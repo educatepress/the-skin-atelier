@@ -67,9 +67,9 @@ export default function Invitation() {
         {/* SNS Follow Buttons (LINE準備中のため一時的にSNSフォローに差し替え) */}
         <FadeIn delay={0.35}>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            {/* X (Twitter) */}
+            {/* TODO: Xアカウント作成後にコメント解除
             <motion.a
-              href="https://x.com/dr_miyaka"
+              href="https://x.com/dr_miyaka_skin"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 bg-[var(--color-text-mocha)] text-white px-10 py-4 font-brand text-[0.75rem] tracking-[0.2em] uppercase hover:bg-[var(--color-text-soft)] transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] shadow-xl"
@@ -81,13 +81,14 @@ export default function Invitation() {
               </svg>
               X をフォロー
             </motion.a>
+            */}
 
-            {/* Instagram */}
+            {/* Instagram — メインCTA */}
             <motion.a
-              href="https://www.instagram.com/dr.miyaka/"
+              href="https://www.instagram.com/dr_miyaka_skin/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 border border-[var(--color-pink-gold)] text-[var(--color-text-mocha)] px-10 py-4 font-brand text-[0.75rem] tracking-[0.2em] uppercase hover:bg-[var(--color-champagne-light)] transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+              className="inline-flex items-center gap-3 bg-[var(--color-text-mocha)] text-white px-12 py-5 font-brand text-[0.75rem] tracking-[0.2em] uppercase hover:bg-[var(--color-text-soft)] transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] shadow-xl"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >

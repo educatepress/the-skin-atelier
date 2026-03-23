@@ -53,7 +53,7 @@ export default function Header() {
 
           {/* CTA — LINE準備中のためSNSリンクに差し替え */}
           <a
-            href="https://www.instagram.com/dr.miyaka/"
+            href="https://www.instagram.com/dr_miyaka_skin/"
             target="_blank"
             rel="noopener noreferrer"
             className="font-brand text-[0.75rem] tracking-[0.18em] text-[var(--color-text-mocha)] uppercase px-6 py-2.5 border border-[var(--color-pink-gold)] hover:bg-[var(--color-champagne-light)] transition-all duration-500"
@@ -105,7 +105,7 @@ export default function Header() {
                 </a>
               ))}
               <a
-                href="https://www.instagram.com/dr.miyaka/"
+                href="https://www.instagram.com/dr_miyaka_skin/"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setIsMobileMenuOpen(false)}
