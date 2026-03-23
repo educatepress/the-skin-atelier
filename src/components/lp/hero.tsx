@@ -45,9 +45,9 @@ export default function Hero() {
       >
         {/* Brand label — Cormorant Garamond, wide tracking */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           className="font-brand text-[0.7rem] tracking-[0.5em] text-[var(--color-text-muted)] uppercase mb-[var(--space-xl)]"
         >
           The Skin Atelier by Dr. Miyaka
@@ -55,9 +55,9 @@ export default function Hero() {
 
         {/* Main catch copy — Shippori Mincho, generous spacing */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.4, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           className="text-[clamp(1.8rem,5vw,4rem)] leading-[1.8] tracking-[0.08em] text-[var(--color-text-mocha)] font-normal mb-[var(--space-xl)]"
         >
           健やかさを、
@@ -67,9 +67,9 @@ export default function Hero() {
 
         {/* Sub copy — generous line height for readability */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.7, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="max-w-lg mx-auto mb-[var(--space-2xl)]"
         >
           <p className="text-[1rem] leading-[2.3] text-[var(--color-text-soft)] tracking-[0.04em]">
@@ -85,9 +85,9 @@ export default function Hero() {
 
         {/* CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.6 }}
+          transition={{ duration: 0.6, delay: 0.9 }}
           className="mb-[var(--space-2xl)]"
         >
           <a href="#invitation" className="btn-atelier">
@@ -100,7 +100,7 @@ export default function Hero() {
         <motion.div
           initial={{ scaleY: 0 }}
           animate={{ scaleY: 1 }}
-          transition={{ duration: 1.2, delay: 2, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.8, delay: 1.2, ease: [0.22, 1, 0.36, 1] }}
           className="w-[1px] h-20 bg-[var(--color-text-mocha)] opacity-15 mx-auto origin-top"
         />
 
@@ -108,7 +108,7 @@ export default function Hero() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 2.4 }}
+          transition={{ duration: 0.6, delay: 1.5 }}
           className="text-[0.7rem] text-[var(--color-text-muted)] mt-[var(--space-xl)] tracking-[0.03em] opacity-40"
         >
           ※自由診療のため公的医療保険は適用されません。効果には個人差がございます。

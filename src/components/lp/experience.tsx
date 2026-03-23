@@ -36,7 +36,7 @@ export default function Experience() {
       <div className="absolute inset-0 bg-[#FDFCFA] opacity-80" />
       <div className="absolute inset-0 marble-texture opacity-30" />
 
-      <div className="relative z-10 max-w-[1000px] mx-auto px-6">
+      <div className="relative z-10 max-w-[1100px] mx-auto px-6">
         <FadeIn>
           <div className="mb-[var(--space-2xl)]">
             <p className="font-brand text-[0.7rem] tracking-[0.4em] text-[var(--color-text-muted)] uppercase mb-[var(--space-md)]">

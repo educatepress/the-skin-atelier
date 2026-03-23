@@ -28,13 +28,13 @@ export default function Header() {
           : "bg-white/40 backdrop-blur-xl py-5"
       }`}
     >
-      <nav className="max-w-6xl mx-auto px-6 flex items-center justify-between">
+      <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
         <a href="#hero" className="group">
-          <p className="font-brand text-[0.65rem] tracking-[0.3em] text-[var(--color-text-mocha)] uppercase group-hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300">
+          <p className="font-brand text-[0.8rem] tracking-[0.3em] text-[var(--color-text-mocha)] uppercase group-hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300">
             The Skin Atelier
           </p>
-          <p className="font-brand text-[0.5rem] tracking-[0.2em] text-[var(--color-text-muted)] uppercase">
+          <p className="font-brand text-[0.6rem] tracking-[0.2em] text-[var(--color-text-muted)] uppercase">
             by Dr. Miyaka
           </p>
         </a>
@@ -45,7 +45,7 @@ export default function Header() {
             <a
               key={item.href}
               href={item.href}
-              className="font-brand text-[0.65rem] tracking-[0.2em] text-[var(--color-text-soft)] uppercase link-underline hover:text-[var(--color-text-mocha)] transition-colors duration-300"
+              className="font-brand text-[0.75rem] tracking-[0.2em] text-[var(--color-text-soft)] uppercase link-underline hover:text-[var(--color-text-mocha)] transition-colors duration-300"
             >
               {item.label}
             </a>
@@ -54,7 +54,7 @@ export default function Header() {
           {/* CTA */}
           <a
             href="#invitation"
-            className="font-brand text-[0.7rem] tracking-[0.18em] text-[var(--color-text-mocha)] uppercase px-6 py-2 border border-[var(--color-pink-gold)] hover:bg-[var(--color-champagne-light)] transition-all duration-500"
+            className="font-brand text-[0.75rem] tracking-[0.18em] text-[var(--color-text-mocha)] uppercase px-6 py-2.5 border border-[var(--color-pink-gold)] hover:bg-[var(--color-champagne-light)] transition-all duration-500"
           >
             LINE予約
           </a>

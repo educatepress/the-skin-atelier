@@ -20,10 +20,10 @@ export default function FadeIn({
   const isInView = useInView(ref, { once: true, margin: "-60px" });
 
   const directionMap = {
-    up: { y: 24, x: 0 },
-    down: { y: -24, x: 0 },
-    left: { y: 0, x: 24 },
-    right: { y: 0, x: -24 },
+    up: { y: 16, x: 0 },
+    down: { y: -16, x: 0 },
+    left: { y: 0, x: 16 },
+    right: { y: 0, x: -16 },
   };
 
   const offset = directionMap[direction];
@@ -34,8 +34,8 @@ export default function FadeIn({
       initial={{ opacity: 0, x: offset.x, y: offset.y }}
       animate={isInView ? { opacity: 1, x: 0, y: 0 } : {}}
       transition={{
-        duration: 0.9,
-        delay,
+        duration: 0.5,
+        delay: delay * 0.6,
         ease: [0.22, 1, 0.36, 1],
       }}
       className={className}

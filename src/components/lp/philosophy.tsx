@@ -10,7 +10,7 @@ export default function Philosophy() {
       id="philosophy"
       className="section-padding relative bg-[var(--color-marble)] overflow-hidden"
     >
-      <div className="max-w-[960px] mx-auto px-6">
+      <div className="max-w-[1100px] mx-auto px-6">
         {/* 2-column layout — Stitch VOGUE editorial style */}
         <div className="flex flex-col md:flex-row items-start gap-16 md:gap-24">
           {/* Left column: Text */}
@@ -141,7 +141,7 @@ export default function Philosophy() {
                   width={600}
                   height={800}
                   className="w-full h-full object-cover max-md:grayscale-0 md:grayscale contrast-[1.15] brightness-110 md:hover:grayscale-0 transition-all duration-[2000ms]"
-                  priority={false}
+                  priority={true}
                 />
               </div>
             </div>
