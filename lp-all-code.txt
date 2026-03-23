@@ -1,0 +1,1417 @@
+
+========================================
+FILE: src/app/globals.css
+========================================
+
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* ════════════════════════════════════════════════════════════════
+   The Skin Atelier by Dr. Miyaka — Design System
+   白大理石 × ピンクゴールド × シルクトーン
+   Inspired by: Chanel, Hermès, Vogue, Golden Ratio
+   ════════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* ── Marble & Surface ── */
+  --color-marble: #FDFCFA;
+  --color-marble-warm: #FAF7F2;
+  --color-marble-vein: #F0EAE2;
+  --color-surface: #F5F1EC;
+  --color-surface-mid: #EDE8E1;
+
+  /* ── Pink Gold / Champagne ── */
+  --color-pink-gold: #E8D3C9;
+  --color-pink-gold-deep: #D4B8A9;
+  --color-champagne: #F5E6D8;
+  --color-champagne-light: #FBF3ED;
+
+  /* ── Text ── */
+  --color-text-mocha: #4A4238;
+  --color-text-soft: #7A7067;
+  --color-text-muted: #A39A90;
+
+  /* ── Accent ── */
+  --color-sage-mist: #C5D4C0;
+  --color-sage: #A8BCA3;
+
+  /* ── Shadows (whisper-soft) ── */
+  --shadow-silk: 0 2px 20px rgba(74, 66, 56, 0.04);
+  --shadow-float: 0 8px 40px rgba(74, 66, 56, 0.06);
+  --shadow-glow: 0 0 60px rgba(232, 211, 201, 0.3);
+
+  /* ── Golden Ratio Spacing ── */
+  --space-xs: 8px;
+  --space-sm: 13px;
+  --space-md: 21px;
+  --space-lg: 34px;
+  --space-xl: 55px;
+  --space-2xl: 89px;
+  --space-3xl: 144px;
+  --space-4xl: 233px;
+}
+
+@layer base {
+  :root {
+    --background: var(--color-marble);
+    --foreground: var(--color-text-mocha);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-noto-sans), "Hiragino Kaku Gothic ProN", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    word-break: normal;
+    overflow-wrap: break-word;
+    overflow-x: hidden;
+    letter-spacing: 0.02em;
+    line-height: 1.9;
+  }
+
+  /* ── Ultra-thin serif headings (しっぽり明朝) ── */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-shippori), "游明朝", "Yu Mincho", serif;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    line-height: 1.6;
+    text-wrap: balance;
+  }
+
+  h1 { font-weight: 400; letter-spacing: 0.08em; }
+
+  p, li { text-wrap: pretty; }
+
+  /* ── Selection color ── */
+  ::selection {
+    background-color: var(--color-champagne);
+    color: var(--color-text-mocha);
+  }
+}
+
+@layer utilities {
+  /* ── Brand Font Classes ── */
+  .font-brand {
+    font-family: var(--font-cormorant), "Didot", "Bodoni MT", serif;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+  }
+
+  .font-body-jp {
+    font-family: var(--font-noto-sans), sans-serif;
+    font-weight: 400;
+  }
+
+  /* ── Glass Panel (frosted marble) ── */
+  .glass-marble {
+    background: rgba(253, 252, 250, 0.72);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(240, 234, 226, 0.5);
+  }
+
+  /* ── Pink Gold Border ── */
+  .border-pink-gold {
+    border: 1px solid var(--color-pink-gold);
+  }
+
+  /* ── Atelier Button ── */
+  .btn-atelier {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 36px;
+    background: transparent;
+    border: 1px solid var(--color-pink-gold);
+    color: var(--color-text-mocha);
+    font-family: var(--font-cormorant), serif;
+    font-weight: 400;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .btn-atelier::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--color-champagne-light), var(--color-champagne));
+    opacity: 0;
+    transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: -1;
+  }
+
+  .btn-atelier:hover::before {
+    opacity: 1;
+  }
+
+  .btn-atelier:hover {
+    border-color: var(--color-pink-gold-deep);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .btn-atelier .arrow {
+    display: inline-block;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .btn-atelier:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  /* ── Divider (thin pink gold line) ── */
+  .divider-gold {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-pink-gold), transparent);
+  }
+
+  /* ── Section spacing (Golden Ratio) ── */
+  .section-padding {
+    padding-top: var(--space-3xl);
+    padding-bottom: var(--space-3xl);
+  }
+
+  /* ── Marble Texture Overlay ── */
+  .marble-texture {
+    position: relative;
+  }
+
+  .marble-texture::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('/marble-texture.webp') center / cover no-repeat;
+    opacity: 0.08;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+
+  /* ── Vogue-style thin underline animation ── */
+  .link-underline {
+    background-image: linear-gradient(var(--color-pink-gold), var(--color-pink-gold));
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .link-underline:hover {
+    background-size: 100% 1px;
+  }
+
+  /* ── Prose (Blog) styling ── */
+  .prose h2 {
+    color: var(--color-text-mocha);
+    font-weight: 300;
+    margin-top: 3em;
+    margin-bottom: 1em;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid var(--color-pink-gold);
+    font-size: 1.5rem;
+  }
+
+  .prose h3 {
+    color: var(--color-text-mocha);
+    font-weight: 400;
+    margin-top: 2em;
+    margin-bottom: 0.8em;
+    position: relative;
+    padding-left: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .prose h3::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10%;
+    bottom: 10%;
+    width: 2px;
+    background: var(--color-pink-gold);
+  }
+
+  .prose p {
+    font-size: 1rem;
+    line-height: 2.1;
+    margin-bottom: 1.8em;
+    color: var(--color-text-soft);
+  }
+
+  .prose strong {
+    background: linear-gradient(transparent 75%, rgba(232, 211, 201, 0.35) 0%);
+    color: var(--color-text-mocha);
+    padding: 0 0.1em;
+    font-weight: 500;
+  }
+}
+
+/* ── Smooth scroll ── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Page transition ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+main {
+  animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+========================================
+FILE: src/app/layout.tsx
+========================================
+
+import type { Metadata } from "next";
+import { Noto_Sans_JP, Cormorant_Garamond, Shippori_Mincho } from "next/font/google";
+import "./globals.css";
+
+const shippori = Shippori_Mincho({
+  weight: ["400", "500"],
+  subsets: ["latin"],
+  variable: "--font-shippori",
+  display: "swap",
+});
+
+const notoSansJP = Noto_Sans_JP({
+  weight: ["300", "400", "500"],
+  subsets: ["latin"],
+  variable: "--font-noto-sans",
+  display: "swap",
+});
+
+const cormorant = Cormorant_Garamond({
+  weight: ["300", "400"],
+  subsets: ["latin"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://the-skin-atelier.vercel.app"),
+  title: "The Skin Atelier by Dr. Miyaka | 美容皮膚科 みやか先生",
+  description:
+    "「今の肌が一番好き」と言える贅沢を、あなたへ。美容皮膚科学会所属の医師みやかが、先進の美容医療と分子栄養学であなた本来の透明感を引き出します。",
+  openGraph: {
+    title: "The Skin Atelier by Dr. Miyaka",
+    description:
+      "かつて肌トラブルに悩み、遠回りをした美容皮膚科医だからこそ辿り着いた答え。先進の美容医療と分子栄養学で、あなた本来の透明感を。",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+    locale: "ja_JP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Skin Atelier by Dr. Miyaka",
+    description:
+      "「今の肌が一番好き」と言える贅沢を。美容皮膚科みやか先生の完全招待制プライベート・ラウンジ。",
+  },
+  robots: { index: true, follow: true },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html
+      lang="ja"
+      className={`${shippori.variable} ${notoSansJP.variable} ${cormorant.variable} h-full antialiased`}
+    >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "MedicalBusiness",
+              name: "The Skin Atelier by Dr. Miyaka",
+              description:
+                "美容皮膚科 みやか先生のプライベートクリニック。先進の美容医療と分子栄養学で、あなた本来の透明感を引き出します。",
+              url: "https://the-skin-atelier.vercel.app",
+              medicalSpecialty: "Dermatology",
+              currenciesAccepted: "JPY",
+              paymentAccepted: "Cash, Credit Card",
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Physician",
+              name: "Dr. Miyaka Sato",
+              description:
+                "美容皮膚科学会所属。長年のニキビ治療経験を持つ美容皮膚科医。先進の美容医療と分子栄養学を融合した独自アプローチ。",
+              medicalSpecialty: "Dermatology",
+              url: "https://the-skin-atelier.vercel.app",
+            }),
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col">{children}</body>
+    </html>
+  );
+}
+
+========================================
+FILE: src/app/page.tsx
+========================================
+
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
+import Hero from "@/components/lp/hero";
+import Philosophy from "@/components/lp/philosophy";
+import Treatments from "@/components/lp/treatments";
+import BlogPreview from "@/components/lp/blog-preview";
+import FaqSection from "@/components/lp/faq-section";
+import Invitation from "@/components/lp/invitation";
+
+export default function Home() {
+  return (
+    <>
+      <Header />
+      <main>
+        <Hero />
+        <Philosophy />
+        <Treatments />
+        <BlogPreview />
+        <FaqSection />
+        <Invitation />
+      </main>
+      <Footer />
+    </>
+  );
+}
+
+========================================
+FILE: src/components/common/fade-in.tsx
+========================================
+
+"use client";
+
+import { motion, useInView } from "framer-motion";
+import { useRef, ReactNode } from "react";
+
+interface FadeInProps {
+  children: ReactNode;
+  delay?: number;
+  direction?: "up" | "down" | "left" | "right";
+  className?: string;
+}
+
+export default function FadeIn({
+  children,
+  delay = 0,
+  direction = "up",
+  className = "",
+}: FadeInProps) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
+
+  const directionMap = {
+    up: { y: 24, x: 0 },
+    down: { y: -24, x: 0 },
+    left: { y: 0, x: 24 },
+    right: { y: 0, x: -24 },
+  };
+
+  const offset = directionMap[direction];
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: offset.x, y: offset.y }}
+      animate={isInView ? { opacity: 1, x: 0, y: 0 } : {}}
+      transition={{
+        duration: 0.9,
+        delay,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+========================================
+FILE: src/components/layout/header.tsx
+========================================
+
+"use client";
+
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const navItems = [
+  { label: "Philosophy", href: "#philosophy" },
+  { label: "Treatments", href: "#treatments" },
+  { label: "Journal", href: "#blog" },
+  { label: "FAQ", href: "#faq" },
+];
+
+export default function Header() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        isScrolled
+          ? "glass-marble py-3 shadow-[var(--shadow-silk)] border-b border-[var(--color-marble-vein)]"
+          : "bg-white/40 backdrop-blur-xl py-5"
+      }`}
+    >
+      <nav className="max-w-6xl mx-auto px-6 flex items-center justify-between">
+        {/* Logo */}
+        <a href="#hero" className="group">
+          <p className="font-brand text-[0.65rem] tracking-[0.3em] text-[var(--color-text-mocha)] uppercase group-hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300">
+            The Skin Atelier
+          </p>
+          <p className="font-brand text-[0.5rem] tracking-[0.2em] text-[var(--color-text-muted)] uppercase">
+            by Dr. Miyaka
+          </p>
+        </a>
+
+        {/* Desktop nav */}
+        <div className="hidden md:flex items-center gap-[var(--space-xl)]">
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="font-brand text-[0.65rem] tracking-[0.2em] text-[var(--color-text-soft)] uppercase link-underline hover:text-[var(--color-text-mocha)] transition-colors duration-300"
+            >
+              {item.label}
+            </a>
+          ))}
+
+          {/* CTA */}
+          <a
+            href="#invitation"
+            className="font-brand text-[0.6rem] tracking-[0.18em] text-[var(--color-text-mocha)] uppercase px-5 py-2 border border-[var(--color-pink-gold)] hover:bg-[var(--color-champagne-light)] transition-all duration-500"
+          >
+            Invitation
+          </a>
+        </div>
+
+        {/* Mobile hamburger */}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="md:hidden flex flex-col gap-[5px] p-2"
+          aria-label="メニュー"
+        >
+          <motion.span
+            animate={isMobileMenuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
+            className="block w-5 h-[1px] bg-[var(--color-text-mocha)]"
+          />
+          <motion.span
+            animate={isMobileMenuOpen ? { opacity: 0 } : { opacity: 1 }}
+            className="block w-5 h-[1px] bg-[var(--color-text-mocha)]"
+          />
+          <motion.span
+            animate={isMobileMenuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
+            className="block w-5 h-[1px] bg-[var(--color-text-mocha)]"
+          />
+        </button>
+      </nav>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="md:hidden overflow-hidden glass-marble"
+          >
+            <div className="px-6 py-[var(--space-xl)] flex flex-col gap-[var(--space-lg)]">
+              {navItems.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="font-brand text-[0.75rem] tracking-[0.2em] text-[var(--color-text-soft)] uppercase"
+                >
+                  {item.label}
+                </a>
+              ))}
+              <a
+                href="#invitation"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="btn-atelier text-center mt-[var(--space-sm)]"
+              >
+                Invitation
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  );
+}
+
+========================================
+FILE: src/components/layout/footer.tsx
+========================================
+
+import FadeIn from "@/components/common/fade-in";
+
+export default function Footer() {
+  return (
+    <footer className="bg-[var(--color-surface)] border-t border-[var(--color-marble-vein)]">
+      <div className="max-w-5xl mx-auto px-6 py-[var(--space-2xl)]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--space-xl)]">
+          {/* Brand */}
+          <div>
+            <p className="font-brand text-[0.8rem] tracking-[0.2em] text-[var(--color-text-mocha)] uppercase mb-[var(--space-sm)]">
+              The Skin Atelier
+            </p>
+            <p className="font-brand text-[0.6rem] tracking-[0.15em] text-[var(--color-text-muted)] uppercase mb-[var(--space-lg)]">
+              by Dr. Miyaka
+            </p>
+            <p className="text-[0.75rem] leading-[2] text-[var(--color-text-muted)] tracking-[0.02em]">
+              美容皮膚科学会所属
+            </p>
+          </div>
+
+          {/* Navigation */}
+          <div>
+            <p className="font-brand text-[0.65rem] tracking-[0.2em] text-[var(--color-text-muted)] uppercase mb-[var(--space-md)]">
+              Navigation
+            </p>
+            <div className="flex flex-col gap-[var(--space-sm)]">
+              {[
+                { label: "Philosophy", href: "#philosophy" },
+                { label: "Treatments", href: "#treatments" },
+                { label: "Journal", href: "#blog" },
+                { label: "FAQ", href: "#faq" },
+                { label: "Invitation", href: "#invitation" },
+              ].map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="text-[0.75rem] text-[var(--color-text-soft)] hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300 tracking-[0.03em]"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Contact / SNS */}
+          <div>
+            <p className="font-brand text-[0.65rem] tracking-[0.2em] text-[var(--color-text-muted)] uppercase mb-[var(--space-md)]">
+              Connect
+            </p>
+            <div className="flex flex-col gap-[var(--space-sm)]">
+              <a
+                href="#"
+                className="text-[0.75rem] text-[var(--color-text-soft)] hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300 tracking-[0.03em]"
+              >
+                Instagram
+              </a>
+              <a
+                href="#"
+                className="text-[0.75rem] text-[var(--color-text-soft)] hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300 tracking-[0.03em]"
+              >
+                X (Twitter)
+              </a>
+              <a
+                href="#"
+                className="text-[0.75rem] text-[var(--color-text-soft)] hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300 tracking-[0.03em]"
+              >
+                公式LINE
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="mt-[var(--space-2xl)] pt-[var(--space-lg)] border-t border-[var(--color-marble-vein)]">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-[var(--space-md)]">
+            <p className="text-[0.65rem] text-[var(--color-text-muted)] tracking-[0.05em]">
+              © 2026 The Skin Atelier by Dr. Miyaka. All rights reserved.
+            </p>
+            <div className="flex gap-[var(--space-lg)]">
+              <a
+                href="#"
+                className="text-[0.6rem] text-[var(--color-text-muted)] hover:text-[var(--color-text-soft)] transition-colors tracking-[0.05em]"
+              >
+                プライバシーポリシー
+              </a>
+              <a
+                href="#"
+                className="text-[0.6rem] text-[var(--color-text-muted)] hover:text-[var(--color-text-soft)] transition-colors tracking-[0.05em]"
+              >
+                特定商取引法に基づく表記
+              </a>
+            </div>
+          </div>
+
+          {/* Medical advertising compliance */}
+          <p className="text-[0.55rem] text-[var(--color-text-muted)] text-center mt-[var(--space-lg)] leading-[1.8] tracking-[0.03em]">
+            ※ 当サイトは医療広告ガイドラインに準拠しています。掲載されている治療には個人差があり、効果を保証するものではありません。
+            <br />
+            治療のリスク・副作用・費用については、カウンセリング時に詳しくご説明いたします。
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+========================================
+FILE: src/components/lp/hero.tsx
+========================================
+
+"use client";
+
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+
+export default function Hero() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 80]);
+
+  return (
+    <section
+      ref={ref}
+      id="hero"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+    >
+      {/* Marble background — Stitch large radial + subtle veining */}
+      <div className="absolute inset-0 bg-[#FDFCFA]">
+        {/* Marble vein texture overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.08]"
+          style={{
+            backgroundImage: `
+              radial-gradient(ellipse at 30% 40%, rgba(232,211,201,0.25) 0%, transparent 50%),
+              radial-gradient(ellipse at 75% 25%, rgba(197,212,192,0.12) 0%, transparent 45%),
+              radial-gradient(ellipse at 55% 75%, rgba(245,230,216,0.18) 0%, transparent 50%),
+              radial-gradient(ellipse at 15% 80%, rgba(212,184,169,0.1) 0%, transparent 40%)
+            `,
+          }}
+        />
+        {/* Central radial glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.8)_0%,rgba(253,252,250,1)_100%)]" />
+      </div>
+
+      {/* Thin decorative line — top (below header) */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[var(--color-pink-gold)] to-transparent opacity-30" />
+
+      <motion.div
+        style={{ opacity, y }}
+        className="relative z-10 text-center px-6 max-w-4xl mx-auto pt-24"
+      >
+        {/* Brand label — Cormorant Garamond, wide tracking */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="font-brand text-[0.65rem] tracking-[0.5em] text-[var(--color-text-muted)] uppercase mb-[var(--space-2xl)]"
+        >
+          The Skin Atelier by Dr. Miyaka
+        </motion.p>
+
+        {/* Main catch copy — Shippori Mincho, generous spacing */}
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.4, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="text-[clamp(1.8rem,5vw,4rem)] leading-[1.8] tracking-[0.15em] text-[var(--color-text-mocha)] font-normal mb-[var(--space-2xl)]"
+        >
+          健やかさを、
+          <br />
+          肌の<span className="text-[#E8D3C9]">輝き</span>へ。
+        </motion.h1>
+
+        {/* Sub copy — generous line height for readability */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-lg mx-auto mb-[var(--space-2xl)]"
+        >
+          <p className="text-[0.85rem] leading-[2.5] text-[var(--color-text-soft)] tracking-[0.04em]">
+            かつて立ち止まった私だから、できること。
+            <br />
+            鏡の前でもどかしさを感じていた日々。
+            <br />
+            私自身の経験から辿り着いたのは、
+            <br />
+            あなたの隣で歩むことでした。
+          </p>
+        </motion.div>
+
+        {/* Vertical divider — Stitch signature element */}
+        <motion.div
+          initial={{ scaleY: 0 }}
+          animate={{ scaleY: 1 }}
+          transition={{ duration: 1.2, delay: 1.6, ease: [0.22, 1, 0.36, 1] }}
+          className="w-[1px] h-20 bg-[var(--color-text-mocha)] opacity-15 mx-auto mb-[var(--space-xl)] origin-top"
+        />
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 2 }}
+        >
+          <a href="#invitation" className="btn-atelier">
+            <span>扉を開ける</span>
+            <span className="arrow">→</span>
+          </a>
+        </motion.div>
+
+        {/* Medical disclaimer — minimal, bottom */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 2.4 }}
+          className="text-[0.5rem] text-[var(--color-text-muted)] mt-[var(--space-2xl)] tracking-[0.03em] opacity-40"
+        >
+          ※自由診療のため公的医療保険は適用されません。効果には個人差がございます。
+        </motion.p>
+      </motion.div>
+
+      {/* Bottom gradient fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[var(--color-marble)] to-transparent" />
+    </section>
+  );
+}
+
+========================================
+FILE: src/components/lp/philosophy.tsx
+========================================
+
+"use client";
+
+import Image from "next/image";
+import { motion } from "framer-motion";
+import FadeIn from "@/components/common/fade-in";
+
+export default function Philosophy() {
+  return (
+    <section
+      id="philosophy"
+      className="section-padding relative bg-[var(--color-marble)] overflow-hidden"
+    >
+      <div className="max-w-[960px] mx-auto px-6">
+        {/* 2-column layout — Stitch VOGUE editorial style */}
+        <div className="flex flex-col md:flex-row items-start gap-16 md:gap-24">
+          {/* Left column: Text */}
+          <div className="flex-1 space-y-[var(--space-xl)]">
+            {/* Title with left border accent */}
+            <FadeIn>
+              <div className="border-l-2 border-[var(--color-pink-gold)] pl-[var(--space-lg)] py-[var(--space-sm)]">
+                <h2 className="text-[clamp(1.6rem,3.5vw,2.5rem)] leading-[1.5] tracking-[0.12em] text-[var(--color-text-mocha)]">
+                  まっさらな私に、
+                  <br />
+                  還るとき。
+                </h2>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={0.1}>
+              <p className="font-brand text-[0.6rem] tracking-[0.3em] text-[var(--color-text-muted)] uppercase">
+                A Quiet Return to Your True Self
+              </p>
+            </FadeIn>
+
+            {/* Story body — Silk tone compliant A案 */}
+            <FadeIn delay={0.2}>
+              <div className="space-y-[var(--space-lg)] text-[var(--color-text-soft)] leading-[2.3]">
+                <p className="text-[0.9rem] tracking-[0.03em]">
+                  都会の喧騒を離れた、広尾の静かなアトリエ。
+                </p>
+                <p className="text-[0.9rem] tracking-[0.03em]">
+                  着飾るのではなく、本来の透明感を引き出す。それは、先進の技術と内側からの調和が織りなす、あなただけの心地よい時間です。
+                </p>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={0.3}>
+              <div className="space-y-[var(--space-lg)] text-[var(--color-text-soft)] leading-[2.3]">
+                <p className="text-[0.9rem] tracking-[0.03em]">
+                  鏡を見るたび、自分の肌を好きになれるように。
+                </p>
+                <p className="text-[0.9rem] tracking-[0.03em]">
+                  そんな想いで、私は美容医療と分子栄養学の探求へと向かいました。
+                </p>
+              </div>
+            </FadeIn>
+
+            {/* Pull quote — Stitch style left border */}
+            <FadeIn delay={0.35}>
+              <div className="py-[var(--space-lg)] px-[var(--space-xl)] border-l border-[var(--color-pink-gold)] bg-gradient-to-r from-[var(--color-champagne-light)] to-transparent">
+                <p className="text-[1rem] leading-[2.2] text-[var(--color-text-mocha)] tracking-[0.04em] italic">
+                  「まっさらな自分に還れる場所を、つくりたい」
+                </p>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={0.4}>
+              <div className="space-y-[var(--space-lg)] text-[var(--color-text-soft)] leading-[2.3]">
+                <p className="text-[0.9rem] tracking-[0.03em]">
+                  外側からは、肌に負担をかけず丁寧に整える美容医療を。
+                  <br />
+                  内側からは、身体の隅々まで必要な成分で満たすインナーケアを。
+                </p>
+                <p className="text-[0.9rem] tracking-[0.03em]">
+                  あらゆるアプローチを自らの肌で確かめながら、少しずつ、自分の肌と対話する術を身につけてきました。
+                </p>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={0.45}>
+              <div className="space-y-[var(--space-lg)] text-[var(--color-text-soft)] leading-[2.3]">
+                <p className="text-[0.9rem] tracking-[0.03em]">
+                  40歳を迎えた今。かつての悩みをふわりと手放した私の肌は、これまでで一番、心地よく透明な状態を保っています。
+                </p>
+                <p className="text-[0.9rem] tracking-[0.03em]">
+                  年齢を重ねることは、決して美しさを失うことではなく、より上質に、しなやかに自分を磨き上げていくフェーズなのだと、今の私自身が実感しています。
+                </p>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={0.5}>
+              <div className="divider-gold mx-auto my-[var(--space-md)]" />
+            </FadeIn>
+
+            <FadeIn delay={0.55}>
+              <div className="space-y-[var(--space-md)]">
+                <p className="text-[0.9rem] leading-[2.3] text-[var(--color-text-mocha)] tracking-[0.03em] font-medium">
+                  美しさは、生まれ持った特別な才能ではありません。
+                </p>
+                <p className="text-[0.9rem] leading-[2.3] text-[var(--color-text-soft)] tracking-[0.03em]">
+                  正しい知識で肌を慈しみ、最適なケアを選択することで、肌は必ず応えてくれます。
+                </p>
+                <p className="text-[0.9rem] leading-[2.3] text-[var(--color-text-soft)] tracking-[0.03em]">
+                  遠回りをした私だからこそ、あなたのお悩みに心から寄り添い、本来の美しさを引き出すお手伝いができる。このアトリエで、あなただけの理想の肌を一緒に見つけていきませんか。
+                </p>
+              </div>
+            </FadeIn>
+
+            {/* Signature — real handwritten image */}
+            <FadeIn delay={0.6}>
+              <motion.div
+                className="flex flex-col items-end pt-[var(--space-md)]"
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                viewport={{ once: true }}
+              >
+                <Image
+                  src="/images/miyaka-signature.jpg"
+                  alt="Miyaka Sato, M.D. — 手書きサイン"
+                  width={280}
+                  height={140}
+                  className="mix-blend-multiply opacity-90"
+                  style={{ objectFit: "contain" }}
+                  priority={false}
+                />
+                <p className="font-brand text-[0.55rem] tracking-[0.3em] text-[var(--color-text-muted)] uppercase mt-[var(--space-sm)]">
+                  Founder & Director — 美容皮膚科学会所属
+                </p>
+              </motion.div>
+            </FadeIn>
+          </div>
+
+          {/* Right column: Portrait image — Stitch VOGUE style */}
+          <FadeIn delay={0.3}>
+            <div className="flex-1 w-full md:sticky md:top-32">
+              <div className="aspect-[3/4] overflow-hidden bg-[var(--color-surface)]">
+                <Image
+                  src="/images/philosophy-portrait.png"
+                  alt="Dr. Miyaka — The Skin Atelier"
+                  width={600}
+                  height={800}
+                  className="w-full h-full object-cover grayscale contrast-[1.15] brightness-110 hover:grayscale-0 transition-all duration-[2000ms]"
+                  priority={false}
+                />
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+
+        {/* Medical disclaimer */}
+        <FadeIn delay={0.65}>
+          <p className="text-[0.55rem] text-[var(--color-text-muted)] mt-[var(--space-2xl)] text-center tracking-[0.03em] opacity-50">
+            ※効果には個人差がございます。
+          </p>
+        </FadeIn>
+      </div>
+    </section>
+  );
+}
+
+========================================
+FILE: src/components/lp/treatments.tsx
+========================================
+
+"use client";
+
+import Image from "next/image";
+import FadeIn from "@/components/common/fade-in";
+
+const treatments = [
+  {
+    number: "01",
+    category: "Phototherapy",
+    nameEn: "Photo Facial",
+    nameJp: "フォトフェイシャル（IPL）",
+    image: "/images/treatment-photofacial.png",
+    description:
+      "肌の土台を整える第一歩。穏やかな光のエネルギーが、シミ・くすみ・赤みにアプローチし、肌本来の透明感を引き出します。",
+    note: "「まず土台を丁寧に耕す」——それが、遠回りしない美肌への道です。",
+  },
+  {
+    number: "02",
+    category: "Infusion",
+    nameEn: "Electroporation",
+    nameJp: "エレクトロポレーション",
+    image: "/images/treatment-electroporation.png",
+    description:
+      "針を使わずに、美容成分を肌の奥深くまで届ける先進技術。ヒアルロン酸やビタミンC誘導体を、イオン導入の約20倍の浸透率で届けます。",
+    note: "整えた土台に、必要な栄養を丁寧に届ける。それが本当のスキンケアです。",
+  },
+  {
+    number: "03",
+    category: "Precision",
+    nameEn: "Injection",
+    nameJp: "ヒアルロン酸・ボトックス注入",
+    image: "/images/treatment-injection.png",
+    description:
+      "「どこに、どれだけ、どの製剤を」——すべてはあなたのお顔立ちとバランスから逆算するデザイン。自然で上品な仕上がりのために、0.1ml単位でこだわります。",
+    note: "あなたの美の基準を共有し、「やりすぎない洗練」を一緒に追求します。",
+  },
+  {
+    number: "04",
+    category: "Holistic",
+    nameEn: "Inner Care",
+    nameJp: "分子栄養学（インナーケア）",
+    image: "/images/treatment-innercare.png",
+    description:
+      "外側からのケアだけでは届かない、細胞レベルの美しさを。必要な栄養素を正しく満たすことで、肌は内側から輝きを取り戻します。",
+    note: "美容医療と分子栄養学の融合——それが、このアトリエの独自のアプローチです。",
+  },
+];
+
+export default function Treatments() {
+  return (
+    <section
+      id="treatments"
+      className="section-padding relative bg-[var(--color-marble-warm)]"
+    >
+      {/* Section header — Stitch editorial style */}
+      <div className="max-w-[1200px] mx-auto px-6 md:px-16 mb-[var(--space-2xl)]">
+        <div className="flex flex-col md:flex-row justify-between items-end gap-8">
+          <FadeIn>
+            <div className="space-y-[var(--space-sm)]">
+              <p className="font-brand text-[0.6rem] tracking-[0.5em] text-[var(--color-text-muted)] uppercase">
+                Curated Services
+              </p>
+              <h2 className="font-brand text-[clamp(1.8rem,4vw,3rem)] tracking-[0.15em] text-[var(--color-text-mocha)] italic">
+                Artisan Treatments
+              </h2>
+            </div>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <p className="text-[0.8rem] text-[var(--color-text-muted)] max-w-sm leading-[2] tracking-[0.03em]">
+              不要な治療は「必要ない」と伝えること。
+              必要な治療だけを丁寧に組み合わせること。それがプロの仕事です。
+            </p>
+          </FadeIn>
+        </div>
+      </div>
+
+      {/* Treatment grid — Stitch gap-px hairline divider */}
+      <div className="max-w-[1200px] mx-auto px-6 md:px-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[1px] bg-[var(--color-marble-vein)]">
+          {treatments.map((t, i) => (
+            <FadeIn key={t.nameEn} delay={0.15 + i * 0.1}>
+              <div className="bg-[var(--color-marble)] group cursor-pointer overflow-hidden p-[var(--space-xl)] md:p-[var(--space-2xl)] transition-all duration-[1200ms] hover:bg-white relative">
+                {/* Placeholder image area — grayscale with hover */}
+                <div className="aspect-[4/5] mb-[var(--space-lg)] overflow-hidden bg-[var(--color-surface)]">
+                  <Image
+                    src={t.image}
+                    alt={`${t.nameEn} — ${t.nameJp}`}
+                    width={600}
+                    height={750}
+                    className="w-full h-full object-cover grayscale brightness-105 group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-[1200ms]"
+                  />
+                </div>
+
+                {/* Content */}
+                <div className="space-y-[var(--space-sm)]">
+                  {/* Numbered category */}
+                  <p className="font-brand text-[0.6rem] tracking-[0.4em] text-[var(--color-pink-gold-deep)] uppercase">
+                    {t.number}. {t.category}
+                  </p>
+
+                  {/* Treatment name */}
+                  <h3 className="text-[1.3rem] tracking-[0.12em] text-[var(--color-text-mocha)]">
+                    {t.nameEn}
+                  </h3>
+                  <p className="text-[0.8rem] tracking-[0.04em] text-[var(--color-text-soft)] mb-[var(--space-md)]">
+                    {t.nameJp}
+                  </p>
+
+                  {/* Description */}
+                  <p className="text-[0.85rem] leading-[2.1] text-[var(--color-text-soft)] tracking-[0.02em]">
+                    {t.description}
+                  </p>
+
+                  {/* Doctor's note — left border accent */}
+                  <div className="border-l border-[var(--color-pink-gold)] pl-[var(--space-md)] mt-[var(--space-md)] opacity-80">
+                    <p className="text-[0.8rem] leading-[2] text-[var(--color-text-mocha)] italic tracking-[0.02em]">
+                      {t.note}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Hover glow */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-champagne-light)] to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-[1200ms] pointer-events-none" />
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+
+        {/* Medical disclaimer */}
+        <FadeIn delay={0.6}>
+          <div className="mt-[var(--space-xl)] text-center">
+            <p className="text-[0.55rem] text-[var(--color-text-muted)] tracking-[0.03em] opacity-50">
+              ※ 効果には個人差がございます。施術には副作用・リスクを伴う場合があります。
+              <br />
+              料金・詳しい施術内容は、カウンセリング時にご案内いたします。
+            </p>
+          </div>
+        </FadeIn>
+      </div>
+    </section>
+  );
+}
+
+========================================
+FILE: src/components/lp/blog-preview.tsx
+========================================
+
+"use client";
+
+import FadeIn from "@/components/common/fade-in";
+
+const samplePosts = [
+  {
+    title: "美しき「引き算」の流儀：冬の肌に静寂を。",
+    excerpt:
+      "多くのものを与えすぎる現代のケア。今、私たちに必要なのは、真に必要なものだけを厳選する心地よさかもしれません。",
+    date: "Coming Soon",
+    category: "Skincare",
+  },
+  {
+    title: "アトリエが選ぶ、至高のエッセンス。",
+    excerpt:
+      "世界中から丁寧に選ばれた、生命力溢れる植物の恩恵。肌が真に喜ぶ対話を。",
+    date: "Coming Soon",
+    category: "Inner Care",
+  },
+  {
+    title: "光を纏う、広尾の朝。",
+    excerpt: "",
+    date: "Coming Soon",
+    category: "Lifestyle",
+    isPlaceholder: true,
+  },
+];
+
+export default function BlogPreview() {
+  return (
+    <section
+      id="blog"
+      className="section-padding relative bg-[var(--color-marble)]"
+    >
+      <div className="max-w-[1200px] mx-auto px-6">
+        {/* Section header — Stitch editorial style with horizontal line */}
+        <FadeIn>
+          <div className="flex items-center gap-[var(--space-lg)] mb-[var(--space-2xl)]">
+            <h2 className="font-brand text-[clamp(2rem,4vw,3.5rem)] italic font-light tracking-[0.1em] text-[var(--color-text-mocha)]">
+              Journal
+            </h2>
+            <div className="flex-1 h-[1px] bg-[var(--color-marble-vein)]" />
+          </div>
+        </FadeIn>
+
+        {/* Articles grid — Stitch 3-column grayscale */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--space-xl)] md:gap-[var(--space-2xl)]">
+          {samplePosts.map((post, i) => (
+            <FadeIn key={i} delay={0.1 + i * 0.15}>
+              <article
+                className={`space-y-[var(--space-md)] group cursor-pointer ${
+                  (post as { isPlaceholder?: boolean }).isPlaceholder ? "opacity-30" : ""
+                }`}
+              >
+                {/* Image area */}
+                <div className="overflow-hidden bg-[var(--color-surface)]">
+                  {(post as { isPlaceholder?: boolean }).isPlaceholder ? (
+                    <div className="h-64 md:h-80 border border-[var(--color-marble-vein)] flex items-center justify-center">
+                      <span className="font-brand italic text-[0.8rem] text-[var(--color-text-muted)] tracking-[0.15em] opacity-50">
+                        Archive Coming Soon
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="h-64 md:h-80 bg-gradient-to-br from-[var(--color-surface)] via-[var(--color-marble-warm)] to-[var(--color-champagne-light)] grayscale opacity-80 group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-[1200ms]">
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span className="font-brand text-[1.5rem] text-[var(--color-pink-gold)] opacity-20">✦</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Meta */}
+                <div className="space-y-[var(--space-xs)]">
+                  <p className="font-brand text-[0.5rem] tracking-[0.4em] text-[var(--color-text-muted)] uppercase">
+                    {post.date}
+                  </p>
+
+                  <h4 className="text-[1rem] tracking-[0.06em] leading-[1.8] text-[var(--color-text-mocha)] group-hover:text-[var(--color-pink-gold-deep)] transition-colors duration-[800ms]">
+                    {post.title}
+                  </h4>
+
+                  {post.excerpt && (
+                    <p className="text-[0.75rem] text-[var(--color-text-muted)] leading-[2] tracking-[0.02em]">
+                      {post.excerpt}
+                    </p>
+                  )}
+                </div>
+              </article>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+========================================
+FILE: src/components/lp/faq-section.tsx
+========================================
+
+"use client";
+
+import FadeIn from "@/components/common/fade-in";
+
+const faqs = [
+  {
+    q: "初めて美容医療を受けるのですが、何から始めればいいですか？",
+    a: "まずは、今のお肌の「現在地」を知ることが大切です。LINEのパーソナル美肌診断で、あなたに合ったケアの方向性をお伝えしています。無理に施術をおすすめすることはありませんので、安心してご相談ください。",
+  },
+  {
+    q: "なぜ最初からレーザー（ピコレーザー等）ではなく、フォトフェイシャルなのですか？",
+    a: "多くの方は、肌の「土台」が整っていない状態でレーザーを当ててしまいます。まずはフォトフェイシャル（IPL）で肌の土台をしっかりと耕し、ポレーションで栄養を届ける。この順番を守ることで、より少ない回数で、より美しい仕上がりが期待できます。遠回りしないための、私がたどり着いた答えです。",
+  },
+  {
+    q: "注入治療（ヒアルロン酸・ボトックス）は「やりすぎ」になりませんか？",
+    a: "「やりすぎない洗練」が私のデザイン哲学です。あなたのお顔立ち、骨格、表情の動きを丁寧に診察し、0.1ml単位で調整します。自然で上品な仕上がりにこだわりますので、周りの方に気づかれないくらいの変化を一緒に目指しましょう。",
+  },
+  {
+    q: "分子栄養学（インナーケア）とはどのような治療ですか？",
+    a: "外側からの美容医療だけでは補えない、細胞レベルでの栄養状態を整えるアプローチです。血液検査をもとに、あなたに不足している栄養素を特定し、サプリメントや食事指導を通じて内側から肌の土台を整えます。美容医療との相乗効果で、より持続的な美しさを実現します。",
+  },
+  {
+    q: "今からできることはありますか？",
+    a: "はい。公式LINEにて「Dr.みやか パーソナル美肌診断」を無料でお受けいただけます。今のあなたの肌に本当に必要なケアがわかりますので、正しいスキンケア習慣を身につけていただけます。",
+  },
+];
+
+export default function FaqSection() {
+  return (
+    <section id="faq" className="section-padding relative">
+      {/* JSON-LD for FAQ */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map((f) => ({
+              "@type": "Question",
+              name: f.q,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: f.a,
+              },
+            })),
+          }),
+        }}
+      />
+
+      <div className="max-w-3xl mx-auto px-6">
+        <FadeIn>
+          <p className="font-brand text-[0.7rem] tracking-[0.3em] text-[var(--color-text-muted)] uppercase text-center mb-[var(--space-sm)]">
+            Questions
+          </p>
+        </FadeIn>
+
+        <FadeIn delay={0.1}>
+          <h2 className="text-[clamp(1.2rem,2.5vw,1.8rem)] text-center leading-[1.8] tracking-[0.06em] text-[var(--color-text-mocha)] mb-[var(--space-md)]">
+            よくいただくご質問
+          </h2>
+        </FadeIn>
+
+        <FadeIn delay={0.15}>
+          <div className="divider-gold mx-auto mb-[var(--space-2xl)]" />
+        </FadeIn>
+
+        <div className="space-y-0">
+          {faqs.map((faq, i) => (
+            <FadeIn key={i} delay={0.15 + i * 0.08}>
+              <details className="group border-b border-[var(--color-marble-vein)] last:border-b-0">
+                <summary className="flex items-start gap-[var(--space-md)] py-[var(--space-lg)] cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  <span className="font-brand text-[0.7rem] text-[var(--color-pink-gold)] tracking-[0.15em] mt-1 shrink-0">
+                    Q.
+                  </span>
+                  <span className="text-[0.9rem] leading-[1.9] text-[var(--color-text-mocha)] tracking-[0.03em] group-hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300">
+                    {faq.q}
+                  </span>
+                  <span className="ml-auto text-[var(--color-pink-gold)] text-[0.8rem] shrink-0 transition-transform duration-300 group-open:rotate-45 mt-1">
+                    +
+                  </span>
+                </summary>
+                <div className="pb-[var(--space-lg)] pl-[calc(var(--space-md)+1rem)]">
+                  <p className="text-[0.85rem] leading-[2.2] text-[var(--color-text-soft)] tracking-[0.02em]">
+                    {faq.a}
+                  </p>
+                </div>
+              </details>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+========================================
+FILE: src/components/lp/invitation.tsx
+========================================
+
+"use client";
+
+import { motion } from "framer-motion";
+import FadeIn from "@/components/common/fade-in";
+
+export default function Invitation() {
+  return (
+    <section
+      id="invitation"
+      className="section-padding relative overflow-hidden bg-white"
+    >
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-marble)] via-white to-[var(--color-marble)]" />
+
+      {/* Radial glow — Stitch style */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[var(--color-pink-gold)] opacity-[0.08] rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="relative z-10 max-w-2xl mx-auto px-6 text-center">
+        {/* Icon */}
+        <FadeIn>
+          <div className="text-[var(--color-text-muted)] opacity-30 mb-[var(--space-lg)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.5" className="mx-auto">
+              <rect x="3" y="11" width="18" height="11" rx="0" ry="0" />
+              <path d="m3 11 9-7 9 7" />
+            </svg>
+          </div>
+        </FadeIn>
+
+        {/* Title — Stitch style but silk tone compliant */}
+        <FadeIn delay={0.1}>
+          <h2 className="font-brand text-[clamp(1.8rem,4vw,3rem)] tracking-[0.15em] text-[var(--color-text-mocha)] mb-[var(--space-md)] leading-[1.5]">
+            Invitation to
+            <br />
+            <span className="italic">&ldquo;The Skin Atelier&rdquo;</span>
+          </h2>
+        </FadeIn>
+
+        <FadeIn delay={0.15}>
+          <div className="divider-gold mx-auto mb-[var(--space-xl)]" />
+        </FadeIn>
+
+        {/* Body — silk tone compliant (NOT elitist) */}
+        <FadeIn delay={0.2}>
+          <p className="text-[0.9rem] leading-[2.3] text-[var(--color-text-soft)] tracking-[0.03em] mb-[var(--space-md)]">
+            心地よく美しさを育みたい方へ、
+            <br />
+            「公式LINE」を先行でご案内しております。
+          </p>
+        </FadeIn>
+
+        <FadeIn delay={0.25}>
+          <p className="text-[0.85rem] leading-[2.2] text-[var(--color-text-muted)] tracking-[0.03em] mb-[var(--space-xl)]">
+            今のあなたに必要なケアがわかる
+            <br />
+            「Dr.みやか パーソナル美肌診断」や、
+            <br />
+            美容医療の正しい知識をお届けする限定コンテンツを
+            <br />
+            ささやかなギフトとしてお届けしております。
+          </p>
+        </FadeIn>
+
+        <FadeIn delay={0.3}>
+          <p className="text-[0.9rem] leading-[2.2] text-[var(--color-text-soft)] tracking-[0.04em] mb-[var(--space-xl)]">
+            ぜひ、新しいご自身と出会う扉を開いてみてください。
+          </p>
+        </FadeIn>
+
+        {/* CTA Button — Stitch dark border style */}
+        <FadeIn delay={0.35}>
+          <motion.a
+            href="#"
+            className="inline-block border border-[var(--color-text-mocha)] px-16 py-5 font-brand text-[0.6rem] tracking-[0.5em] text-[var(--color-text-mocha)] uppercase hover:bg-[var(--color-text-mocha)] hover:text-white transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            アトリエへの招待状を受け取る
+          </motion.a>
+          <p className="text-[0.6rem] text-[var(--color-text-muted)] tracking-[0.1em] mt-[var(--space-md)]">
+            無料パーソナル美肌診断つき
+          </p>
+        </FadeIn>
+
+        {/* Trust signals */}
+        <FadeIn delay={0.4}>
+          <div className="mt-[var(--space-2xl)] flex flex-wrap justify-center gap-[var(--space-xl)] text-[0.6rem] text-[var(--color-text-muted)] tracking-[0.08em]">
+            <span>✦ 完全無料</span>
+            <span>✦ いつでも解除可能</span>
+            <span>✦ 個人情報厳守</span>
+          </div>
+        </FadeIn>
+      </div>
+    </section>
+  );
+}

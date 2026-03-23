@@ -1,26 +1,263 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ════════════════════════════════════════════════════════════════
+   The Skin Atelier by Dr. Miyaka — Design System
+   白大理石 × ピンクゴールド × シルクトーン
+   Inspired by: Chanel, Hermès, Vogue, Golden Ratio
+   ════════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* ── Marble & Surface ── */
+  --color-marble: #FDFCFA;
+  --color-marble-warm: #FAF7F2;
+  --color-marble-vein: #F0EAE2;
+  --color-surface: #F5F1EC;
+  --color-surface-mid: #EDE8E1;
+
+  /* ── Pink Gold / Champagne ── */
+  --color-pink-gold: #E8D3C9;
+  --color-pink-gold-deep: #D4B8A9;
+  --color-champagne: #F5E6D8;
+  --color-champagne-light: #FBF3ED;
+
+  /* ── Text ── */
+  --color-text-mocha: #4A4238;
+  --color-text-soft: #7A7067;
+  --color-text-muted: #A39A90;
+
+  /* ── Accent ── */
+  --color-sage-mist: #C5D4C0;
+  --color-sage: #A8BCA3;
+
+  /* ── Shadows (whisper-soft) ── */
+  --shadow-silk: 0 2px 20px rgba(74, 66, 56, 0.04);
+  --shadow-float: 0 8px 40px rgba(74, 66, 56, 0.06);
+  --shadow-glow: 0 0 60px rgba(232, 211, 201, 0.3);
+
+  /* ── Golden Ratio Spacing ── */
+  --space-xs: 8px;
+  --space-sm: 13px;
+  --space-md: 21px;
+  --space-lg: 34px;
+  --space-xl: 55px;
+  --space-2xl: 89px;
+  --space-3xl: 144px;
+  --space-4xl: 233px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: var(--color-marble);
+    --foreground: var(--color-text-mocha);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-noto-sans), "Hiragino Kaku Gothic ProN", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    word-break: normal;
+    overflow-wrap: break-word;
+    overflow-x: hidden;
+    letter-spacing: 0.02em;
+    line-height: 1.9;
+  }
+
+  /* ── Ultra-thin serif headings (しっぽり明朝) ── */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-shippori), "游明朝", "Yu Mincho", serif;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    line-height: 1.6;
+    text-wrap: balance;
+  }
+
+  h1 { font-weight: 400; letter-spacing: 0.08em; }
+
+  p, li { text-wrap: pretty; }
+
+  /* ── Selection color ── */
+  ::selection {
+    background-color: var(--color-champagne);
+    color: var(--color-text-mocha);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* ── Brand Font Classes ── */
+  .font-brand {
+    font-family: var(--font-cormorant), "Didot", "Bodoni MT", serif;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+  }
+
+  .font-body-jp {
+    font-family: var(--font-noto-sans), sans-serif;
+    font-weight: 400;
+  }
+
+  /* ── Glass Panel (frosted marble) ── */
+  .glass-marble {
+    background: rgba(253, 252, 250, 0.72);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(240, 234, 226, 0.5);
+  }
+
+  /* ── Pink Gold Border ── */
+  .border-pink-gold {
+    border: 1px solid var(--color-pink-gold);
+  }
+
+  /* ── Atelier Button ── */
+  .btn-atelier {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 36px;
+    background: transparent;
+    border: 1px solid var(--color-pink-gold);
+    color: var(--color-text-mocha);
+    font-family: var(--font-cormorant), serif;
+    font-weight: 400;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .btn-atelier::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--color-champagne-light), var(--color-champagne));
+    opacity: 0;
+    transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: -1;
+  }
+
+  .btn-atelier:hover::before {
+    opacity: 1;
+  }
+
+  .btn-atelier:hover {
+    border-color: var(--color-pink-gold-deep);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .btn-atelier .arrow {
+    display: inline-block;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .btn-atelier:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  /* ── Divider (thin pink gold line) ── */
+  .divider-gold {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-pink-gold), transparent);
+  }
+
+  /* ── Section spacing (Golden Ratio) ── */
+  .section-padding {
+    padding-top: var(--space-3xl);
+    padding-bottom: var(--space-3xl);
+  }
+
+  /* ── Marble Texture Overlay ── */
+  .marble-texture {
+    position: relative;
+  }
+
+  .marble-texture::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('/marble-texture.webp') center / cover no-repeat;
+    opacity: 0.08;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+
+  /* ── Vogue-style thin underline animation ── */
+  .link-underline {
+    background-image: linear-gradient(var(--color-pink-gold), var(--color-pink-gold));
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .link-underline:hover {
+    background-size: 100% 1px;
+  }
+
+  /* ── Prose (Blog) styling ── */
+  .prose h2 {
+    color: var(--color-text-mocha);
+    font-weight: 300;
+    margin-top: 3em;
+    margin-bottom: 1em;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid var(--color-pink-gold);
+    font-size: 1.5rem;
+  }
+
+  .prose h3 {
+    color: var(--color-text-mocha);
+    font-weight: 400;
+    margin-top: 2em;
+    margin-bottom: 0.8em;
+    position: relative;
+    padding-left: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .prose h3::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10%;
+    bottom: 10%;
+    width: 2px;
+    background: var(--color-pink-gold);
+  }
+
+  .prose p {
+    font-size: 1rem;
+    line-height: 2.1;
+    margin-bottom: 1.8em;
+    color: var(--color-text-soft);
+  }
+
+  .prose strong {
+    background: linear-gradient(transparent 75%, rgba(232, 211, 201, 0.35) 0%);
+    color: var(--color-text-mocha);
+    padding: 0 0.1em;
+    font-weight: 500;
+  }
+}
+
+/* ── Smooth scroll ── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Page transition ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+main {
+  animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
