@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: "/private/",
     },
-    sitemap: "https://the-skin-atelier.vercel.app/sitemap.xml",
+    sitemap: "https://skin-atelier.jp/sitemap.xml",
   };
 }

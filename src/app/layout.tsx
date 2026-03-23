@@ -24,7 +24,7 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://the-skin-atelier.vercel.app"),
+  metadataBase: new URL("https://skin-atelier.jp"),
   title: "The Skin Atelier by Dr. Miyaka | 美容皮膚科 みやか先生",
   description:
     "「今の肌が一番好き」と言える贅沢を、あなたへ。美容皮膚科学会所属の医師みやかが、先進の美容医療と分子栄養学であなた本来の透明感を引き出します。",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "The Skin Atelier by Dr. Miyaka",
     description:
-      "「今の肌が一番好き」と言える贅沢を。美容皮膚科みやか先生の完全招待制プライベート・ラウンジ。",
+      "「今の肌が一番好き」と言える贅沢を。美容皮膚科みやか先生のプライベート・スキンアトリエ。",
   },
   robots: { index: true, follow: true },
 };
@@ -65,7 +65,7 @@ export default function RootLayout({
               name: "The Skin Atelier by Dr. Miyaka",
               description:
                 "美容皮膚科 みやか先生のプライベートクリニック。先進の美容医療と分子栄養学で、あなた本来の透明感を引き出します。",
-              url: "https://the-skin-atelier.vercel.app",
+              url: "https://skin-atelier.jp",
               medicalSpecialty: "Dermatology",
               currenciesAccepted: "JPY",
               paymentAccepted: "Cash, Credit Card",
@@ -82,7 +82,7 @@ export default function RootLayout({
               description:
                 "美容皮膚科学会所属。長年のニキビ治療経験を持つ美容皮膚科医。先進の美容医療と分子栄養学を融合した独自アプローチ。",
               medicalSpecialty: "Dermatology",
-              url: "https://the-skin-atelier.vercel.app",
+              url: "https://skin-atelier.jp",
             }),
           }}
         />
