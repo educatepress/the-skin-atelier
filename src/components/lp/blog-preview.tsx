@@ -18,7 +18,7 @@ const samplePosts = [
     category: "Inner Care",
   },
   {
-    title: "光を纏う、広尾の朝。",
+    title: "光を纏う、朝のルーティン。",
     excerpt: "",
     date: "Coming Soon",
     category: "Lifestyle",

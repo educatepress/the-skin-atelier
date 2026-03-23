@@ -36,7 +36,7 @@ export default function Philosophy() {
             <FadeIn delay={0.2}>
               <div className="space-y-[var(--space-lg)] text-[var(--color-text-soft)] leading-[2.3]">
                 <p className="text-[0.95rem] tracking-[0.03em]">
-                  都会の喧騒を離れた、広尾の静かなアトリエ。
+                  日常の喧騒を離れた、静かなアトリエ。
                 </p>
                 <p className="text-[0.95rem] tracking-[0.03em]">
                   着飾るのではなく、本来の透明感を引き出す。それは、先進の技術と内側からの調和が織りなす、あなただけの心地よい時間です。
