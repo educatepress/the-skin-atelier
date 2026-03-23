@@ -91,7 +91,7 @@ export default function Hero() {
           className="mb-[var(--space-2xl)]"
         >
           <a href="#invitation" className="btn-atelier">
-            <span>LINEで無料美肌診断</span>
+            <span>SNSで美容情報をフォロー</span>
             <span className="arrow">→</span>
           </a>
         </motion.div>

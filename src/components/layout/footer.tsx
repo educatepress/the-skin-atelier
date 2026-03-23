@@ -60,12 +60,6 @@ export default function Footer() {
               >
                 X (Twitter)
               </a>
-              <a
-                href="#"
-                className="text-[0.75rem] text-[var(--color-text-soft)] hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300 tracking-[0.03em]"
-              >
-                公式LINE
-              </a>
             </div>
           </div>
         </div>

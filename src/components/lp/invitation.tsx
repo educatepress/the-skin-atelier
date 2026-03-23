@@ -44,49 +44,72 @@ export default function Invitation() {
           <p className="text-[0.95rem] leading-[2.4] text-[var(--color-text-soft)] tracking-[0.03em] mb-[var(--space-md)]">
             心地よく美しさを育みたい方へ、
             <br />
-            「公式LINE」を先行でご案内しております。
+            SNSにて美容医療の正しい知識や
+            <br />
+            日々のスキンケアのヒントをお届けしています。
           </p>
         </FadeIn>
 
         <FadeIn delay={0.25}>
           <p className="text-[0.95rem] leading-[2.4] text-[var(--color-text-muted)] tracking-[0.03em] mb-[var(--space-xl)]">
-            今のあなたに必要なケアがわかる
+            あなたの「美しさのかかりつけ医」として、
             <br />
-            「Dr.みやか パーソナル美肌診断」や、
-            <br />
-            美容医療の正しい知識をお届けする限定コンテンツを
-            <br />
-            ささやかなギフトとしてお届けしております。
+            日常に寄り添う情報を丁寧にお届けいたします。
           </p>
         </FadeIn>
 
         <FadeIn delay={0.3}>
           <p className="text-[0.95rem] leading-[2.4] text-[var(--color-text-soft)] tracking-[0.04em] mb-[var(--space-xl)]">
-            ぜひ、新しいご自身と出会う扉を開いてみてください。
+            ぜひ、お気軽にフォローしてみてください。
           </p>
         </FadeIn>
 
-        {/* CTA Button — Solid primary action matching Marketing best practice */}
+        {/* SNS Follow Buttons (LINE準備中のため一時的にSNSフォローに差し替え) */}
         <FadeIn delay={0.35}>
-          <motion.a
-            href="#"
-            className="inline-block bg-[var(--color-text-mocha)] text-white px-10 md:px-16 py-5 font-brand text-[0.75rem] tracking-[0.2em] uppercase hover:bg-[var(--color-text-soft)] hover:text-white transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] shadow-xl"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            公式LINEを追加して無料美肌診断へ
-          </motion.a>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            {/* X (Twitter) */}
+            <motion.a
+              href="https://x.com/dr_miyaka"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 bg-[var(--color-text-mocha)] text-white px-10 py-4 font-brand text-[0.75rem] tracking-[0.2em] uppercase hover:bg-[var(--color-text-soft)] transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] shadow-xl"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+              X をフォロー
+            </motion.a>
+
+            {/* Instagram */}
+            <motion.a
+              href="https://www.instagram.com/dr.miyaka/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 border border-[var(--color-pink-gold)] text-[var(--color-text-mocha)] px-10 py-4 font-brand text-[0.75rem] tracking-[0.2em] uppercase hover:bg-[var(--color-champagne-light)] transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" />
+                <circle cx="12" cy="12" r="5" />
+                <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+              </svg>
+              Instagram をフォロー
+            </motion.a>
+          </div>
           <p className="text-[0.75rem] text-[var(--color-text-muted)] tracking-[0.1em] mt-[var(--space-md)]">
-            無料パーソナル美肌診断つき
+            美容医療の正しい知識を毎日お届け中
           </p>
         </FadeIn>
 
         {/* Trust signals */}
         <FadeIn delay={0.4}>
           <div className="mt-[var(--space-2xl)] flex flex-wrap justify-center gap-[var(--space-xl)] text-[0.7rem] text-[var(--color-text-muted)] tracking-[0.08em]">
-            <span>✦ 完全無料</span>
-            <span>✦ いつでも解除可能</span>
-            <span>✦ 個人情報厳守</span>
+            <span>✦ エビデンスに基づく情報</span>
+            <span>✦ 医師監修コンテンツ</span>
+            <span>✦ 毎日更新</span>
           </div>
         </FadeIn>
       </div>
