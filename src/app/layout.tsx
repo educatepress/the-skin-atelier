@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP, Cormorant_Garamond, Shippori_Mincho } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 
 const shippori = Shippori_Mincho({
@@ -86,6 +87,7 @@ export default function RootLayout({
             }),
           }}
         />
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />
       </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
