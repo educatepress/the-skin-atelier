@@ -109,14 +109,14 @@ export default function Philosophy() {
             {/* Signature — real handwritten image */}
             <FadeIn delay={0.6}>
               <motion.div
-                className="flex flex-col items-end pt-[var(--space-md)]"
+                className="flex flex-col items-center pt-[var(--space-md)]"
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
                 viewport={{ once: true }}
               >
                 <Image
-                  src="/images/miyaka-signature.jpg"
+                  src="/images/miyaka-signature-new.png"
                   alt="Miyaka Sato, M.D. — 手書きサイン"
                   width={280}
                   height={140}
