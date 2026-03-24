@@ -136,7 +136,7 @@ export default function Philosophy() {
             <div className="w-full md:sticky md:top-32">
               <div className="aspect-[3/4] overflow-hidden bg-[var(--color-surface)]">
                 <Image
-                  src="/images/philosophy-portrait.png"
+                  src="/images/profile/dr-miyaka-2.jpg"
                   alt="Dr. Miyaka — The Skin Atelier"
                   width={600}
                   height={800}
