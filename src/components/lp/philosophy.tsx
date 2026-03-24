@@ -125,7 +125,7 @@ export default function Philosophy() {
                   priority={false}
                 />
                 <p className="font-brand text-[0.7rem] tracking-[0.3em] text-[var(--color-text-muted)] uppercase mt-[var(--space-sm)]">
-                  Founder & Director — 美容皮膚科学会所属
+                  美容皮膚科医 みやか
                 </p>
               </motion.div>
             </FadeIn>
@@ -148,12 +148,7 @@ export default function Philosophy() {
           </FadeIn>
         </div>
 
-        {/* Medical disclaimer */}
-        <FadeIn delay={0.65}>
-          <p className="text-[0.7rem] text-[var(--color-text-muted)] mt-[var(--space-2xl)] text-center tracking-[0.03em] opacity-50">
-            ※効果には個人差がございます。
-          </p>
-        </FadeIn>
+
       </div>
     </section>
   );

@@ -15,8 +15,8 @@ export default function Profile() {
               <div className="absolute inset-0 border border-[var(--color-pink-gold)] m-4 opacity-30" />
               <div className="w-full h-full bg-[var(--color-surface)] relative overflow-hidden">
                 <Image
-                  src="/images/philosophy-portrait.png" // 仮画像（後で白衣の宣材写真等に差し替え）
-                  alt="Dr. Miyaka Portrait"
+                  src="/images/profile/dr-miyaka-3.jpg"
+                  alt="Dr. Miyaka"
                   width={500}
                   height={625}
                   className="w-full h-full object-cover max-md:grayscale-0 md:grayscale md:hover:grayscale-0 transition-all duration-[2000ms] brightness-105"
@@ -25,11 +25,11 @@ export default function Profile() {
             </div>
           </FadeIn>
 
-          {/* Right: Credentials */}
+          {/* Right: Bio only — no credentials */}
           <FadeIn delay={0.2} className="w-full md:w-7/12 space-y-[var(--space-lg)]">
             <div>
               <p className="font-brand text-[0.7rem] tracking-[0.4em] text-[var(--color-text-muted)] uppercase mb-[var(--space-xs)]">
-                Medical Director
+                About
               </p>
               <h3 className="text-[1.8rem] tracking-[0.1em] text-[var(--color-text-mocha)] leading-[1.4]">
                 Dr. みやか
@@ -41,32 +41,15 @@ export default function Profile() {
 
             <div className="divider-gold" />
 
-            {/* Dummy Bio (to be written by Doctor) */}
             <div className="space-y-[var(--space-md)]">
               <p className="text-[0.95rem] leading-[2.2] text-[var(--color-text-soft)] tracking-[0.03em]">
-                ここに院長ご自身による経歴・実績のサマリーが入ります（仮テキスト）。長年の皮膚科診療の中で、外側からのアプローチだけでなく、内側（分子栄養学）からのケアの重要性を痛感。
+                美容皮膚科医として診療を続ける中で、外側のケアだけでなく、
+                身体の内側（分子栄養学）からのアプローチが肌の根本的な変化に繋がると実感。
               </p>
               <p className="text-[0.95rem] leading-[2.2] text-[var(--color-text-soft)] tracking-[0.03em]">
-                数多くの患者様の肌トラブルと向き合ってきた経験から、「削る・不自然に埋める」美容医療ではなく、本質的な透明感を引き立てる「育てる美容医療」を提唱。
+                このサイトでは、肌と美容について、医師として正直な目線でお届けしています。
+                難しい情報をわかりやすく、そして飾らずに。
               </p>
-            </div>
-
-            {/* Credentials List */}
-            <div className="pt-[var(--space-md)] mt-[var(--space-md)] border-t border-[var(--color-marble-vein)]">
-              <ul className="space-y-3">
-                <li className="flex items-start gap-4 text-[0.9rem] text-[var(--color-text-mocha)] tracking-[0.03em]">
-                  <span className="text-[var(--color-pink-gold-deep)] text-[0.75rem] mt-1 shrink-0">✦</span>
-                  <span>日本美容皮膚科学会 所属</span>
-                </li>
-                <li className="flex items-start gap-4 text-[0.9rem] text-[var(--color-text-mocha)] tracking-[0.03em]">
-                  <span className="text-[var(--color-pink-gold-deep)] text-[0.75rem] mt-1 shrink-0">✦</span>
-                  <span>臨床分子栄養医学研究会 認定医（ダミー）</span>
-                </li>
-                <li className="flex items-start gap-4 text-[0.9rem] text-[var(--color-text-mocha)] tracking-[0.03em]">
-                  <span className="text-[var(--color-pink-gold-deep)] text-[0.75rem] mt-1 shrink-0">✦</span>
-                  <span>アラガン社認定 ボトックス・ヒアルロン酸施注医（ダミー）</span>
-                </li>
-              </ul>
             </div>
           </FadeIn>
 

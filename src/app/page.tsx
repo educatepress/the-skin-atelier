@@ -5,7 +5,6 @@ import Hero from "@/components/lp/hero";
 import Philosophy from "@/components/lp/philosophy";
 import Profile from "@/components/lp/profile";
 import Treatments from "@/components/lp/treatments";
-import Experience from "@/components/lp/experience";
 import BlogPreview from "@/components/lp/blog-preview";
 import FaqSection from "@/components/lp/faq-section";
 import Invitation from "@/components/lp/invitation";
@@ -19,7 +18,6 @@ export default function Home() {
         <Philosophy />
         <Profile />
         <Treatments />
-        <Experience />
         <BlogPreview />
         <FaqSection />
         <Invitation />
@@ -29,4 +27,5 @@ export default function Home() {
     </>
   );
 }
+
 
