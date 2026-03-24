@@ -65,7 +65,7 @@ export default function RootLayout({
               "@type": "MedicalBusiness",
               name: "The Skin Atelier by Dr. Miyaka",
               description:
-                "美容皮膚科 みやか先生のプライベートクリニック。先進の美容医療と分子栄養学で、あなた本来の透明感を引き出します。",
+                "美容皮膚科医 みやか先生の情報発信サイト。先進の美容医療と分子栄養学の知識を、わかりやすくお届けしています。",
               url: "https://skin-atelier.jp",
               medicalSpecialty: "Dermatology",
               currenciesAccepted: "JPY",
@@ -79,7 +79,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Physician",
-              name: "Dr. Miyaka Sato",
+              name: "Dr. Miyaka",
               description:
                 "美容皮膚科学会所属。長年のニキビ治療経験を持つ美容皮膚科医。先進の美容医療と分子栄養学を融合した独自アプローチ。",
               medicalSpecialty: "Dermatology",

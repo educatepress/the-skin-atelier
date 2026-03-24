@@ -117,15 +117,15 @@ export default function Philosophy() {
               >
                 <Image
                   src="/images/miyaka-signature-new.png"
-                  alt="Miyaka Sato, M.D. — 手書きサイン"
+                  alt="みやか先生 — 手書きサイン"
                   width={280}
                   height={140}
-                  className="mix-blend-multiply opacity-90"
+                  className="opacity-90"
                   style={{ objectFit: "contain" }}
                   priority={false}
                 />
                 <p className="font-brand text-[0.7rem] tracking-[0.3em] text-[var(--color-text-muted)] uppercase mt-[var(--space-sm)]">
-                  美容皮膚科医 みやか
+                  Dr. Miyaka
                 </p>
               </motion.div>
             </FadeIn>

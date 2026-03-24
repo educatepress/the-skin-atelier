@@ -32,9 +32,9 @@ export default function Profile() {
                 About
               </p>
               <h3 className="text-[1.8rem] tracking-[0.1em] text-[var(--color-text-mocha)] leading-[1.4]">
-                Dr. みやか
+                みやか先生
                 <span className="block text-[0.95rem] tracking-[0.05em] text-[var(--color-text-soft)] mt-2">
-                  Miyaka Sato, M.D.
+                  Dr. Miyaka
                 </span>
               </h3>
             </div>
