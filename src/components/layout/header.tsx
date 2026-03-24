@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 const navItems = [
-  { label: "Philosophy", href: "#philosophy" },
-  { label: "Treatments", href: "#treatments" },
-  { label: "Journal", href: "#blog" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Philosophy", href: "/#philosophy" },
+  { label: "Treatments", href: "/#treatments" },
+  { label: "Journal", href: "/#blog" },
+  { label: "FAQ", href: "/#faq" },
 ];
 
 export default function Header() {
@@ -30,25 +31,25 @@ export default function Header() {
     >
       <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
-        <a href="#hero" className="group">
+        <Link href="/#hero" className="group">
           <p className="font-brand text-[0.8rem] tracking-[0.3em] text-[var(--color-text-mocha)] uppercase group-hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300">
             The Skin Atelier
           </p>
           <p className="font-brand text-[0.6rem] tracking-[0.2em] text-[var(--color-text-muted)] uppercase">
             by Dr. Miyaka
           </p>
-        </a>
+        </Link>
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-[var(--space-xl)]">
           {navItems.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
               className="font-brand text-[0.75rem] tracking-[0.2em] text-[var(--color-text-soft)] uppercase link-underline hover:text-[var(--color-text-mocha)] transition-colors duration-300"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
 
           {/* CTA — LINE準備中のためSNSリンクに差し替え */}
@@ -95,14 +96,14 @@ export default function Header() {
           >
             <div className="px-6 py-[var(--space-xl)] flex flex-col gap-[var(--space-lg)]">
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="font-brand text-[0.75rem] tracking-[0.2em] text-[var(--color-text-soft)] uppercase"
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
               <a
                 href="https://www.instagram.com/dr_miyaka_skin/"
