@@ -83,6 +83,35 @@ async function generateBlogPost(theme: string, researchData: string) {
 }
 
 /**
+ * 3. 記事の自動検閲（レビュー＆修正）
+ * 生成された記事を「医療広告ガイドライン」および「トーン」の観点から厳格に自己検閲し、修正する
+ */
+async function reviewArticle(articleMdx: string) {
+  console.log(`🧐 生成された記事を自動で検閲・修正中...`);
+
+  const reviewPrompt = `
+    あなたは医療法務部およびVOGUEの編集長です。
+    以下の【ブログ原稿】を厳格に検閲し、問題があれば修正した完全なMDXを返してください。
+    問題がなければ、そのままのMDXを返してください。
+
+    【検閲基準】
+    1. 医療広告ガイドライン: 「絶対治る」「最高」「No.1」などの誇大・断定表現がないか。「〜という報告があります」等の控えめな表現になっているか。
+    2. トーン＆マナー: 不安を煽っていないか。上品で洗練された手紙風（Elegant Letter Style）を維持できているか。
+    3. フォーマット: 指定された見出し（Dear You, など）や、末尾のサイン画像が正しく入っているか。
+
+    【ブログ原稿】
+    ${articleMdx}
+  `;
+
+  const response = await ai.models.generateContent({
+    model: "gemini-2.5-pro",
+    contents: reviewPrompt,
+  });
+
+  return response.text;
+}
+
+/**
  * メイン実行関数
  */
 async function main() {
@@ -100,14 +129,19 @@ async function main() {
     const articleMdx = await generateBlogPost(todayTheme, researchResult || "");
     console.log("✅ 記事生成完了\n");
 
-    // ④ ファイル保存
+    // ④ 検閲・自己修正
+    const rawMdx = articleMdx || "";
+    const reviewedMdx = await reviewArticle(rawMdx);
+    console.log("✅ 自動検閲・修正完了\n");
+
+    // ⑤ ファイル保存
     const filePath = path.join(process.cwd(), "content/blog", `${slug}.mdx`);
     
     // MDXの中身だけを抽出（AIが ```markdown などを付けた場合の除去）
-    const cleanMdx = articleMdx?.replace(/^```markdown\n/, "").replace(/\n```$/, "") || "";
+    const cleanMdx = reviewedMdx?.replace(/^```markdown\n/, "").replace(/\n```$/, "") || "";
 
     fs.writeFileSync(filePath, cleanMdx, "utf8");
-    console.log(`🎉 記事を保存しました: ${filePath}`);
+    console.log(`🎉 検閲済み記事を保存しました: ${filePath}`);
     
     // ⑤（後日追加）自動で git add / commit / push する処理をここに書く
 
