@@ -2,6 +2,8 @@ import { GoogleGenAI } from "@google/genai";
 import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
+import { SheetsDB } from "./lib/sheets-db";
+import { WebClient } from '@slack/web-api';
 
 // .env.localから環境変数を読み込む
 dotenv.config({ path: path.join(process.cwd(), ".env.local") });
@@ -15,6 +17,11 @@ if (!apiKey) {
 
 // Geminiクライアントの初期化
 const ai = new GoogleGenAI({ apiKey });
+
+// Slack連携の初期化
+const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
+const TARGET_CHANNEL = 'skin-atelier_jp';
+const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
 /**
  * 1. Deep Research（Google検索を活用した情報収集）
@@ -145,16 +152,86 @@ async function main() {
     const reviewedMdx = await reviewArticle(rawMdx);
     console.log("✅ 自動検閲・修正完了\n");
 
-    // ⑤ ファイル保存
-    const filePath = path.join(process.cwd(), "content/blog", `${slug}.mdx`);
-    
-    // MDXの中身だけを抽出（AIが ```markdown などを付けた場合の除去）
+    // ⑤ MDXの中身だけを抽出
     const cleanMdx = reviewedMdx?.replace(/^```markdown\n/, "").replace(/\n```$/, "") || "";
 
-    fs.writeFileSync(filePath, cleanMdx, "utf8");
-    console.log(`🎉 検閲済み記事を保存しました: ${filePath}`);
+    const contentId = `blog-${dateStr}-${slug}`;
+
+    // ⑥ Google Sheetsへ保存 (キュー登録)
+    const newRow = {
+      content_id: contentId,
+      brand: 'atelier',
+      type: 'blog',
+      title: slug,
+      generation_recipe: JSON.stringify({
+        captionText: cleanMdx,
+        theme: todayTheme
+      }),
+      status: 'pending',
+    };
+
+    console.log(`📦 Google Sheets にブログ記事をキュー登録中...`);
+    await SheetsDB.appendRows([newRow]);
+
+    // ⑦ Slackへ承認メッセージを送信
+    console.log(`📤 Slack へ承認メッセージを送信中...`);
     
-    // ⑤（後日追加）自動で git add / commit / push する処理をここに書く
+    // Slackには長すぎるので最初の500文字をプレビューとして送信
+    const previewText = cleanMdx.substring(0, 500) + (cleanMdx.length > 500 ? '...' : '');
+    const blocks = [
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `📝 *ブログ記事*: \`${slug}\`\n【配信先: 🟦 hiroo-open / The Skin Atelier】`
+        }
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `📝 *【プレビュー】:*\n> ${previewText.replace(/\n/g, '\n> ')}`
+        }
+      },
+      {
+        type: 'actions',
+        elements: [
+          {
+            type: 'button',
+            text: { type: 'plain_text', text: '✅ 承認', emoji: true },
+            style: 'primary',
+            action_id: 'approve_content',
+            value: JSON.stringify({ id: contentId, batchId: 'auto-blog', brand: 'atelier' }),
+          },
+          {
+            type: 'button',
+            text: { type: 'plain_text', text: '❌ 却下', emoji: true },
+            style: 'danger',
+            action_id: 'reject_content',
+            value: JSON.stringify({ id: contentId, brand: 'atelier' }),
+          },
+        ]
+      },
+      { type: 'divider' },
+    ];
+
+    try {
+      const result = await slackClient.chat.postMessage({
+        channel: TARGET_CHANNEL,
+        text: `📝 ブログ記事 ${slug} — レビュー待ち`,
+        blocks,
+      });
+      console.log(`✅ Slack通知完了: ${result.ts}`);
+      
+      // tsを記録したい場合はDBをupdateする
+      if (result.ts) {
+        await SheetsDB.updateRow(contentId, { slack_ts: result.ts });
+      }
+    } catch (error) {
+      console.error(`❌ Slack通知エラー:`, error);
+    }
+
+    console.log(`🎉 キュー登録＆Slack通知完了！Slackで確認・承認してください。`);
 
   } catch (error) {
     console.error("❌ エラーが発生しました:", error);

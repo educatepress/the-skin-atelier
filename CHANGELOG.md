@@ -1,5 +1,14 @@
 # CHANGELOG — The Skin Atelier by Dr. Miyaka
 
+## [0.3.0] — 2026-03-28
+
+### 📝 SNS Prompts Update
+- **multi-platform-content-prompts.md**: Dr.みやかのSNS運用（Instagram カルーセル、X/Threads、リール/ショート動画）用のシステムプロンプトを最新の「みやか節」に合わせて更新。
+  - Instagramカルーセル用の手紙スタイル（共感、分子栄養学、クリニックケアなど10枚構成）の指示を強化
+  - X/Threads用のお節介な独白スタイルの指示を更新
+  - リール/ショート用の20秒台本スタイル（ Smart Brevity構成 ）のアドバイスを適用
+  - AI特有の表現（定型文、絵文字）を避けるための「運用のアドバイス」を追加
+
 ## [0.2.0] — 2026-03-22
 
 ### 🎨 Phase 1.5: Stitch VOGUE EDITORIAL 統合
