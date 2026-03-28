@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(req: NextRequest) {
+  // 🔥 一般公開：Basic認証を一時的にバイパス
+  return NextResponse.next();
+
   const basicAuth = req.headers.get('authorization');
 
   if (basicAuth) {
