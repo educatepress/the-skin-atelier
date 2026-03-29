@@ -7,7 +7,7 @@ export default function proxy(req: NextRequest) {
 
   const basicAuth = req.headers.get('authorization');
 
-  if (basicAuth) {
+  if (typeof basicAuth === 'string') {
     const authValue = basicAuth.split(' ')[1];
     const [user, pwd] = atob(authValue).split(':');
 
