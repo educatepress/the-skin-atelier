@@ -91,6 +91,18 @@ async function sendSlackApprovalMessage(contentId: string, slug: string, caption
         },
       ]
     },
+    {
+      type: 'actions',
+      elements: [
+        {
+          type: 'button',
+          text: { type: 'plain_text', text: '✨ この案で手動ポスト/編集する (Xアプリ起動)', emoji: true },
+          style: 'primary',
+          url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(captionText)}`,
+          action_id: `intent_tweet_${contentId}`
+        }
+      ]
+    },
     { type: 'divider' },
   ];
 

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(req: NextRequest) {
+export default function proxy(req: NextRequest) {
   // 🔥 一般公開：Basic認証を一時的にバイパス
   return NextResponse.next();
 
