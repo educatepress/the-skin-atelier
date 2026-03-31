@@ -37,7 +37,7 @@ export default function BlogArticleClient({
           >
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-[0.6rem] font-brand tracking-[0.3em] text-[var(--color-text-muted)] uppercase hover:text-[#E8D3C9] transition-colors duration-500 mb-12"
+              className="inline-flex items-center gap-2 text-[0.6rem] font-brand tracking-[0.3em] text-[var(--color-text-muted)] uppercase hover:text-[#E8D3C9] transition-colors duration-500 mb-6 md:mb-12"
             >
               ← Journal
             </Link>
@@ -54,7 +54,7 @@ export default function BlogArticleClient({
               {metadata.category}
             </span>
             <span className="w-8 h-[1px] bg-[var(--color-marble-vein)]" />
-            <span className="text-[0.5rem] text-[var(--color-text-muted)] tracking-[0.1em]">
+            <span className="font-brand text-[0.5rem] text-[var(--color-text-muted)] tracking-[0.15em]">
               {metadata.date}
             </span>
           </motion.div>
@@ -64,7 +64,8 @@ export default function BlogArticleClient({
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.2 }}
-            className="text-[clamp(1.5rem,4vw,2.5rem)] leading-[1.8] tracking-[0.1em] text-[var(--color-text-mocha)] font-normal mb-8 whitespace-pre-line"
+            className="text-[clamp(1.3rem,3.5vw,2.2rem)] leading-[1.7] tracking-[0.08em] text-[var(--color-text-mocha)] font-normal mb-8"
+            style={{ textWrap: 'balance' } as React.CSSProperties}
           >
             {metadata.title}
           </motion.h1>

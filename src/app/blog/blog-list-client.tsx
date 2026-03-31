@@ -11,6 +11,7 @@ interface Article {
   date: string;
   readTime: string;
   featured: boolean;
+  image?: string;
 }
 
 export default function BlogListClient({
@@ -76,11 +77,19 @@ export default function BlogListClient({
                   className="bg-[#FDFCFA] group"
                 >
                   <Link href={`/blog/${article.slug}`} className="block p-10 md:p-14">
-                    {/* Image placeholder — grayscale */}
-                    <div className="aspect-[4/3] bg-gradient-to-br from-[var(--color-surface)] via-[var(--color-marble-warm)] to-[var(--color-champagne-light)] mb-8 overflow-hidden">
-                      <div className="w-full h-full grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-[1200ms] flex items-center justify-center">
-                        <span className="font-brand text-[2rem] text-[#E8D3C9] opacity-20">✦</span>
-                      </div>
+                    {/* Image / Placeholder */}
+                    <div className="aspect-[4/3] bg-gradient-to-br from-[var(--color-surface)] via-[var(--color-marble-warm)] to-[var(--color-champagne-light)] mb-8 overflow-hidden relative">
+                      {article.image ? (
+                        <img 
+                          src={article.image} 
+                          alt={article.title} 
+                          className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-[1200ms]"
+                        />
+                      ) : (
+                        <div className="w-full h-full grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-[1200ms] flex items-center justify-center">
+                          <span className="font-brand text-[2rem] text-[#E8D3C9] opacity-20">✦</span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Meta */}
@@ -89,12 +98,15 @@ export default function BlogListClient({
                         <span className="font-brand text-[0.5rem] tracking-[0.4em] text-[#E8D3C9] uppercase">
                           {article.category}
                         </span>
-                        <span className="text-[0.5rem] text-[var(--color-text-muted)]">
+                        <span className="font-brand text-[0.5rem] text-[var(--color-text-muted)] tracking-[0.15em]">
                           {article.date}
                         </span>
                       </div>
 
-                      <h2 className="text-[1.15rem] leading-[1.9] tracking-[0.06em] text-[var(--color-text-mocha)] group-hover:text-[#E8D3C9] transition-colors duration-[800ms] whitespace-pre-line">
+                      <h2
+                        className="text-[1.15rem] leading-[1.9] tracking-[0.06em] text-[var(--color-text-mocha)] group-hover:text-[#E8D3C9] transition-colors duration-[800ms]"
+                        style={{ textWrap: 'balance' } as React.CSSProperties}
+                      >
                         {article.title}
                       </h2>
 
@@ -136,23 +148,34 @@ export default function BlogListClient({
                 className="group"
               >
                 <Link href={`/blog/${article.slug}`} className="block space-y-3">
-                  {/* Image placeholder */}
-                  <div className="aspect-[4/5] bg-gradient-to-br from-[var(--color-surface)] to-[var(--color-marble-warm)] overflow-hidden">
-                    <div className="w-full h-full grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1200ms] flex items-center justify-center">
-                      <span className="font-brand text-[1.5rem] text-[#E8D3C9] opacity-15">✦</span>
-                    </div>
+                  {/* Image / Placeholder */}
+                  <div className="aspect-[4/5] bg-gradient-to-br from-[var(--color-surface)] to-[var(--color-marble-warm)] overflow-hidden relative">
+                    {article.image ? (
+                      <img 
+                        src={article.image} 
+                        alt={article.title} 
+                        className="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1200ms]"
+                      />
+                    ) : (
+                      <div className="w-full h-full grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1200ms] flex items-center justify-center">
+                        <span className="font-brand text-[1.5rem] text-[#E8D3C9] opacity-15">✦</span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-3 pt-2">
                     <span className="font-brand text-[0.45rem] tracking-[0.4em] text-[#E8D3C9] uppercase">
                       {article.category}
                     </span>
-                    <span className="text-[0.45rem] text-[var(--color-text-muted)]">
+                    <span className="font-brand text-[0.45rem] text-[var(--color-text-muted)] tracking-[0.15em]">
                       {article.date}
                     </span>
                   </div>
 
-                  <h3 className="text-[0.9rem] leading-[1.8] tracking-[0.04em] text-[var(--color-text-mocha)] group-hover:text-[#E8D3C9] transition-colors duration-[800ms] whitespace-pre-line">
+                  <h3
+                    className="text-[0.9rem] leading-[1.8] tracking-[0.04em] text-[var(--color-text-mocha)] group-hover:text-[#E8D3C9] transition-colors duration-[800ms]"
+                    style={{ textWrap: 'balance' } as React.CSSProperties}
+                  >
                     {article.title}
                   </h3>
 

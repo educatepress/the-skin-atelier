@@ -35,7 +35,10 @@ export default function BlogPreview() {
                     {metadata.date}
                   </p>
 
-                  <h4 className="text-[1rem] tracking-[0.06em] leading-[1.8] text-[var(--color-text-mocha)] group-hover:text-[var(--color-pink-gold-deep)] transition-colors duration-[800ms] line-clamp-2">
+                  <h4
+                    className="text-[1rem] tracking-[0.06em] leading-[1.8] text-[var(--color-text-mocha)] group-hover:text-[var(--color-pink-gold-deep)] transition-colors duration-[800ms] line-clamp-2"
+                    style={{ textWrap: 'balance' } as React.CSSProperties}
+                  >
                     {metadata.title}
                   </h4>
 
