@@ -64,43 +64,25 @@ export default function Invitation() {
           </p>
         </FadeIn>
 
-        {/* SNS Follow Buttons (LINE準備中のため一時的にSNSフォローに差し替え) */}
+        {/* Official LINE CTA */}
         <FadeIn delay={0.35}>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            {/* X (Twitter) */}
+          <div className="flex flex-col items-center justify-center gap-4">
             <motion.a
-              href="https://x.com/dr_miyaka"
+              href="#"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-[var(--color-text-mocha)] text-white px-10 py-4 font-brand text-[0.75rem] tracking-[0.2em] uppercase hover:bg-[var(--color-text-soft)] transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] shadow-xl"
+              className="inline-flex items-center gap-3 bg-[#06C755] text-white px-12 py-5 font-brand text-[0.85rem] tracking-[0.1em] rounded-full hover:bg-[#05b34c] transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] shadow-xl"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22.5 9.8c0-4.3-4.3-7.8-9.6-7.8s-9.6 3.5-9.6 7.8c0 3.8 3.4 7.1 8 7.7.4.1.9.2 1 .5.1.3 0 .7 0 .7l-.2 1.2c0 .1-.1.4.3.6.4.2.9-.1 1-.2 1.1-.9 6.2-5 6.2-5 .2-.2.3-.4.3-.6.1-1.6 2.6-3 2.6-4.9z"/>
               </svg>
-              X をフォロー
-            </motion.a>
-
-            {/* Instagram — メインCTA */}
-            <motion.a
-              href="https://www.instagram.com/dr_miyaka_skin/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-[var(--color-text-mocha)] text-white px-12 py-5 font-brand text-[0.75rem] tracking-[0.2em] uppercase hover:bg-[var(--color-text-soft)] transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] shadow-xl"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="2" width="20" height="20" rx="5" />
-                <circle cx="12" cy="12" r="5" />
-                <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
-              </svg>
-              Instagram をフォロー
+              公式LINEで無料相談・予約する
             </motion.a>
           </div>
           <p className="text-[0.75rem] text-[var(--color-text-muted)] tracking-[0.1em] mt-[var(--space-md)]">
-            美容医療の正しい知識を毎日お届け中
+            パーソナル美肌診断を実施中
           </p>
         </FadeIn>
 
