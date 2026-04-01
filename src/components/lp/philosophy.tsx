@@ -18,28 +18,28 @@ export default function Philosophy() {
             {/* Title with left border accent */}
             <FadeIn>
               <div className="border-l-2 border-[var(--color-pink-gold)] pl-[var(--space-lg)] py-[var(--space-sm)]">
-                <h2 className="text-[clamp(1.6rem,3.5vw,2.5rem)] leading-[1.6] tracking-[0.08em] text-[var(--color-text-mocha)]">
-                  まっさらな私に、
+                <h2 className="text-[clamp(1.4rem,3vw,2.2rem)] leading-[1.6] tracking-[0.08em] text-[var(--color-text-mocha)] font-medium">
+                  肌の悩みを知る私だからこそ、
                   <br />
-                  還るとき。
+                  伝えられることがあります。
                 </h2>
               </div>
             </FadeIn>
 
             <FadeIn delay={0.1}>
               <p className="font-brand text-[0.75rem] tracking-[0.3em] text-[var(--color-text-muted)] uppercase">
-                A Quiet Return to Your True Self
+                A Message from the Doctor
               </p>
             </FadeIn>
 
-            {/* Story body — Silk tone compliant A案 */}
+            {/* Story body */}
             <FadeIn delay={0.2}>
               <div className="space-y-[var(--space-lg)] text-[var(--color-text-soft)] leading-[2.3]">
                 <p className="text-[0.95rem] tracking-[0.03em]">
-                  日常の喧騒を離れた、静かなアトリエ。
+                  10代の頃、私はニキビに悩み、自分の肌に強いコンプレックスを持っていました。鏡を見るのが辛かったあの頃、私自身も一人の患者でした。
                 </p>
                 <p className="text-[0.95rem] tracking-[0.03em]">
-                  着飾るのではなく、本来の透明感を引き出す。それは、先進の技術と内側からの調和が織りなす、あなただけの心地よい時間です。
+                  しかし、その経験があったからこそ、私は美容皮膚科医として患者様の悩みに寄り添いたいと強く願うようになりました。
                 </p>
               </div>
             </FadeIn>
@@ -47,19 +47,10 @@ export default function Philosophy() {
             <FadeIn delay={0.3}>
               <div className="space-y-[var(--space-lg)] text-[var(--color-text-soft)] leading-[2.3]">
                 <p className="text-[0.95rem] tracking-[0.03em]">
-                  鏡を見るたび、自分の肌を好きになれるように。
+                  美容医療は魔法ではありません。しかし、毎日のコツコツとした積み重ねに、肌は必ず応えてくれます。
                 </p>
                 <p className="text-[0.95rem] tracking-[0.03em]">
-                  そんな想いで、私は美容医療と分子栄養学の探求へと向かいました。
-                </p>
-              </div>
-            </FadeIn>
-
-            {/* Pull quote — Stitch style left border / Margins expanded for rhythm */}
-            <FadeIn delay={0.35} className="my-[var(--space-2xl)]">
-              <div className="py-[var(--space-lg)] px-[var(--space-xl)] border-l border-[var(--color-pink-gold)] bg-gradient-to-r from-[var(--color-champagne-light)] to-transparent">
-                <p className="text-[1rem] leading-[2.2] text-[var(--color-text-mocha)] tracking-[0.04em] italic">
-                  「まっさらな自分に還れる場所を、つくりたい」
+                  私自身、適切な治療とスキンケアを10年継続したことで、今ではノーファンデーションで過ごせる肌を手に入れることができました。
                 </p>
               </div>
             </FadeIn>
@@ -67,41 +58,16 @@ export default function Philosophy() {
             <FadeIn delay={0.4}>
               <div className="space-y-[var(--space-lg)] text-[var(--color-text-soft)] leading-[2.3]">
                 <p className="text-[0.95rem] tracking-[0.03em]">
-                  外側からは、肌に負担をかけず丁寧に整える美容医療を。
-                  <br />
-                  内側からは、身体の隅々まで必要な成分で満たすインナーケアを。
-                </p>
-                <p className="text-[0.95rem] tracking-[0.03em]">
-                  あらゆるアプローチを自らの肌で確かめながら、少しずつ、自分の肌と対話する術を身につけてきました。
+                  育児や仕事など、女性の毎日は多忙を極めます。けれど、肌の老化もまた待ってはくれません。完璧を目指さなくても大丈夫です。できる範囲で、今日からエイジングケアを始めてみませんか？
                 </p>
               </div>
             </FadeIn>
 
-            <FadeIn delay={0.45}>
-              <div className="space-y-[var(--space-lg)] text-[var(--color-text-soft)] leading-[2.3]">
-                <p className="text-[0.95rem] tracking-[0.03em]">
-                  40歳を迎えた今。かつての悩みをふわりと手放した私の肌は、これまでで一番、心地よく透明な状態を保っています。
-                </p>
-                <p className="text-[0.95rem] tracking-[0.03em]">
-                  年齢を重ねることは、決して美しさを失うことではなく、より上質に、しなやかに自分を磨き上げていくフェーズなのだと、今の私自身が実感しています。
-                </p>
-              </div>
-            </FadeIn>
-
-            <FadeIn delay={0.5}>
-              <div className="divider-gold mx-auto my-[var(--space-md)]" />
-            </FadeIn>
-
-            <FadeIn delay={0.55}>
-              <div className="space-y-[var(--space-md)]">
-                <p className="text-[0.95rem] leading-[2.3] text-[var(--color-text-mocha)] tracking-[0.03em] font-medium">
-                  美しさは、生まれ持った特別な才能ではありません。
-                </p>
-                <p className="text-[0.95rem] leading-[2.3] text-[var(--color-text-soft)] tracking-[0.03em]">
-                  正しい知識で肌を慈しみ、最適なケアを選択することで、肌は必ず応えてくれます。
-                </p>
-                <p className="text-[0.95rem] leading-[2.3] text-[var(--color-text-soft)] tracking-[0.03em]">
-                  遠回りをした私だからこそ、あなたのお悩みに心から寄り添い、本来の美しさを引き出すお手伝いができる。このアトリエで、あなただけの理想の肌を一緒に見つけていきませんか。
+            {/* Pull quote */}
+            <FadeIn delay={0.5} className="my-[var(--space-2xl)]">
+              <div className="py-[var(--space-lg)] px-[var(--space-xl)] border-l border-[var(--color-pink-gold)] bg-gradient-to-r from-[var(--color-champagne-light)] to-transparent">
+                <p className="text-[1rem] leading-[2.2] text-[var(--color-text-mocha)] tracking-[0.04em] italic font-medium">
+                  「10年後の自分を好きになれるよう、<br className="md:hidden" />その一歩を全力でサポートさせていただきます。」
                 </p>
               </div>
             </FadeIn>
@@ -140,7 +106,7 @@ export default function Philosophy() {
                   alt="Dr. Miyaka — The Skin Atelier"
                   width={600}
                   height={800}
-                  className="w-full h-full object-cover max-md:grayscale-0 md:grayscale contrast-[1.15] brightness-110 md:hover:grayscale-0 transition-all duration-[2000ms]"
+                  className="w-full h-full object-cover contrast-[1.05] brightness-105 hover:brightness-110 transition-all duration-[2000ms]"
                   priority={true}
                 />
               </div>

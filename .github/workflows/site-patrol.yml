@@ -1,0 +1,27 @@
+name: Site Patrol — Daily Health Check
+
+on:
+  schedule:
+    # 毎日 AM 9:00 JST (= 00:00 UTC)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 手動実行も可能
+
+jobs:
+  patrol:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run Site Patrol
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_PATROL_CHANNEL: '#skin-atelier_jp'
+        run: npx tsx scripts/patrol/site-patrol.ts

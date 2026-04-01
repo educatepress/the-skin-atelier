@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 
 import { PostMetadata } from "@/lib/blog";
@@ -77,7 +78,13 @@ export default function BlogArticleClient({
             transition={{ duration: 0.8, delay: 0.4 }}
             className="flex items-center gap-6 pb-10 border-b border-[var(--color-marble-vein)]"
           >
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--color-champagne-light)] to-[var(--color-surface)]" />
+            <Image
+              src="/images/profile/dr-miyaka-avatar.jpg"
+              alt="Dr. みやか"
+              width={40}
+              height={40}
+              className="w-10 h-10 rounded-full object-cover"
+            />
             <div>
               <p className="text-[0.75rem] text-[var(--color-text-mocha)] tracking-[0.03em]">
                 Dr. みやか
