@@ -28,9 +28,8 @@ export default function Footer() {
                 { label: "Philosophy", href: "/#philosophy" },
                 { label: "Treatments", href: "/#treatments" },
                 { label: "Menu", href: "/menu" },
+                { label: "Access", href: "/access" },
                 { label: "Journal", href: "/#blog" },
-                { label: "FAQ", href: "/#faq" },
-                { label: "Invitation", href: "/#invitation" },
               ].map((link) => (
                 <a
                   key={link.href}

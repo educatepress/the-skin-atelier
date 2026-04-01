@@ -8,8 +8,8 @@ const navItems = [
   { label: "Philosophy", href: "/#philosophy" },
   { label: "Treatments", href: "/#treatments" },
   { label: "Menu", href: "/menu" },
+  { label: "Access", href: "/access" },
   { label: "Journal", href: "/#blog" },
-  { label: "FAQ", href: "/#faq" },
 ];
 
 export default function Header() {
