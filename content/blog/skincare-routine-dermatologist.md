@@ -5,6 +5,7 @@ category: "Skincare"
 date: "2026.04"
 readTime: "3 min read"
 featured: false
+image: "/images/optimized/harper-sunday-TZBLq6MDfxc-unsplash.webp"
 ---
 
 **10ステップのスキンケアに疲れていませんか？** 化粧水、乳液、美容液、クリーム、アイクリーム……。実は、皮膚科医の多くが毎日使っているのは「たった3つ」のアイテムだけです。

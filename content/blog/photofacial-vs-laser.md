@@ -5,6 +5,7 @@ category: "Treatment"
 date: "2026.03"
 readTime: "5 min read"
 featured: true
+image: "/images/optimized/larisa-birta-9YwlCD8-Gh4-unsplash.webp"
 ---
 
 **「シミ取り＝レーザー」と思い込んでいませんか？** 

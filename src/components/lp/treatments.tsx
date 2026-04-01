@@ -9,7 +9,7 @@ const treatments = [
     category: "Phototherapy",
     nameEn: "Photo Facial",
     nameJp: "フォトフェイシャル（IPL）",
-    image: "/images/treatment-photofacial.png",
+    image: "/images/optimized/alef-morais-I8WPLHJEUyo-unsplash.webp",
     description:
       "肌の土台を整える第一歩。穏やかな光のエネルギーが、シミ・くすみ・赤みにアプローチし、肌本来の透明感を引き出します。",
     note: "「まず土台を丁寧に耕す」——それが、遠回りしない美肌への道です。",
@@ -19,7 +19,7 @@ const treatments = [
     category: "Infusion",
     nameEn: "Electroporation",
     nameJp: "エレクトロポレーション",
-    image: "/images/treatment-electroporation.png",
+    image: "/images/optimized/alona-gross--1ZOkqWiI98-unsplash.webp",
     description:
       "針を使わずに、美容成分を肌の奥深くまで届ける先進技術。ヒアルロン酸やビタミンC誘導体を、イオン導入の約20倍の浸透率で届けます。",
     note: "整えた土台に、必要な栄養を丁寧に届ける。それが本当のスキンケアです。",
@@ -29,7 +29,7 @@ const treatments = [
     category: "Precision",
     nameEn: "Injection",
     nameJp: "ヒアルロン酸・ボトックス注入",
-    image: "/images/treatment-injection.png",
+    image: "/images/optimized/alona-gross-qtoMPyiIBPA-unsplash.webp",
     description:
       "「どこに、どれだけ、どの製剤を」——すべてはあなたのお顔立ちとバランスから逆算するデザイン。自然で上品な仕上がりのために、0.1ml単位でこだわります。",
     note: "あなたの美の基準を共有し、「やりすぎない洗練」を一緒に追求します。",
@@ -39,7 +39,7 @@ const treatments = [
     category: "Holistic",
     nameEn: "Inner Care",
     nameJp: "分子栄養学（インナーケア）",
-    image: "/images/treatment-innercare.png",
+    image: "/images/optimized/batch-by-wisconsin-hemp-scientific-AT3vEwQHFcA-unsplash.webp",
     description:
       "外側からのケアだけでは届かない、細胞レベルの美しさを。必要な栄養素を正しく満たすことで、肌は内側から輝きを取り戻します。",
     note: "美容医療と分子栄養学の融合——それが、このアトリエの独自のアプローチです。",

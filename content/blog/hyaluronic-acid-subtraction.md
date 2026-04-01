@@ -5,6 +5,7 @@ category: "Injectable"
 date: "2026.04"
 readTime: "4 min read"
 featured: false
+image: "/images/optimized/susan-wilkinson-lMrH5Mh-ZU0-unsplash.webp"
 ---
 
 **ヒアルロン酸注入で「不自然な顔」になるのが怖い。** その不安、とてもよくわかります。実は、注入治療で本当に大切なのは「どれだけ入れるか」ではなく「どこで止めるか」——引き算の美学です。
