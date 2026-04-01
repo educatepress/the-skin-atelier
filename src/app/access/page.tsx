@@ -115,6 +115,20 @@ export default function AccessPage() {
                   <br />
                   公式LINEよりご予約をお願いいたします。
                 </p>
+
+                {/* Route Search Button */}
+                <a
+                  href="https://www.google.com/maps/dir/?api=1&destination=35.6503,139.7220&travelmode=transit"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-[var(--space-lg)] inline-flex items-center justify-center gap-2 w-full bg-[var(--color-text-mocha)] text-white px-6 py-4 text-[0.85rem] tracking-[0.08em] hover:bg-[var(--color-text-soft)] transition-all duration-500"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="10" r="3" />
+                    <path d="M12 2a8 8 0 0 0-8 8c0 5.4 7.05 11.5 7.35 11.76a1 1 0 0 0 1.3 0C13 21.5 20 15.4 20 10a8 8 0 0 0-8-8z" />
+                  </svg>
+                  現在地からの経路を検索する
+                </a>
               </div>
             </div>
           </FadeIn>
