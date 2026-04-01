@@ -7,6 +7,7 @@ import Link from "next/link";
 const navItems = [
   { label: "Philosophy", href: "/#philosophy" },
   { label: "Treatments", href: "/#treatments" },
+  { label: "Menu", href: "/menu" },
   { label: "Journal", href: "/#blog" },
   { label: "FAQ", href: "/#faq" },
 ];

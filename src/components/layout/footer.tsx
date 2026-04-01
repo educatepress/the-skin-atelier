@@ -25,11 +25,12 @@ export default function Footer() {
             </p>
             <div className="flex flex-col gap-[var(--space-sm)]">
               {[
-                { label: "Philosophy", href: "#philosophy" },
-                { label: "Treatments", href: "#treatments" },
-                { label: "Journal", href: "#blog" },
-                { label: "FAQ", href: "#faq" },
-                { label: "Invitation", href: "#invitation" },
+                { label: "Philosophy", href: "/#philosophy" },
+                { label: "Treatments", href: "/#treatments" },
+                { label: "Menu", href: "/menu" },
+                { label: "Journal", href: "/#blog" },
+                { label: "FAQ", href: "/#faq" },
+                { label: "Invitation", href: "/#invitation" },
               ].map((link) => (
                 <a
                   key={link.href}
