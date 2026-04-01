@@ -7,8 +7,8 @@ const treatments = [
   {
     number: "01",
     category: "Phototherapy",
-    nameEn: "Photo Facial",
-    nameJp: "フォトフェイシャル（IPL）",
+    nameEn: "IPL Treatment",
+    nameJp: "IPL治療（光治療）",
     image: "/images/optimized/alef-morais-I8WPLHJEUyo-unsplash.webp",
     description:
       "肌の土台を整える第一歩。穏やかな光のエネルギーが、シミ・くすみ・赤みにアプローチし、肌本来の透明感を引き出します。",

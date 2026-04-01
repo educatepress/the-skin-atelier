@@ -12,6 +12,7 @@ export interface PostMetadata {
   date: string;
   readTime: string;
   featured?: boolean;
+  image?: string;
 }
 
 export interface Post {
@@ -56,6 +57,7 @@ export function getPostBySlug(slug: string): Post | null {
       date: data.date || "",
       readTime: data.readTime || "5 min read",
       featured: typeof data.featured === "boolean" ? data.featured : false,
+      image: data.image || "",
     },
     content,
   };

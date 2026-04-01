@@ -1,11 +1,11 @@
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 import { google, drive_v3, sheets_v4 } from 'googleapis';
 import { execSync } from 'child_process';
-import readline from 'readline';
-import dotenv from 'dotenv';
+import * as readline from 'readline';
+import * as dotenv from 'dotenv';
 
-dotenv.config({ path: path.join(process.cwd(), '.env.local') });
+dotenv.config({ path: path.resolve(__dirname, '..', '..', '.env.local') });
 
 const OAUTH_CLIENT_ID = process.env.GOOGLE_OAUTH_CLIENT_ID || '';
 const OAUTH_CLIENT_SECRET = process.env.GOOGLE_OAUTH_CLIENT_SECRET || '';

@@ -194,7 +194,7 @@ async function sendProposalToSlack(tweetDetails: any, evaluation: any) {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `📝 *引用RP 下書き案:*\n\`\`\`\n${evaluation.draftReply}\n\`\`\``
+        text: `📝 *リプライ 下書き案:*\n\`\`\`\n${evaluation.draftReply}\n\`\`\``
       }
     },
     {
@@ -202,10 +202,10 @@ async function sendProposalToSlack(tweetDetails: any, evaluation: any) {
       elements: [
         {
           type: "button",
-          text: { type: "plain_text", text: "✨ この案でそのまま引用RPする", emoji: true },
-          style: "primary",
-          url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(evaluation.draftReply)}&url=https://x.com/i/web/status/${tweetDetails.id}`,
-          action_id: `intent_quote_tweet_${tweetDetails.id}`
+          text: { type: 'plain_text', text: '✨ この案でリプライする (Xアプリ起動)', emoji: true },
+          style: 'primary',
+          url: `https://x.com/intent/tweet?in_reply_to=${tweetDetails.id}&text=${encodeURIComponent(evaluation.draftReply)}`.substring(0, 3000),
+          action_id: `intent_reply_${tweetDetails.id}`
         }
       ]
     },

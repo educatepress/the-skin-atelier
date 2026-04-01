@@ -1,8 +1,8 @@
 import { getSheetsClient } from './google-client';
-import dotenv from 'dotenv';
-import path from 'path';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
 
-dotenv.config({ path: path.join(process.cwd(), '.env.local') });
+dotenv.config({ path: path.resolve(__dirname, '..', '..', '.env.local') });
 const SPREADSHEET_ID = process.env.GOOGLE_SHEETS_QUEUE_ID;
 
 export const HEADERS = [
@@ -45,10 +45,41 @@ export interface SheetsQueueRow {
   error_detail: string;
 }
 
+export interface PromptsRow {
+  brand: string;
+  persona: string;
+  target_audience: string;
+  tone_and_style: string;
+  cta_template: string;
+  forbidden_rules: string;
+}
+
 export class SheetsDB {
   private static async getClient() {
     if (!SPREADSHEET_ID) throw new Error('GOOGLE_SHEETS_QUEUE_ID is not set in .env');
     return await getSheetsClient();
+  }
+
+  // プロンプト設定を取得
+  static async getPrompts(): Promise<PromptsRow[]> {
+    const sheets = await this.getClient();
+    const res = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: 'prompts!A2:F'
+    }).catch((e) => {
+      console.warn('⚠️ promptsシートが見つからないか、エラーが発生しました:', e.message);
+      return null;
+    });
+
+    const rows = res?.data?.values || [];
+    return rows.map(r => ({
+      brand: r[0] || '',
+      persona: r[1] || '',
+      target_audience: r[2] || '',
+      tone_and_style: r[3] || '',
+      cta_template: r[4] || '',
+      forbidden_rules: r[5] || ''
+    }));
   }
 
   // 行データを取得

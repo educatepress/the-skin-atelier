@@ -4,6 +4,7 @@ import path from "path";
 import dotenv from "dotenv";
 import { SheetsDB } from "./lib/sheets-db";
 import { WebClient } from '@slack/web-api';
+import { createClient } from 'pexels';
 
 // .env.localから環境変数を読み込む
 dotenv.config({ path: path.join(process.cwd(), ".env.local") });
@@ -24,6 +25,23 @@ const TARGET_CHANNEL = 'skin-atelier_jp';
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
 /**
+ * Helper: リトライ付きAPI呼び出し (503対策)
+ */
+async function withRetry<T>(fn: () => Promise<T>, maxRetries = 3, baseDelay = 10000): Promise<T> {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (err: any) {
+      if (attempt === maxRetries || err?.status !== 503) throw err;
+      const delay = baseDelay * Math.pow(2, attempt - 1);
+      console.log(`⏳ API混雑中 (503)… ${delay / 1000}秒後にリトライ (${attempt}/${maxRetries})`);
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
+  throw new Error("Unreachable");
+}
+
+/**
  * 1. Deep Research（Google検索を活用した情報収集）
  * ※プロンプトは後日推敲予定のため、仮のシンプルな状態にしています。
  */
@@ -35,43 +53,57 @@ async function performDeepResearch(theme: string) {
     テーマ: ${theme}
   `;
 
-  // Gemini 2.5 Pro + Google Search Groundingを使用
-  const response = await ai.models.generateContent({
+  // Gemini 2.5 Pro + Google Search Grounding（リトライ付き）
+  const response = await withRetry(() => ai.models.generateContent({
     model: "gemini-2.5-pro",
     contents: researchPrompt,
     config: {
-      tools: [{ googleSearch: {} }], // Google検索を有効化
+      tools: [{ googleSearch: {} }],
     }
-  });
+  }));
 
   return response.text;
 }
 
 /**
- * 2. 記事の生成
+ * 2. 記事用のPexelsフリー素材自動取得 (LPの世界観に合うもの)
+ */
+async function fetchAestheticImage(): Promise<string> {
+  try {
+    const PEXELS_KEY = process.env.PEXELS_API_KEY;
+    if (!PEXELS_KEY) return "";
+    const pexels = createClient(PEXELS_KEY);
+    const keywords = ["minimalist cosmetic bottle", "white silk fabric aesthetic", "modern monochrome minimal beauty"];
+    const query = keywords[Math.floor(Math.random() * keywords.length)];
+    const res = await pexels.photos.search({ query, per_page: 15, orientation: "square" });
+    if ('photos' in res && res.photos.length > 0) {
+      const idx = Math.floor(Math.random() * res.photos.length);
+      return res.photos[idx].src.large;
+    }
+  } catch(e) { console.error("Pexels error:", e); }
+  return ""; // Fallback no image
+}
+
+/**
+ * 3. 記事の生成
  * ※プロンプトは後日推敲予定のため、ガイドラインの内容を簡易的に埋め込んでいます。
  */
-async function generateBlogPost(theme: string, researchData: string) {
+async function generateBlogPost(theme: string, researchData: string, imageUrl: string) {
   console.log(`✍️ 記事を生成中（Elegant Letter Style）...`);
 
+  const promptPath = path.join(process.cwd(), "..", "the-skin-atelier", "prompts", "blog-writing-guide.md");
+  let masterPrompt = "";
+  try { masterPrompt = fs.readFileSync(promptPath, "utf-8"); } catch (e) { console.error("Could not read prompt MD", e); }
+
   const writingPrompt = `
-    あなたは美容皮膚科医 Dr.みやかの専属ディレクター兼ライターです。
-    専門家としての知見を、40代の洗練された女性が親しい友人に宛てた手紙のような、優しく品のある日本語で出力してください。断定を避け、余白を感じさせる文体にすること。
+    以下の【The Skin Atelier — ブログ執筆ガイドライン＆プロンプト】に完全に従って、ブログ記事を作成してください。
+    特に【出力フォーマット】の構造を厳守すること。
 
-    以下の【生きた文章にするための5つの美容皮膚科・シルクトーン・フィルタ】を必ず適用し、【リサーチデータ】をもとにマークダウン記事を書いてください。
-
-    【5つのシルクトーン・フィルタ】
-    1. 過剰なセールスの排除（Trust First）: 「絶対治る」等は使わず、「仕立てる」「育む」言葉で丁寧さを演出。
-    2. 「あなた・私」の黄金比（Empathy）: 自身の過去の悩みなど、自己開示を混ぜて距離を縮める。
-    3. AEO（AI検索対策）としてのFAQ（Authority）: 「Your Questions」の見出しで、自分のライフスタイル（働く女性目線）を入れた回答をする。
-    4. 専門医としての客観的トーン（Safety）: 流行りの美容法にも「あえてやらない選択」を提示する誠実さを持つこと。
-    5. 秘密保持（Confidentiality）: 「白金高輪」「広尾」といった具体的な地名や、自身のクリニックの「開業・開院」に関する予告・言及は一切禁止。
+    【ガイドライン元ファイル抜粋】:
+    ${masterPrompt}
 
     【テーマ】: ${theme}
     【リサーチデータ】: ${researchData}
-
-    【出力フォーマット】: 洗練された手紙風 (Elegant Letter Style)
-    （※詳細は prompts/blog-writing-guide.md を参照）
     
     ---
     title: "記事のタイトル"
@@ -79,6 +111,8 @@ async function generateBlogPost(theme: string, researchData: string) {
     date: "YYYY-MM-DD"
     category: "Skincare"
     readTime: "〇 min read"
+    featured: false
+    image: "${imageUrl}"
     ---
     
     ## 1. Dear You, 
@@ -133,18 +167,25 @@ async function reviewArticle(articleMdx: string) {
  * メイン実行関数
  */
 async function main() {
-  // ① 本日のテーマ（将来的にはこれもAIに自動で決めさせるか、リストからランダム取得）
-  const todayTheme = "春のゆらぎ肌と花粉による肌荒れのメカニズムと正しいスキンケア";
-  const dateStr = new Date().toISOString().split('T')[0];
-  const slug = `spring-skin-care-${dateStr}`;
+  console.log("🚀 ブログ自動生成プロセスを開始します...\n");
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  const args = process.argv.slice(2);
+  const todayTheme = args[0] || "春のゆらぎ肌と花粉による肌荒れのメカニズムと正しいスキンケア";
+  const slug = `blog-auto-${todayStr}-${Math.random().toString(36).substring(7)}`;
+  const contentId = `blog-${todayStr}-${slug}`;
 
   try {
-    // ② リサーチ
+    // 1. レポート用のリサーチ実行
     const researchResult = await performDeepResearch(todayTheme);
     console.log("✅ リサーチ完了\n");
 
+    // ② 写真の自動取得
+    console.log("📸 LP用のサムネイル画像を取得中...");
+    const imageUrl = await fetchAestheticImage();
+
     // ③ 執筆
-    const articleMdx = await generateBlogPost(todayTheme, researchResult || "");
+    const articleMdx = await generateBlogPost(todayTheme, researchResult || "", imageUrl);
     console.log("✅ 記事生成完了\n");
 
     // ④ 検閲・自己修正
@@ -154,8 +195,6 @@ async function main() {
 
     // ⑤ MDXの中身だけを抽出
     const cleanMdx = reviewedMdx?.replace(/^```markdown\n/, "").replace(/\n```$/, "") || "";
-
-    const contentId = `blog-${dateStr}-${slug}`;
 
     // ⑥ Google Sheetsへ保存 (キュー登録)
     const newRow = {
@@ -176,21 +215,12 @@ async function main() {
     // ⑦ Slackへ承認メッセージを送信
     console.log(`📤 Slack へ承認メッセージを送信中...`);
     
-    // Slackには長すぎるので最初の500文字をプレビューとして送信
-    const previewText = cleanMdx.substring(0, 500) + (cleanMdx.length > 500 ? '...' : '');
     const blocks = [
       {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: `📝 *ブログ記事*: \`${slug}\`\n【配信先: 🟦 hiroo-open / The Skin Atelier】`
-        }
-      },
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: `📝 *【プレビュー】:*\n> ${previewText.replace(/\n/g, '\n> ')}`
+          text: `📝 *ブログ記事*: \`${slug}\`\n【配信先: 🟦 hiroo-open / The Skin Atelier】\n\n※本文はスレッド内のファイルをクリックして確認してください 👇`
         }
       },
       {
@@ -211,8 +241,7 @@ async function main() {
             value: JSON.stringify({ id: contentId, brand: 'atelier' }),
           },
         ]
-      },
-      { type: 'divider' },
+      }
     ];
 
     try {
@@ -221,17 +250,22 @@ async function main() {
         text: `📝 ブログ記事 ${slug} — レビュー待ち`,
         blocks,
       });
-      console.log(`✅ Slack通知完了: ${result.ts}`);
+      console.log(`✅ Slack親通知完了: ${result.ts}`);
       
-      // tsを記録したい場合はDBをupdateする
       if (result.ts) {
+        // ⑧ スレッド内にMarkdown全文を直接テキスト返信
+        await slackClient.chat.postMessage({
+           channel: TARGET_CHANNEL,
+           thread_ts: result.ts,
+           text: cleanMdx,
+        });
         await SheetsDB.updateRow(contentId, { slack_ts: result.ts });
       }
     } catch (error) {
       console.error(`❌ Slack通知エラー:`, error);
     }
 
-    console.log(`🎉 キュー登録＆Slack通知完了！Slackで確認・承認してください。`);
+    console.log(`🎉 キュー登録＆Slack通知完了！`);
 
   } catch (error) {
     console.error("❌ エラーが発生しました:", error);

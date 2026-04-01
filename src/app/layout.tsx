@@ -44,6 +44,9 @@ export const metadata: Metadata = {
       "「今の肌が一番好き」と言える贅沢を。美容皮膚科みやか先生のプライベート・スキンアトリエ。",
   },
   robots: { index: true, follow: true },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
+  },
 };
 
 export default function RootLayout({
