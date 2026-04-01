@@ -1,12 +1,41 @@
 # CHANGELOG — The Skin Atelier by Dr. Miyaka
 
-## [Next] — 2026-04-01（計画中）
+## [Next] — 未定
 
-### 📋 次フェーズ方針決定
-- **A. AIパトロール自動監視**: サイトマップに基づく全ページ定期巡回（HTTP / OGP / 画像 / JSエラー）。GitHub Actions cron で日次実行し、結果をSlack通知。
-- **B. ブログ執筆プロンプト改修**: Smart Brevity構造を維持しつつ、英語見出し（Why It Matters, Go Deeper, FAQ）を日本語の手紙風（大切なこと、もう少し詳しく、よくいただくご質問）に変更。既存6記事も一括差し替え。
-- **C. ブログサムネイル写真**: Unsplashから選定し、ピンクゴールド寄りのカラー調整＋ハイキー＋WebP圧縮で統一感を持たせる。
-- **D. LP・ブログ写真変更**: Philosophy セクションの院長写真をカラー化。ブログ著者アイコンをInstagramトップの顔写真に統一。
+### 📋 残タスク
+- **公式LINE開設**: テキスト素材・リッチメニュー画像は作成済み。アカウント開設後、友だち追加URLをLPのCTAボタンに埋め込む。
+- **サイト全体の見え方チェック**: 本番環境（skin-atelier.jp）でのスマホ・PC表示確認。
+- **自動パトロール（毎日サイト監視）**: GitHub Actions cronの動作テスト実行。
+- **メニュー・アクセス情報の正式化**: ダミーの住所・料金を本番データに差し替え。
+
+## [0.5.0] — 2026-04-01
+
+### 🔒 コンテンツ匿名化・表現統一
+- **「フォトフェイシャル」→「IPL治療（光治療）」に全面置換**: ブログ全6記事、LPのFAQ（faq-section.tsx）、Treatments（treatments.tsx）の該当箇所をすべて書き換え。
+- **クリニック固有表現の一般化**: 「The Skin Atelierでは」→「私の診療では」に変更（hyaluronic-acid-subtraction.md）。
+- **ボトックス記事の修正**: 具体的な単位数テーブル・追加注入の文言を削除（botox-how-many-times.md）。
+- **AIプロンプト厳格化**: `prompts/blog-writing-guide.md` に禁止ルール3項目（クリニック固有表現、具体的注入量、フォトフェイシャル名称）を追加。
+
+### 📄 新規ページ追加
+- **メニュー・料金表ページ**: `/menu` — サイトのStitchデザインに統一したダミー料金表（IPL治療、エレクトロポレーション、注入治療、インナーケア、診察料）。FadeInアニメーション・Recommendバッジ付き。
+- **アクセスページ**: `/access` — Google Maps埋め込み（広尾エリアのダミーピン）＋住所・最寄り駅・診療時間＋徒歩ルート案内＋**「現在地からの経路を検索する」ボタン**（Google Maps Directions API連携）。
+
+### 🧭 ナビゲーション更新
+- **ヘッダー**: `Menu` `Access` リンクを追加。`FAQ` を削除し、ナビを簡潔化。
+- **フッター**: 同様に `Menu` `Access` を追加。ハッシュリンクを `/#` 形式に修正（他ページからの遷移対応）。
+
+### 💬 公式LINE準備
+- **LPのCTAボタン変更**: Invitationセクションの「X をフォロー」「Instagram をフォロー」ボタンを削除 → LINE公式グリーンの「**公式LINEで無料相談・予約する**」ボタンに一新。
+- **LINE設定テキスト一式作成**: `prompts/line-official-copy.md` — プロフィール、挨拶メッセージ、美肌診断の自動応答、相談の自動応答、リッチメニュー構成をコピペ用に整備。
+- **リッチメニューモックアップ**: AI画像生成により大理石×ピンクゴールドのデザイン案を作成。
+
+### 🔧 Slack通知改善
+- **auto-post-blog.ts**: 記事全文のSlack通知を `files.uploadV2`（ファイル添付）→ `chat.postMessage`（テキスト返信）に変更。スマホからもスレッド内で全文が直接読めるように。
+
+### 🔍 SEO / Search Console
+- **Google Search Console所有権確認**: 既に完了済みであることを確認。
+- **サイトマップ送信**: `https://skin-atelier.jp/sitemap.xml` をSearch Consoleに送信完了。全ページのインデックス登録を開始。
+- **メタタグ準備**: `layout.tsx` の `metadata.verification.google` に環境変数ベースのGSC確認タグを追加。
 
 
 
