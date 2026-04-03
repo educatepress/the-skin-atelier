@@ -44,3 +44,5 @@ image: "/images/pool/pool-img-31.webp"
 
 ---
 あなたの肌にとっての「正解」は、あなたの肌の状態を知ることから始まります。まずはパーソナル美肌診断で、ご自身の肌の「現在地」をご確認ください。
+
+![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)

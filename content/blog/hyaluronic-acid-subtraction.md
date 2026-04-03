@@ -49,3 +49,5 @@ image: "/images/pool/pool-img-36.webp"
 
 ---
 「やりすぎない」美容医療で、あなただけの自然な美しさを。まずは無料カウンセリングで、理想のデザインを一緒に描きましょう。
+
+![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)

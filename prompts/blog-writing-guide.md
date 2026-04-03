@@ -89,7 +89,7 @@ JSON-LD構造化データの元になるため、質問形式（Q: / A:）を明
 
 ## 6. サイン画像（記事の末尾に必ず付与）
 記事の一番最後に、改行して以下の画像タグを必ず入れてください。
-![Dr. Miyaka Signature](/images/miyaka-signature-new.png)
+![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)
 
 ---
 

@@ -55,3 +55,5 @@ image: "/images/pool/pool-img-34.webp"
 
 ---
 ボトックスへの「漠然とした不安」は、正しい知識で解消できます。まずは気軽にご相談ください。
+
+![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)

@@ -53,3 +53,5 @@ image: "/images/pool/pool-img-24.webp"
 
 ---
 あなたの肌の「材料」が十分かどうか、まずは知ることから始めてみませんか。内側から輝く美しさへの第一歩を、一緒に踏み出しましょう。
+
+![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)

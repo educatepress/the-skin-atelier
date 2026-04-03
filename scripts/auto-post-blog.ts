@@ -118,7 +118,7 @@ async function generateBlogPost(theme: string, researchData: string, imageUrl: s
     ## 4. あなたの不安に寄り添って
     ## 5. 最後に、心を込めて。
 
-    ![Dr. Miyaka Signature](/images/miyaka-signature-new.png)
+    ![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)
   `;
 
   const response = await ai.models.generateContent({

@@ -54,3 +54,5 @@ image: "/images/pool/pool-img-28.webp"
 
 ---
 スキンケアの「正解」は、意外とシンプル。まずは余計なものを手放すところから始めてみませんか。
+
+![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)
