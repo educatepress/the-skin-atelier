@@ -66,21 +66,19 @@ async function performDeepResearch(theme: string) {
 }
 
 /**
- * 2. 記事用のPexelsフリー素材自動取得 (LPの世界観に合うもの)
+ * 2. 記事用の画像自動取得 (ローカルのプールから選定)
  */
 async function fetchAestheticImage(): Promise<string> {
   try {
-    const PEXELS_KEY = process.env.PEXELS_API_KEY;
-    if (!PEXELS_KEY) return "";
-    const pexels = createClient(PEXELS_KEY);
-    const keywords = ["minimalist cosmetic bottle", "white silk fabric aesthetic", "modern monochrome minimal beauty"];
-    const query = keywords[Math.floor(Math.random() * keywords.length)];
-    const res = await pexels.photos.search({ query, per_page: 15, orientation: "square" });
-    if ('photos' in res && res.photos.length > 0) {
-      const idx = Math.floor(Math.random() * res.photos.length);
-      return res.photos[idx].src.large;
+    const poolDir = path.join(process.cwd(), "public", "images", "pool");
+    if (fs.existsSync(poolDir)) {
+      const files = fs.readdirSync(poolDir).filter((f: string) => f.match(/\.(jpg|jpeg|png|webp)$/i));
+      if (files.length > 0) {
+        const idx = Math.floor(Math.random() * files.length);
+        return `/images/pool/${files[idx]}`;
+      }
     }
-  } catch(e) { console.error("Pexels error:", e); }
+  } catch(e) { console.error("Pool search error:", e); }
   return ""; // Fallback no image
 }
 
@@ -116,10 +114,10 @@ async function generateBlogPost(theme: string, researchData: string, imageUrl: s
     ---
     
     ## 1. Dear You, 
-    ## 2. Why I Share This
-    ## 3. My Medical View
-    ## 4. Your Questions
-    ## 5. With Love,
+    ## 2. まず、お伝えしたい大切なこと
+    ## 3. 美しさを紐解く、専門医の視点
+    ## 4. あなたの不安に寄り添って
+    ## 5. 最後に、心を込めて。
 
     ![Dr. Miyaka Signature](/images/miyaka-signature-new.png)
   `;
@@ -148,7 +146,7 @@ async function reviewArticle(articleMdx: string) {
     1. 過剰なセールスの排除（Trust First）: 「絶対治る」「最高」「No.1」などの誇大・断定表現がないか。
     2. 「あなた・私」の黄金比（Empathy）: 説教臭くなっていないか。親しい友人に宛てた手紙のような、優しく品のある日本語（余白を感じる文体）になっているか。
     3. 専門医としての客観的トーン（Safety）: 流行りに乗るだけでなく、「いまのあなたには強いかもしれない」といった誠実さがあるか。
-    4. フォーマット: 指定された見出し（Dear You, など）や、最後に必ず「FAQ（働く女性目線の人肌感ある回答）」とサイン画像が入っているか。
+    4. フォーマット: 指定された見出し（Dear You, や、まず、お伝えしたい大切なこと、など）や、見出し「あなたの不安に寄り添って」の中に必ずFAQ（Q&A形式で働く女性目線の人肌感ある回答）とサイン画像が入っているか。
     5. 秘密保持（Confidentiality）: 「白金高輪」「広尾」といった具体的な地名や、自身のクリニックの「開業・開院」に関する予告・言及がないか。
 
     【ブログ原稿】
@@ -195,6 +193,7 @@ async function main() {
 
     // ⑤ MDXの中身だけを抽出
     const cleanMdx = reviewedMdx?.replace(/^```markdown\n/, "").replace(/\n```$/, "") || "";
+    fs.writeFileSync("tmp-hayfever-blog.md", cleanMdx);
 
     // ⑥ Google Sheetsへ保存 (キュー登録)
     const newRow = {
