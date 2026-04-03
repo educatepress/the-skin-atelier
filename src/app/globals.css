@@ -309,28 +309,32 @@
     background-size: 100% 1px;
   }
 
-  /* ── Prose (Blog) styling ── */
-  .prose h2 {
+  /* ── Prose-Atelier (Blog article) styling ── */
+  .prose-atelier h2 {
     color: var(--color-text-mocha);
     font-weight: 300;
-    margin-top: 3em;
-    margin-bottom: 1em;
-    padding-bottom: 0.5em;
+    margin-top: 3.5em;
+    margin-bottom: 1.2em;
+    padding-bottom: 0.6em;
     border-bottom: 1px solid var(--color-pink-gold);
-    font-size: 1.5rem;
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    letter-spacing: 0.08em;
+    text-wrap: balance;
   }
 
-  .prose h3 {
+  .prose-atelier h3 {
     color: var(--color-text-mocha);
     font-weight: 400;
-    margin-top: 2em;
-    margin-bottom: 0.8em;
+    margin-top: 2.5em;
+    margin-bottom: 1em;
     position: relative;
     padding-left: 1rem;
-    font-size: 1.2rem;
+    font-size: clamp(1.05rem, 2vw, 1.2rem);
+    letter-spacing: 0.06em;
+    text-wrap: balance;
   }
 
-  .prose h3::before {
+  .prose-atelier h3::before {
     content: '';
     position: absolute;
     left: 0;
@@ -340,18 +344,64 @@
     background: var(--color-pink-gold);
   }
 
-  .prose p {
-    font-size: 1rem;
-    line-height: 2.1;
-    margin-bottom: 1.8em;
+  .prose-atelier p {
+    font-size: clamp(0.88rem, 1.6vw, 1rem);
+    line-height: 2.2;
+    margin-bottom: 2em;
     color: var(--color-text-soft);
+    letter-spacing: 0.04em;
   }
 
-  .prose strong {
+  .prose-atelier strong {
     background: linear-gradient(transparent 75%, rgba(232, 211, 201, 0.35) 0%);
-    color: var(--color-text-mocha);
-    padding: 0 0.1em;
-    font-weight: 500;
+    color: #5A5048;
+    padding: 0 0.15em;
+    font-weight: 600;
+  }
+
+  .prose-atelier ul,
+  .prose-atelier ol {
+    margin-bottom: 2em;
+    padding-left: 1.2em;
+    color: var(--color-text-soft);
+    font-size: clamp(0.88rem, 1.6vw, 1rem);
+    line-height: 2.2;
+    letter-spacing: 0.04em;
+  }
+
+  .prose-atelier li {
+    margin-bottom: 0.6em;
+  }
+
+  .prose-atelier blockquote {
+    border-left: 2px solid var(--color-pink-gold);
+    padding-left: 1.5em;
+    margin: 2.5em 0;
+    font-style: italic;
+    color: var(--color-text-soft);
+    font-size: clamp(0.88rem, 1.6vw, 1rem);
+    line-height: 2.2;
+  }
+
+  .prose-atelier hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-pink-gold), transparent);
+    margin: 3em 0;
+  }
+
+  /* ── Mobile adjustments for article body ── */
+  @media (max-width: 768px) {
+    .prose-atelier p {
+      line-height: 2.0;
+      margin-bottom: 1.6em;
+    }
+    .prose-atelier h2 {
+      margin-top: 2.5em;
+    }
+    .prose-atelier h3 {
+      margin-top: 2em;
+    }
   }
 }
 

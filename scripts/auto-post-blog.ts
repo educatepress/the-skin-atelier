@@ -24,21 +24,27 @@ const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
 const TARGET_CHANNEL = 'skin-atelier_jp';
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
+/**
+ * Helper: リトライ付きAPI呼び出し (503対策)
+ */
 async function withRetry<T>(fn: () => Promise<T>, maxRetries = 3, baseDelay = 10000): Promise<T> {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await fn();
     } catch (err: any) {
-      const isRetryable = err?.status === 503 || err?.code === 'UND_ERR_HEADERS_TIMEOUT' || err?.message?.includes('Timeout') || err?.message?.includes('fetch failed');
-      if (attempt === maxRetries || !isRetryable) throw err;
+      if (attempt === maxRetries || err?.status !== 503) throw err;
       const delay = baseDelay * Math.pow(2, attempt - 1);
-      console.log(`⏳ API混雑中またはタイムアウト… ${delay / 1000}秒後にリトライ (${attempt}/${maxRetries})`);
+      console.log(`⏳ API混雑中 (503)… ${delay / 1000}秒後にリトライ (${attempt}/${maxRetries})`);
       await new Promise(r => setTimeout(r, delay));
     }
   }
   throw new Error("Unreachable");
 }
 
+/**
+ * 1. Deep Research（Google検索を活用した情報収集）
+ * ※プロンプトは後日推敲予定のため、仮のシンプルな状態にしています。
+ */
 async function performDeepResearch(theme: string) {
   console.log(`🔍 テーマ「${theme}」についてDeep Researchを実行中...`);
   
@@ -47,28 +53,22 @@ async function performDeepResearch(theme: string) {
     テーマ: ${theme}
   `;
 
+  // Gemini 2.5 Pro + Google Search Grounding（リトライ付き）
   const response = await withRetry(() => ai.models.generateContent({
     model: "gemini-2.5-pro",
     contents: researchPrompt,
+    config: {
+      tools: [{ googleSearch: {} }],
+    }
   }));
 
   return response.text;
 }
 
+/**
+ * 2. 記事用のPexelsフリー素材自動取得 (LPの世界観に合うもの)
+ */
 async function fetchAestheticImage(): Promise<string> {
-  try {
-    const poolDir = path.join(process.cwd(), "public", "images", "pool");
-    if (fs.existsSync(poolDir)) {
-      const files = fs.readdirSync(poolDir).filter(f => f.endsWith('.webp'));
-      if (files.length > 0) {
-        const randomImg = files[Math.floor(Math.random() * files.length)];
-        console.log(`Using pool image: /images/pool/${randomImg}`);
-        return `/images/pool/${randomImg}`;
-      }
-    }
-  } catch (e) { console.error("Pool error:", e); }
-
-  console.log("Falling back to Pexels...");
   try {
     const PEXELS_KEY = process.env.PEXELS_API_KEY;
     if (!PEXELS_KEY) return "";
@@ -81,9 +81,13 @@ async function fetchAestheticImage(): Promise<string> {
       return res.photos[idx].src.large;
     }
   } catch(e) { console.error("Pexels error:", e); }
-  return ""; 
+  return ""; // Fallback no image
 }
 
+/**
+ * 3. 記事の生成
+ * ※プロンプトは後日推敲予定のため、ガイドラインの内容を簡易的に埋め込んでいます。
+ */
 async function generateBlogPost(theme: string, researchData: string, imageUrl: string) {
   console.log(`✍️ 記事を生成中（Elegant Letter Style）...`);
 
@@ -111,11 +115,11 @@ async function generateBlogPost(theme: string, researchData: string, imageUrl: s
     image: "${imageUrl}"
     ---
     
-    ## Dear You, 
-    ## まず、お伝えしたい大切なこと
-    ## 美しさを紐解く、専門医の視点
-    ## あなたの不安に寄り添って
-    ## 最後に、心を込めて。
+    ## 1. Dear You, 
+    ## 2. Why I Share This
+    ## 3. My Medical View
+    ## 4. Your Questions
+    ## 5. With Love,
 
     ![Dr. Miyaka Signature](/images/miyaka-signature-new.png)
   `;
@@ -128,6 +132,10 @@ async function generateBlogPost(theme: string, researchData: string, imageUrl: s
   return response.text;
 }
 
+/**
+ * 3. 記事の自動検閲（レビュー＆修正）
+ * 生成された記事を「医療広告ガイドライン」および「トーン」の観点から厳格に自己検閲し、修正する
+ */
 async function reviewArticle(articleMdx: string) {
   console.log(`🧐 生成された記事を自動で検閲・修正中...`);
 
@@ -140,9 +148,8 @@ async function reviewArticle(articleMdx: string) {
     1. 過剰なセールスの排除（Trust First）: 「絶対治る」「最高」「No.1」などの誇大・断定表現がないか。
     2. 「あなた・私」の黄金比（Empathy）: 説教臭くなっていないか。親しい友人に宛てた手紙のような、優しく品のある日本語（余白を感じる文体）になっているか。
     3. 専門医としての客観的トーン（Safety）: 流行りに乗るだけでなく、「いまのあなたには強いかもしれない」といった誠実さがあるか。
-    4. フォーマット: 指定された見出し（Dear You, など）や、最後に必ず「あなたの不安に寄り添って（働く女性目線の人肌感ある回答）」とサイン画像が入っているか。
-    5. 秘密保持（Confidentiality）: 「白金高輪」「広尾」といった具体的な地名や、自身のクリニックの「開業・開院」に関する言及がないか。また、「当院では」「私のクリニックでは」「私のアトリエでは」等のフレーズがあれば完全に削除・修正すること。
-    6. パラグラフ・ライティングの徹底（Readability）: 1つの段落に複数のトピックが詰め込まれておらず、「最初の1文で結論」が徹底されているか厳しくチェックすること。
+    4. フォーマット: 指定された見出し（Dear You, など）や、最後に必ず「FAQ（働く女性目線の人肌感ある回答）」とサイン画像が入っているか。
+    5. 秘密保持（Confidentiality）: 「白金高輪」「広尾」といった具体的な地名や、自身のクリニックの「開業・開院」に関する予告・言及がないか。
 
     【ブログ原稿】
     ${articleMdx}
@@ -156,55 +163,40 @@ async function reviewArticle(articleMdx: string) {
   return response.text;
 }
 
+/**
+ * メイン実行関数
+ */
 async function main() {
   console.log("🚀 ブログ自動生成プロセスを開始します...\n");
 
   const todayStr = new Date().toISOString().split('T')[0];
   const args = process.argv.slice(2);
-  let todayTheme = args[0];
-  let searchKeywords = "";
-
-  try {
-    const schedules = await SheetsDB.getThemeSchedule();
-    if (schedules && schedules.length > 0) {
-      // Find today's row for "atelier" brand
-      const todayRow = schedules.find(r => r.date === todayStr && r.brand === "atelier");
-      if (!todayTheme && todayRow && todayRow.theme) {
-        console.log(`📅 今日のスケジュールされたテーマを発見 [${todayRow.themeArea}]: ${todayRow.theme}`);
-        todayTheme = todayRow.theme;
-        searchKeywords = todayRow.searchKeywords || "";
-        await SheetsDB.updateThemeStatus(todayStr, "posted");
-      }
-    }
-  } catch (error) {
-    console.error("⚠️ テーマスケジュールの取得に失敗しました。フォールバックします。", error);
-  }
-
-  if (!todayTheme) {
-    todayTheme = "春のゆらぎ肌と花粉による肌荒れのメカニズムと正しいスキンケア";
-    console.log(`ℹ️ スケジュールが見つからないため、デフォルトテーマで実行します: ${todayTheme}`);
-  }
-
+  const todayTheme = args[0] || "春のゆらぎ肌と花粉による肌荒れのメカニズムと正しいスキンケア";
   const slug = `blog-auto-${todayStr}-${Math.random().toString(36).substring(7)}`;
   const contentId = `blog-${todayStr}-${slug}`;
 
   try {
-    const researchQuery = searchKeywords ? `${todayTheme} ${searchKeywords}` : todayTheme;
-    const researchResult = await performDeepResearch(researchQuery);
+    // 1. レポート用のリサーチ実行
+    const researchResult = await performDeepResearch(todayTheme);
     console.log("✅ リサーチ完了\n");
 
+    // ② 写真の自動取得
     console.log("📸 LP用のサムネイル画像を取得中...");
     const imageUrl = await fetchAestheticImage();
 
+    // ③ 執筆
     const articleMdx = await generateBlogPost(todayTheme, researchResult || "", imageUrl);
     console.log("✅ 記事生成完了\n");
 
+    // ④ 検閲・自己修正
     const rawMdx = articleMdx || "";
     const reviewedMdx = await reviewArticle(rawMdx);
     console.log("✅ 自動検閲・修正完了\n");
 
+    // ⑤ MDXの中身だけを抽出
     const cleanMdx = reviewedMdx?.replace(/^```markdown\n/, "").replace(/\n```$/, "") || "";
 
+    // ⑥ Google Sheetsへ保存 (キュー登録)
     const newRow = {
       content_id: contentId,
       brand: 'atelier',
@@ -220,6 +212,7 @@ async function main() {
     console.log(`📦 Google Sheets にブログ記事をキュー登録中...`);
     await SheetsDB.appendRows([newRow]);
 
+    // ⑦ Slackへ承認メッセージを送信
     console.log(`📤 Slack へ承認メッセージを送信中...`);
     
     const blocks = [
@@ -260,13 +253,11 @@ async function main() {
       console.log(`✅ Slack親通知完了: ${result.ts}`);
       
       if (result.ts) {
-        await slackClient.files.uploadV2({
-           channel_id: TARGET_CHANNEL,
+        // ⑧ スレッド内にMarkdown全文を直接テキスト返信
+        await slackClient.chat.postMessage({
+           channel: TARGET_CHANNEL,
            thread_ts: result.ts,
-           content: cleanMdx,
-           filename: `${slug}.md`,
-           title: "記事全文",
-           initial_comment: "クリックして全文を確認してください✨"
+           text: cleanMdx,
         });
         await SheetsDB.updateRow(contentId, { slack_ts: result.ts });
       }

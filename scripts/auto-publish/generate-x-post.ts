@@ -127,37 +127,14 @@ async function sendSlackApprovalMessage(contentId: string, slug: string, caption
 async function main() {
   const todayStr = new Date().toISOString().split('T')[0];
   const args = process.argv.slice(2);
-  let theme = args[0];
-  let searchKeywords = "";
-
-  try {
-    const schedules = await SheetsDB.getThemeSchedule();
-    if (schedules && schedules.length > 0) {
-      const todayRow = schedules.find(r => r.date === todayStr && r.brand === "atelier");
-      if (!theme && todayRow && todayRow.theme) {
-        console.log(`📅 今日のスケジュールされたテーマを発見 [${todayRow.themeArea}]: ${todayRow.theme}`);
-        theme = todayRow.theme;
-        searchKeywords = todayRow.searchKeywords || "";
-      }
-    }
-  } catch (error) {
-    console.error("⚠️ テーマスケジュールの取得に失敗しました。フォールバックします。", error);
-  }
-
-  if (!theme) {
-    theme = "春のゆらぎ肌と花粉によるスキンケア";
-    console.log(`ℹ️ スケジュールが見つからないため、デフォルトテーマで実行します: ${theme}`);
-  }
-
+  const theme = args[0] || "春のゆらぎ肌と花粉によるスキンケア";
   const sceneContext = args[1] || "最新の医学論文や自身のスキンケア経験から得られた客観的な気づき。架空の患者は絶対に出さないこと。";
   const slug = `x-${todayStr}-${Math.random().toString(36).substring(7)}`;
   const contentId = `x-${todayStr}-${slug}`;
 
   try {
     // 1. AIで投稿文を生成
-    // X向けのプロンプトにsearchKeywordsを渡すのも有効ですが、今回はthemeに含めます
-    const researchQuery = searchKeywords ? `${theme} ${searchKeywords}` : theme;
-    const generatedText = await generateXPost(researchQuery, sceneContext);
+    const generatedText = await generateXPost(theme, sceneContext);
     const cleanText = generatedText?.replace(/^```\n/gm, "").replace(/```$/gm, "").trim() || "";
     console.log("\n==============================");
     console.log(cleanText);

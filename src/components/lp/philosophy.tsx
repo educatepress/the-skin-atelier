@@ -106,7 +106,7 @@ export default function Philosophy() {
                   alt="Dr. Miyaka — The Skin Atelier"
                   width={600}
                   height={800}
-                  className="w-full h-full object-cover max-md:grayscale-0 md:grayscale contrast-[1.15] brightness-110 md:hover:grayscale-0 transition-all duration-[2000ms]"
+                  className="w-full h-full object-cover contrast-[1.05] brightness-105 hover:brightness-110 transition-all duration-[2000ms]"
                   priority={true}
                 />
               </div>

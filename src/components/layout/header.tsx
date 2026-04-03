@@ -6,9 +6,10 @@ import Link from "next/link";
 
 const navItems = [
   { label: "Philosophy", href: "/#philosophy" },
-  // { label: "Treatments", href: "/#treatments" },
+  { label: "Treatments", href: "/#treatments" },
+  { label: "Menu", href: "/menu" },
+  { label: "Access", href: "/access" },
   { label: "Journal", href: "/#blog" },
-  { label: "FAQ", href: "/#faq" },
 ];
 
 export default function Header() {
@@ -35,7 +36,7 @@ export default function Header() {
           <p className="font-brand text-[0.8rem] tracking-[0.3em] text-[var(--color-text-mocha)] uppercase group-hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300">
             The Skin Atelier
           </p>
-          <p className="font-brand text-[11px] tracking-[0.2em] text-[var(--color-text-muted)] uppercase">
+          <p className="font-brand text-[0.6rem] tracking-[0.2em] text-[var(--color-text-muted)] uppercase">
             by Dr. Miyaka
           </p>
         </Link>
