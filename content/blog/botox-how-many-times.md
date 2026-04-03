@@ -5,6 +5,7 @@ category: "Injectable"
 date: "2026.05"
 readTime: "4 min read"
 featured: false
+image: "/images/pool/pool-img-1.webp"
 ---
 
 **「ボトックスって、一度打ち始めたら一生やめられないんでしょ？」** この誤解が美容医療への第一歩を阻んでいるケースをよく見かけます。結論から言うと、やめても全く問題ありません。正しい知識を持てば、もっと気軽に付き合える治療です。

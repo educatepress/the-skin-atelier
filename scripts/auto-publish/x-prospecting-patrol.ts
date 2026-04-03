@@ -1,6 +1,7 @@
 import { TwitterApi } from 'twitter-api-v2';
 import { GoogleGenAI } from "@google/genai";
 import { WebClient } from '@slack/web-api';
+import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
 
@@ -46,38 +47,74 @@ const slackClient = new WebClient(SLACK_BOT_TOKEN);
 // -------------------------------------------------------------
 // 設定値 (検索クエリなど)
 // -------------------------------------------------------------
-// -is:retweet でリツイートを除外
-// -has:links でアフィリエイトなどのリンク付き業者ツイートをある程度除外（オプション）
-const SEARCH_QUERY = '("肌管理" OR "ポテンツァ" OR "ダウンタイム" OR "ジュベルック" OR "肝斑") -is:retweet -has:links lang:ja';
+// キーワードを日替わりランダムで切り替え、毎日同じ人の投稿にヒットするのを防ぎます
+const KEYWORD_GROUPS = [
+  '("肌管理" OR "美容皮膚科" OR "スキンケア迷子")',
+  '("ポテンツァ" OR "ダーマペン" OR "ダウンタイム")',
+  '("ジュベルック" OR "水光注射" OR "美容医療")',
+  '("肝斑" OR "シミ取り" OR "ピコトーニング")',
+  '("乾燥肌" OR "ゆらぎ肌" OR "肌荒れ やばい")',
+  '("美容クリニック" OR "肌質改善" OR "ピーリング")'
+];
+const randomGroup = KEYWORD_GROUPS[Math.floor(Math.random() * KEYWORD_GROUPS.length)];
+const SEARCH_QUERY = `${randomGroup} -is:retweet -has:links lang:ja`;
 const MAX_RESULTS = 100; // 有望な5件を抽出するため、一次取得の母数を100件に拡大
+
+// 履歴ファイルのパス（二度同じ人に送らないためのDB）
+const HISTORY_FILE = path.join(process.cwd(), "x-patrol-history.json");
+
+function loadHistory(): string[] {
+  try {
+    if (fs.existsSync(HISTORY_FILE)) {
+      return JSON.parse(fs.readFileSync(HISTORY_FILE, "utf-8"));
+    }
+  } catch (e) { console.error("History load error", e); }
+  return [];
+}
+
+function saveHistory(authorIds: string[]) {
+  try {
+    const existing = loadHistory();
+    const merged = Array.from(new Set([...existing, ...authorIds]));
+    fs.writeFileSync(HISTORY_FILE, JSON.stringify(merged), "utf-8");
+  } catch (e) { console.error("History save error", e); }
+}
 
 /**
  * 1. X APIを使ってツイートを検索収集
  */
 async function fetchTargetTweets() {
-  console.log(`🔍 X APIで「${SEARCH_QUERY}」を検索中...`);
+  console.log(`🔍 X APIで本日のテーマ「${randomGroup}」を検索中...`);
+  const history = loadHistory();
+  
   try {
+    // 過去24時間以内の投稿だけに絞る（昨日の投稿と重複しないように）
+    const startTime = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    
     const searchResponse = await xClient.search(SEARCH_QUERY, {
       max_results: MAX_RESULTS,
+      start_time: startTime,
       "tweet.fields": ["created_at", "public_metrics", "author_id"],
       "user.fields": ["username", "name"]
     });
 
-    // searchResponse.tweets を見ると、1ページ目のみ（最大 MAX_RESULTS 件）を配列として取得可能
     const fetchedTweets = searchResponse.tweets || [];
     const tweets: any[] = [];
     
     for (const tweet of fetchedTweets) {
       if (tweet.text.length < 20) continue; // 短すぎるつぶやきは除外
+      if (history.includes(tweet.author_id!)) continue; // 過去に抽出したことのある人は「bot対策」として無条件で除外
+      
       tweets.push({
         id: tweet.id,
+        author_id: tweet.author_id,
         text: tweet.text,
         metrics: tweet.public_metrics,
         url: `https://x.com/i/web/status/${tweet.id}`
       });
     }
     
-    console.log(`✅ ${tweets.length}件 のツイートを収集しました。`);
+    console.log(`✅ ${tweets.length}件 の新規ツイート（過去24時間＆未接触ユーザー）を収集しました。`);
     return tweets;
   } catch (error) {
     console.error("❌ X API 検索エラー (Basicプラン未契約の可能性があります):", error);
@@ -194,7 +231,7 @@ async function sendProposalToSlack(tweetDetails: any, evaluation: any) {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `📝 *引用RP 下書き案:*\n\`\`\`\n${evaluation.draftReply}\n\`\`\``
+        text: `📝 *リプライ 下書き案:*\n\`\`\`\n${evaluation.draftReply}\n\`\`\``
       }
     },
     {
@@ -202,10 +239,10 @@ async function sendProposalToSlack(tweetDetails: any, evaluation: any) {
       elements: [
         {
           type: "button",
-          text: { type: "plain_text", text: "✨ この案でそのまま引用RPする", emoji: true },
-          style: "primary",
-          url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(evaluation.draftReply)}&url=https://x.com/i/web/status/${tweetDetails.id}`,
-          action_id: `intent_quote_tweet_${tweetDetails.id}`
+          text: { type: 'plain_text', text: '✨ この案でリプライする (Xアプリ起動)', emoji: true },
+          style: 'primary',
+          url: `https://x.com/intent/tweet?in_reply_to=${tweetDetails.id}&text=${encodeURIComponent(evaluation.draftReply)}`.substring(0, 3000),
+          action_id: `intent_reply_${tweetDetails.id}`
         }
       ]
     },
@@ -246,14 +283,23 @@ async function main() {
 
   console.log(`🎯 ${evaluations.length} 件の【優良ターゲットポスト】が抽出されました。Slackへ通知します...`);
 
+  const proposedAuthorIds: string[] = [];
+
   // 3. Slackへ通知
   for (const evalItem of evaluations) {
     const tweetDetails = tweets.find(t => t.id === evalItem.tweetId);
     if (tweetDetails) {
       await sendProposalToSlack(tweetDetails, evalItem);
+      proposedAuthorIds.push(tweetDetails.author_id);
       // 通知制限に配慮するため少しWait
       await new Promise(r => setTimeout(r, 1000));
     }
+  }
+
+  // 今回提案した人たちを「アプローチ済み」として記録する
+  if (proposedAuthorIds.length > 0) {
+    saveHistory(proposedAuthorIds);
+    console.log(`📝 ${proposedAuthorIds.length} 名のユーザーIDをブロックリストに保存しました。`);
   }
 
   console.log("\n🎉 AIパトロールがすべて完了しました！");

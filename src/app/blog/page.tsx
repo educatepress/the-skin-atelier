@@ -19,6 +19,7 @@ export default function BlogPage() {
     date: post.metadata.date,
     readTime: post.metadata.readTime,
     featured: post.metadata.featured || false,
+    image: post.metadata.image || "",
   }));
 
   return <BlogListClient articles={articles} />;

@@ -1,8 +1,8 @@
 import { getSheetsClient } from './google-client';
-import dotenv from 'dotenv';
-import path from 'path';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
 
-dotenv.config({ path: path.join(process.cwd(), '.env.local') });
+dotenv.config({ path: path.resolve(__dirname, '..', '..', '.env.local') });
 const SPREADSHEET_ID = process.env.GOOGLE_SHEETS_QUEUE_ID;
 
 export const HEADERS = [
@@ -45,10 +45,53 @@ export interface SheetsQueueRow {
   error_detail: string;
 }
 
+export interface PromptsRow {
+  brand: string;
+  persona: string;
+  target_audience: string;
+  tone_and_style: string;
+  cta_template: string;
+  forbidden_rules: string;
+}
+
+export interface ThemeScheduleRow {
+  date: string;
+  brand: string;
+  themeArea: string;
+  theme: string;
+  searchKeywords: string;
+  referenceUrl: string;
+  status: string;
+}
+
+export const THEME_HEADERS = ['Date', 'Brand', 'ThemeArea', 'Theme', 'SearchKeywords', 'ReferenceURL', 'Status'];
+
 export class SheetsDB {
   private static async getClient() {
     if (!SPREADSHEET_ID) throw new Error('GOOGLE_SHEETS_QUEUE_ID is not set in .env');
     return await getSheetsClient();
+  }
+
+  // プロンプト設定を取得
+  static async getPrompts(): Promise<PromptsRow[]> {
+    const sheets = await this.getClient();
+    const res = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: 'prompts!A2:F'
+    }).catch((e) => {
+      console.warn('⚠️ promptsシートが見つからないか、エラーが発生しました:', e.message);
+      return null;
+    });
+
+    const rows = res?.data?.values || [];
+    return rows.map(r => ({
+      brand: r[0] || '',
+      persona: r[1] || '',
+      target_audience: r[2] || '',
+      tone_and_style: r[3] || '',
+      cta_template: r[4] || '',
+      forbidden_rules: r[5] || ''
+    }));
   }
 
   // 行データを取得
@@ -130,5 +173,92 @@ export class SheetsDB {
       return true;
     }
     return false;
+  }
+
+  // ==== Theme Schedule Operations ====
+  
+  static async ensureThemeScheduleTabExists() {
+    const sheets = await this.getClient();
+    const spreadsheet = await sheets.spreadsheets.get({ spreadsheetId: SPREADSHEET_ID });
+    const exists = spreadsheet.data.sheets?.some(s => s.properties?.title === 'ThemeSchedule');
+    
+    if (!exists) {
+      console.log('🌱 ThemeScheduleタブが存在しないため、新規作成します...');
+      await sheets.spreadsheets.batchUpdate({
+        spreadsheetId: SPREADSHEET_ID,
+        requestBody: {
+          requests: [{
+            addSheet: { properties: { title: 'ThemeSchedule' } }
+          }]
+        }
+      });
+      console.log('📝 ThemeScheduleタブにヘッダーを書き込みます...');
+      await sheets.spreadsheets.values.update({
+        spreadsheetId: SPREADSHEET_ID,
+        range: 'ThemeSchedule!A1:G1',
+        valueInputOption: 'USER_ENTERED',
+        requestBody: { values: [THEME_HEADERS] }
+      });
+    }
+  }
+
+  static async getThemeSchedule(): Promise<ThemeScheduleRow[]> {
+    const sheets = await this.getClient();
+    const res = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: 'ThemeSchedule!A2:G'
+    }).catch((e) => {
+      console.warn('⚠️ ThemeScheduleデータ取得エラー:', e.message);
+      return null;
+    });
+
+    const rows = res?.data?.values || [];
+    return rows.map(r => ({
+      date: r[0] || '',
+      brand: r[1] || '',
+      themeArea: r[2] || '',
+      theme: r[3] || '',
+      searchKeywords: r[4] || '',
+      referenceUrl: r[5] || '',
+      status: r[6] || ''
+    }));
+  }
+
+  static async appendThemeSchedule(rows: ThemeScheduleRow[]) {
+    if (rows.length === 0) return;
+    
+    await this.ensureThemeScheduleTabExists();
+    
+    const sheets = await this.getClient();
+    const values = rows.map(r => [r.date, r.brand, r.themeArea, r.theme, r.searchKeywords, r.referenceUrl, r.status]);
+
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: 'ThemeSchedule!A:G',
+      valueInputOption: 'USER_ENTERED',
+      requestBody: { values }
+    }).catch(e => console.error("appendThemeSchedule Error:", e));
+  }
+
+  static async updateThemeStatus(dateStr: string, newStatus: string) {
+    const sheets = await this.getClient();
+    const res = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: 'ThemeSchedule!A:A'
+    }).catch(() => null);
+
+    const dates = res?.data?.values || [];
+    const rowIndex = dates.findIndex(row => row[0] === dateStr);
+    
+    if (rowIndex === -1) return false;
+    
+    const actualRowNumber = rowIndex + 1; // 1-indexed
+    await sheets.spreadsheets.values.update({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `ThemeSchedule!D${actualRowNumber}`,
+      valueInputOption: 'USER_ENTERED',
+      requestBody: { values: [[newStatus]] }
+    });
+    return true;
   }
 }

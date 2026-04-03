@@ -1,0 +1,40 @@
+════════════════════════════════════════
+📝 Daily Blog Generation — 2026-04-01 10:00:05
+════════════════════════════════════════
+[dotenv@17.3.1] injecting env (22) from .env.local -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+🚀 ブログ自動生成プロセスを開始します...
+
+🔍 テーマ「春のゆらぎ肌と花粉による肌荒れのメカニズムと正しいスキンケア」についてDeep Researchを実行中...
+✅ リサーチ完了
+
+📸 LP用のサムネイル画像を取得中...
+✍️ 記事を生成中（Elegant Letter Style）...
+✅ 記事生成完了
+
+🧐 生成された記事を自動で検閲・修正中...
+✅ 自動検閲・修正完了
+
+📦 Google Sheets にブログ記事をキュー登録中...
+📤 Slack へ承認メッセージを送信中...
+✅ Slack親通知完了: 1775005318.162209
+❌ Slack通知エラー: Error: An API error occurred: missing_scope
+    at platformErrorFromResult (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@slack/web-api/src/errors.ts:119:5)
+    at WebClient.apiCall (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@slack/web-api/src/WebClient.ts:405:36)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Promise.all (index 0)
+    at async WebClient.filesUploadV2 (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@slack/web-api/src/WebClient.ts:565:31)
+    at async main (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-post-blog.ts:258:9) {
+  code: 'slack_webapi_platform_error',
+  data: {
+    ok: false,
+    error: 'missing_scope',
+    needed: 'files:write',
+    provided: 'chat:write,chat:write.public',
+    response_metadata: { scopes: [Array], acceptedScopes: [Array] }
+  }
+}
+🎉 キュー登録＆Slack通知完了！
+
+✅ 完了: 10:01:58

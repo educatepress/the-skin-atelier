@@ -5,12 +5,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://skin-atelier.jp";
 
   const blogSlugs = getPostSlugs();
-  const blogEntries = blogSlugs.map((slug) => ({
-    url: `${baseUrl}/blog/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }));
+  const blogEntries = blogSlugs.map((filename) => {
+    const slug = filename.replace(/\.mdx?$/, "");
+    return {
+      url: `${baseUrl}/blog/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    };
+  });
 
   return [
     {

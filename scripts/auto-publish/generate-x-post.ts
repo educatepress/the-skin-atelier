@@ -26,19 +26,20 @@ const slackClient = new WebClient(SLACK_BOT_TOKEN);
 async function generateXPost(theme: string, sceneContext: string) {
   console.log(`✍️ 拡散スレッド（X/Twitter）を生成中...`);
 
+  const promptPath = path.join(process.cwd(), "..", "the-skin-atelier", "prompts", "multi-platform-content-prompts.md");
+  let masterPrompt = "";
+  try { masterPrompt = fs.readFileSync(promptPath, "utf-8"); } catch (e) { console.error("Could not read prompt MD", e); }
+
   const prompt = `
-    美容皮膚科医 Dr.みやかとして、スマホでふと呟いたような、体温のあるスレッド（3ポスト）を作成してください。
+    以下のルールに従いXのスレッド（3〜5ポスト）を作成してください。
+    特にMarkdownの【2. 【X (Twitter) / Threads 用】】の指示を絶対に守ること。
+
+    【ルール元ファイル抜粋】:
+    ${masterPrompt}
 
     【今回のインプット】
     ・テーマ：${theme}
-    ・今日のきっかけ（Scene）：${sceneContext}
-
-    【執筆ルール】
-    ・「AI定型文」は完全禁止（「必見です」「驚きの事実」等は使わない）。
-    ・「〜なんですよね」「〜なんです😭」「〜しちゃダメですよ（笑）」という、お節介なママドクターの口調。
-    ・「正直に告白します」「正直、〇〇はおすすめしません」といった、現場の本音から書き出す。
-    ・専門用語は日常語（細胞のガソリン等）に例え、場所を特定したり「アトリエ」といった架空の施設名表現は避ける。
-    ・結びは「一緒に美肌を目指しましょう✨」または「保存して見返してね🚩」
+    ・今日のきっかけ（Scene）：${sceneContext || '本日の診察での気づき'}
 
     ※余計なマークダウン（\`\`\`など）を使わず、そのままコピペして使えるプレーンテキストを出力してください。スレッドの区切りは「---」としてください。
   `;
@@ -98,7 +99,7 @@ async function sendSlackApprovalMessage(contentId: string, slug: string, caption
           type: 'button',
           text: { type: 'plain_text', text: '✨ この案で手動ポスト/編集する (Xアプリ起動)', emoji: true },
           style: 'primary',
-          url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(captionText)}`,
+          url: `https://x.com/intent/tweet?text=${encodeURIComponent(captionText)}`.substring(0, 3000),
           action_id: `intent_tweet_${contentId}`
         }
       ]
@@ -125,14 +126,38 @@ async function sendSlackApprovalMessage(contentId: string, slug: string, caption
  */
 async function main() {
   const todayStr = new Date().toISOString().split('T')[0];
-  const theme = "春のゆらぎ肌と花粉による肌荒れのメカニズム。与えるよりも「落とす」「休ませる」重要性。";
-  const sceneContext = "診察室で「花粉の時期は何を使ってもヒリヒリする」と相談された。昔の自分を思い出してハッとした。";
-  const slug = `spring-skincare-x-${todayStr}`;
+  const args = process.argv.slice(2);
+  let theme = args[0];
+  let searchKeywords = "";
+
+  try {
+    const schedules = await SheetsDB.getThemeSchedule();
+    if (schedules && schedules.length > 0) {
+      const todayRow = schedules.find(r => r.date === todayStr && r.brand === "atelier");
+      if (!theme && todayRow && todayRow.theme) {
+        console.log(`📅 今日のスケジュールされたテーマを発見 [${todayRow.themeArea}]: ${todayRow.theme}`);
+        theme = todayRow.theme;
+        searchKeywords = todayRow.searchKeywords || "";
+      }
+    }
+  } catch (error) {
+    console.error("⚠️ テーマスケジュールの取得に失敗しました。フォールバックします。", error);
+  }
+
+  if (!theme) {
+    theme = "春のゆらぎ肌と花粉によるスキンケア";
+    console.log(`ℹ️ スケジュールが見つからないため、デフォルトテーマで実行します: ${theme}`);
+  }
+
+  const sceneContext = args[1] || "最新の医学論文や自身のスキンケア経験から得られた客観的な気づき。架空の患者は絶対に出さないこと。";
+  const slug = `x-${todayStr}-${Math.random().toString(36).substring(7)}`;
   const contentId = `x-${todayStr}-${slug}`;
 
   try {
     // 1. AIで投稿文を生成
-    const generatedText = await generateXPost(theme, sceneContext);
+    // X向けのプロンプトにsearchKeywordsを渡すのも有効ですが、今回はthemeに含めます
+    const researchQuery = searchKeywords ? `${theme} ${searchKeywords}` : theme;
+    const generatedText = await generateXPost(researchQuery, sceneContext);
     const cleanText = generatedText?.replace(/^```\n/gm, "").replace(/```$/gm, "").trim() || "";
     console.log("\n==============================");
     console.log(cleanText);

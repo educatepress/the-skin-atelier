@@ -85,6 +85,114 @@
   }
 }
 
+@layer components {
+  /* =========================================
+     The Skin Atelier - Blog Prose Styles 
+     文字の小ささではなく、「余白の取り方」で気品を演出する
+  ========================================= */
+  .prose-atelier {
+    color: var(--color-text-mocha);
+  }
+
+  /* 本文の黄金比 */
+  .prose-atelier p {
+    font-size: 1rem;
+    line-height: 1.9;
+    letter-spacing: 0.05em;
+    color: var(--color-text-mocha);
+    margin-bottom: 2.5em; /* 段落間にたっぷりとした深呼吸の余白 */
+  }
+
+  /* 大見出し (##) */
+  .prose-atelier h2 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--color-text-mocha);
+    margin-top: 4.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid rgba(232, 211, 201, 0.6);
+  }
+
+  /* 小見出し (###) */
+  .prose-atelier h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-mocha);
+    margin-top: 3.5rem;
+    margin-bottom: 1rem;
+  }
+
+  /* 箇条書きの上品な装飾 */
+  .prose-atelier ul {
+    margin-bottom: 2.5em;
+    padding-left: 1.5rem;
+  }
+  .prose-atelier li {
+    line-height: 1.8;
+    margin-bottom: 0.75rem;
+    position: relative;
+    list-style-type: none;
+    color: var(--color-text-mocha);
+  }
+  .prose-atelier li::before {
+    content: "";
+    position: absolute;
+    left: -1.25rem;
+    top: 0.65rem;
+    width: 4px;
+    height: 4px;
+    background-color: #D4C1B3;
+    border-radius: 50%;
+  }
+
+  .prose-atelier blockquote {
+    border-left: 1px solid var(--color-marble-vein);
+    padding-left: 1.5rem;
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin: 3rem 0;
+  }
+
+  /* -----------------------------
+     FAQ（あなたの不安に寄り添って）の美しい装飾
+     ※他の小見出し(h3)と干渉しないよう h4 を使用
+  ----------------------------- */
+  /* 質問部分 (Q.) */
+  .prose-atelier h4 {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--color-text-mocha);
+    margin-top: 3.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed rgba(232, 211, 201, 0.7); 
+  }
+
+  /* 回答部分 (A.) ※h4の直後に来る段落 */
+  .prose-atelier h4 + p {
+    position: relative;
+    color: var(--color-text-mocha);
+    background-color: #FDFBF9; /* ごく薄いアイボリー背景で囲む */
+    padding: 1.5rem 1.5rem 1.5rem 3.5rem; /* 左側にA.を入れるための余白(3.5rem)を確保 */
+    border-radius: 4px;
+    margin-bottom: 3rem;
+  }
+
+  /* 自動で美しい「A.」を付与 */
+  .prose-atelier h4 + p::before {
+    content: "A.";
+    position: absolute;
+    left: 1.25rem;
+    top: 1.45rem;
+    font-family: var(--font-brand, Georgia, serif);
+    color: #D4C1B3; /* アクセントカラーのベージュ */
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+}
+
 @layer utilities {
   /* ── Brand Font Classes ── */
   .font-brand {

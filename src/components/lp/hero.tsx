@@ -54,16 +54,42 @@ export default function Hero() {
           The Skin Atelier by Dr. Miyaka
         </motion.p>
 
+        {/* Doctor Portrait & Badge - Focal Point for FV */}
+        <motion.div
+           initial={{ opacity: 0, scale: 0.95 }}
+           animate={{ opacity: 1, scale: 1 }}
+           transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+           className="relative mx-auto w-32 h-40 md:w-36 md:h-48 mb-[var(--space-2xl)]"
+        >
+           {/* Elegant Arch/Pill Shape Mask */}
+           <div className="w-full h-full rounded-t-full rounded-b-full overflow-hidden shadow-[0_20px_40px_-15px_rgba(212,184,169,0.3)] ring-1 ring-white/60">
+             <Image 
+               src="/images/profile/dr-miyaka-1.jpg"
+               alt="Dr. Miyaka Portrait"
+               fill
+               className="object-cover object-top"
+               priority
+             />
+           </div>
+           
+           {/* Authority Badge */}
+           <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap bg-[var(--color-surface)] px-4 py-1.5 rounded-full border border-[var(--color-marble-vein)] shadow-sm">
+             <span className="text-[10px] tracking-[0.15em] text-[var(--color-text-mocha)]">
+               美容皮膚科医 <span className="font-brand opacity-60">Dr. MIYAKA</span>
+             </span>
+           </div>
+        </motion.div>
+
         {/* Main catch copy: 行間を leading-[1.8] -> [1.4] に引き締め、言葉の力を高める */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[clamp(1.8rem,5vw,4rem)] leading-[1.4] tracking-[0.08em] text-[var(--color-text-mocha)] font-normal mb-[var(--space-xl)]"
+          transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="text-[clamp(1.6rem,4.5vw,3rem)] leading-[1.5] tracking-[0.08em] text-[var(--color-text-mocha)] font-normal mb-[var(--space-lg)]"
         >
-          健やかさを、
-          <br />
-          肌の<span className="text-[var(--color-pink-gold-deep)]">輝き</span>へ。
+          もう、スキンケアで
+          <br className="md:hidden" />
+          迷わない。
         </motion.h1>
 
         {/* Sub copy — generous line height for readability */}
@@ -71,16 +97,18 @@ export default function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-lg mx-auto mb-[var(--space-2xl)]"
+          className="max-w-md mx-auto mb-[var(--space-2xl)]"
         >
-          <p className="text-[1rem] leading-[2.3] text-[var(--color-text-soft)] tracking-[0.04em]">
-            かつて立ち止まった私だから、できること。
+          <p className="text-[13px] md:text-[1rem] leading-[2.1] text-[var(--color-text-soft)] tracking-[0.04em]">
+            自らも肌荒れに悩み、
+            <br className="block md:hidden" />
+            遠回りをしてきたからこそ伝えたい。
             <br />
-            鏡の前でもどかしさを感じていた日々。
+            情報に疲れた大人の肌に、
             <br />
-            私自身の経験から辿り着いたのは、
-            <br />
-            あなたの隣で歩むことでした。
+            皮膚科学という明確な答えと、
+            <br className="block md:hidden" />
+            『引き算の美容医療』を。
           </p>
         </motion.div>
 
@@ -88,11 +116,11 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.9 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
           className="mb-[var(--space-2xl)]"
         >
           <a href="#invitation" className="btn-atelier">
-            <span className="tracking-[0.1em]">毎日の美しさを育む、SNSでのお手紙</span>
+            <span className="tracking-[0.1em]">毎日の美しさを育む、無料の美容情報</span>
             <span className="arrow">→</span>
           </a>
         </motion.div>
@@ -101,15 +129,15 @@ export default function Hero() {
         <motion.div
           initial={{ scaleY: 0 }}
           animate={{ scaleY: 1 }}
-          transition={{ duration: 0.8, delay: 1.2, ease: [0.22, 1, 0.36, 1] }}
-          className="w-[1px] h-20 bg-[var(--color-text-mocha)] opacity-15 mx-auto origin-top"
+          transition={{ duration: 0.8, delay: 1.0, ease: [0.22, 1, 0.36, 1] }}
+          className="w-[1px] h-16 md:h-20 bg-[var(--color-text-mocha)] opacity-15 mx-auto origin-top"
         />
 
         {/* Medical disclaimer: 11px & opacity-70 で誠実にリスクを開示 */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1.5 }}
+          transition={{ duration: 0.6, delay: 1.2 }}
           className="text-[11px] text-[var(--color-text-muted)] mt-[var(--space-xl)] tracking-[0.03em] opacity-70"
         >
           ※自由診療のため公的医療保険は適用されません。効果には個人差がございます。

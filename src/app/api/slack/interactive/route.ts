@@ -102,7 +102,7 @@ export async function POST(req: Request) {
           const owner = process.env.GITHUB_OWNER || 'educatepress';
           const repo = process.env.GITHUB_REPO || 'the-skin-atelier';
           const slug = targetRow.title;
-          const filePath = `src/content/blog/${slug}.mdx`;
+          const filePath = `content/blog/${slug}.md`;
           const commitMessage = `Auto-publish blog: ${slug}`;
           const contentEncoded = Buffer.from(captionText).toString('base64');
 

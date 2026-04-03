@@ -5,6 +5,7 @@ category: "Treatment"
 date: "2026.03"
 readTime: "5 min read"
 featured: true
+image: "/images/pool/pool-img-5.webp"
 ---
 
 **「シミ取り＝レーザー」と思い込んでいませんか？** 

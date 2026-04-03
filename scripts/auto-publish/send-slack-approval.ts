@@ -13,26 +13,31 @@
  * ================================================================
  */
 
-import path from 'path';
-import fs from 'fs';
+import * as path from 'path';
+import * as fs from 'fs';
 import { WebClient } from '@slack/web-api';
 import * as dotenv from 'dotenv';
 
-dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
+dotenv.config({ path: path.resolve(__dirname, '..', '..', '.env.local') });
+
+import { SheetsDB, SheetsQueueRow } from '../lib/sheets-db';
+import { runVisionCheck } from '../lib/vision-patrol';
 
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || '';
-// hiroo-open プロジェクトからの全ての投稿は `#skin-atelier_jp` へ
-const TARGET_SLACK_CHANNEL = 'skin-atelier_jp';
+const SLACK_CHANNEL   = 'skin-atelier_jp';
 const DRIVE_FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID || '';
-const OUT_DIR         = path.join(process.cwd(), 'out');
-import { SheetsDB, SheetsQueueRow } from './lib/sheets-db';
+
+// ── Directories ──
+const FACTORY_DIR = path.join(process.cwd(), '..', 'reels-factory-atelier');
+const OUT_DIR = path.join(FACTORY_DIR, 'out');
+
 
 // ── Types ──────────────────────────────────────────────────────
 
-interface QueueItem {
+export interface QueueItem {
   id: string;
   brand: string;
-  type: 'reel' | 'carousel' | 'x' | 'blog';
+  type: 'reel' | 'carousel';
   slug: string;
   status: 'pending' | 'approved' | 'rejected' | 'posted';
   captionText: string;
@@ -45,6 +50,8 @@ interface QueueItem {
   createdAt: string;
   approvedAt?: string;
   postedAt?: string;
+  patrolPreResult?: 'pass' | 'warning';
+  patrolFeedback?: string;
 }
 
 // ── Helpers ──────────────────────────────────────────────────────
@@ -65,8 +72,8 @@ async function fetchQueueFromSheets(): Promise<QueueItem[]> {
     try { recipe = JSON.parse(row.generation_recipe || '{}'); } catch {}
     return {
       id: row.content_id,
-      brand: row.brand || 'book',
-      type: row.type as 'reel' | 'carousel' | 'x' | 'blog',
+      brand: row.brand || 'atelier',
+      type: row.type as 'reel' | 'carousel',
       slug: row.title,
       status: row.status as 'pending' | 'approved' | 'rejected' | 'posted',
       captionText: recipe.captionText || '',
@@ -98,27 +105,14 @@ function truncate(text: string, maxLen: number): string {
 
 function buildContentBlocks(item: QueueItem): any[] {
   const isCarousel = item.type === 'carousel';
-  const isX = item.type === 'x';
-  const isBlog = item.type === 'blog';
-  
-  let icon = '🎬';
-  let typeLabel = 'リール';
-  if (isCarousel) { icon = '🎠'; typeLabel = 'カルーセル'; }
-  if (isX) { icon = '🐦'; typeLabel = 'X (Twitter)'; }
-  if (isBlog) { icon = '📝'; typeLabel = 'ブログ'; }
-  
+  const icon = isCarousel ? '🎠' : '🎬';
+  const typeLabel = isCarousel ? 'カルーセル' : 'リール';
   const slideCount = item.publicUrls ? `（${item.publicUrls.length}枚）` : '';
 
-  // Caption display (truncate to Slack limit, keeping most content)
-  const captionDisplay = item.captionText
-    ? `> ${truncate(item.captionText.replace(/\n/g, '\n> '), 2000)}`
-    : '_キャプションなし_';
-
-  const captionJpDisplay = item.captionTextJp
-    ? `\n\n*🇯🇵 日本語訳:*\n> ${truncate(item.captionTextJp.replace(/\n/g, '\n> '), 800)}`
-    : '';
-
-  const brandBadge = item.brand === 'atelier' ? '🟦 hiroo-open' : '🟩 Skin Atelier';
+  // Only show Japanese text to keep Slack clean (English text is too long)
+  const captionDisplay = item.captionTextJp
+    ? `> ${truncate(item.captionTextJp.replace(/\n/g, '\n> '), 2000)}`
+    : '_日本語訳なし_';
 
   const blocks: any[] = [
     // Header
@@ -126,9 +120,9 @@ function buildContentBlocks(item: QueueItem): any[] {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `${icon} *${typeLabel}${slideCount}*: \`${item.slug}\`\n【配信先: ${brandBadge}】`
+        text: `${icon} *${typeLabel}${slideCount}*: \`${item.slug}\``
       },
-      accessory: (isX || isBlog) ? undefined : {
+      accessory: {
         type: 'button',
         text: { 
           type: 'plain_text', 
@@ -145,9 +139,20 @@ function buildContentBlocks(item: QueueItem): any[] {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `📝 *キャプション:*\n${captionDisplay}${captionJpDisplay}`
+        text: `📝 *キャプション (和訳):*\n${captionDisplay}`
       }
     },
+
+    // AI Vision Warning (if any)
+    ...(item.patrolPreResult === 'warning' ? [{
+      type: 'context',
+      elements: [
+        {
+          type: 'mrkdwn',
+          text: `⚠️ *【AI Vision Check 警告】*\n${item.patrolFeedback}`
+        }
+      ]
+    }] : []),
 
     // Approve / Reject buttons
     {
@@ -158,14 +163,14 @@ function buildContentBlocks(item: QueueItem): any[] {
           text: { type: 'plain_text', text: '✅ 承認', emoji: true },
           style: 'primary',
           action_id: 'approve_content',
-          value: JSON.stringify({ id: item.id, batchId: item.batchId, brand: item.brand }),
+          value: JSON.stringify({ id: item.id, batchId: item.batchId }),
         },
         {
           type: 'button',
           text: { type: 'plain_text', text: '❌ 却下', emoji: true },
           style: 'danger',
           action_id: 'reject_content',
-          value: JSON.stringify({ id: item.id, brand: item.brand }),
+          value: JSON.stringify({ id: item.id }),
         },
       ]
     },
@@ -203,7 +208,7 @@ async function main() {
     }
     newItems.push({
       id,
-      brand: reel.brand || 'book',
+      brand: reel.brand || 'atelier',
       type: 'reel',
       slug: reel.slug,
       status: 'pending',
@@ -216,7 +221,8 @@ async function main() {
     });
   }
 
-  // Carousels
+  // Carousels (🚨現在一時ストップ中🚨)
+  /*
   for (const carousel of batchData.carousels || []) {
     const id = `carousel-${today}-${carousel.slug}`;
     if (queue.some(q => q.id === id)) {
@@ -225,7 +231,7 @@ async function main() {
     }
     newItems.push({
       id,
-      brand: carousel.brand || 'book',
+      brand: carousel.brand || 'atelier',
       type: 'carousel',
       slug: carousel.slug,
       status: 'pending',
@@ -237,6 +243,7 @@ async function main() {
       createdAt: new Date().toISOString(),
     });
   }
+  */
 
   if (newItems.length === 0) {
     console.log('ℹ️  新規コンテンツなし。すべてキュー登録済みです。');
@@ -249,11 +256,11 @@ async function main() {
   const todayStr = new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
 
   console.log(`📤 Slack に ${newItems.length} 件の個別メッセージを送信します...`);
+  console.log(`   チャンネル: #${SLACK_CHANNEL}`);
   console.log(`   リール: ${reelCount}本 / カルーセル: ${carouselCount}件`);
 
-  // ヘッダー通知
   await client.chat.postMessage({
-    channel: TARGET_SLACK_CHANNEL,
+    channel: SLACK_CHANNEL,
     text: `📅 ${todayStr} コンテンツレビュー`,
     blocks: [
       {
@@ -273,12 +280,19 @@ async function main() {
   // Send individual messages
   for (let i = 0; i < newItems.length; i++) {
     const item = newItems[i];
+    
+    console.log(`   🤖 [${i + 1}/${newItems.length}] ${item.slug} の Vision AI チェックを実行中...`);
+    const vision = await runVisionCheck(item);
+    item.patrolPreResult = vision.status;
+    item.patrolFeedback = vision.feedback;
+
     const blocks = buildContentBlocks(item);
 
-    // hiroo-openプロジェクトの通知は一律で skin-atelier_jp へ送信
+    const targetChannel = item.brand === 'atelier' ? 'skin-atelier_jp' : SLACK_CHANNEL;
+
     try {
       const result = await client.chat.postMessage({
-        channel: TARGET_SLACK_CHANNEL,
+        channel: targetChannel,
         text: `${item.type === 'carousel' ? '🎠' : '🎬'} ${item.slug} — レビュー待ち`,
         blocks,
       });
@@ -286,6 +300,27 @@ async function main() {
       if (result.ok) {
         item.slackTs = result.ts as string;
         console.log(`   ✅ [${i + 1}/${newItems.length}] ${item.slug}`);
+
+        // カルーセルの場合、10枚のサムネイルをスレッドにインライン画像として送信する
+        if (item.type === 'carousel' && item.publicUrls && item.publicUrls.length > 0) {
+          const imageBlocks = item.publicUrls.slice(0, 10).map((img, idx) => ({
+            type: 'image',
+            image_url: img.image_url,
+            alt_text: `Slide ${idx + 1}`
+          }));
+          
+          try {
+            await client.chat.postMessage({
+              channel: targetChannel,
+              thread_ts: result.ts as string,
+              text: `🎠 全てのスライド画像 (${item.publicUrls.length}枚)`,
+              blocks: imageBlocks
+            });
+            console.log(`     ↳ 🖼️ スレッドに ${item.publicUrls.length}枚の画像を添付しました`);
+          } catch (threadErr: any) {
+            console.error(`     ↳ ❌ スレッドへの画像添付失敗: ${threadErr.message}`);
+          }
+        }
       }
     } catch (e: any) {
       console.error(`   ❌ [${i + 1}/${newItems.length}] ${item.slug}: ${e.message}`);
@@ -300,6 +335,7 @@ async function main() {
   // Save to Sheets
   const newSheetsRows = newItems.map(item => ({
     content_id: item.id,
+    brand: item.brand,
     type: item.type,
     title: item.slug,
     cloudinary_url: item.type === 'carousel' ? JSON.stringify(item.publicUrls) : item.publicUrl,
@@ -312,7 +348,7 @@ async function main() {
       createdAt: item.createdAt,
     }),
     status: item.status,
-    patrol_pre_result: 'pass',
+    patrol_pre_result: item.patrolPreResult || 'pass',
     slack_ts: item.slackTs || '',
     cloudinary_deleted: 'false'
   }));

@@ -1,0 +1,4 @@
+shell-init: error retrieving current directory: getcwd: cannot access parent directories: Operation not permitted
+/bin/bash: /Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/run-x-patrol.sh: Operation not permitted
+shell-init: error retrieving current directory: getcwd: cannot access parent directories: Operation not permitted
+/bin/bash: /Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/run-x-patrol.sh: Operation not permitted
