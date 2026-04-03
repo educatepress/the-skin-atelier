@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import Image from "next/image";
 
 export default function Hero() {
   const ref = useRef(null);
@@ -43,26 +44,26 @@ export default function Hero() {
         style={{ opacity, y }}
         className="relative z-10 text-center px-6 max-w-4xl mx-auto pt-24"
       >
-        {/* Brand label — Cormorant Garamond, wide tracking */}
+        {/* Brand label: 0.7rem -> 11px */}
         <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="font-brand text-[0.7rem] tracking-[0.5em] text-[var(--color-text-muted)] uppercase mb-[var(--space-xl)]"
+          className="font-brand text-[11px] sm:text-xs tracking-[0.4em] text-[var(--color-text-muted)] uppercase mb-[var(--space-xl)]"
         >
           The Skin Atelier by Dr. Miyaka
         </motion.p>
 
-        {/* Main catch copy — Shippori Mincho, generous spacing */}
+        {/* Main catch copy: 行間を leading-[1.8] -> [1.4] に引き締め、言葉の力を高める */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[clamp(1.8rem,5vw,4rem)] leading-[1.8] tracking-[0.08em] text-[var(--color-text-mocha)] font-normal mb-[var(--space-xl)]"
+          className="text-[clamp(1.8rem,5vw,4rem)] leading-[1.4] tracking-[0.08em] text-[var(--color-text-mocha)] font-normal mb-[var(--space-xl)]"
         >
           健やかさを、
           <br />
-          肌の<span className="text-[#D4B8A9]">輝き</span>へ。
+          肌の<span className="text-[var(--color-pink-gold-deep)]">輝き</span>へ。
         </motion.h1>
 
         {/* Sub copy — generous line height for readability */}
@@ -83,7 +84,7 @@ export default function Hero() {
           </p>
         </motion.div>
 
-        {/* CTA */}
+        {/* CTA: 機械的なコピーから情緒的なコピーへ */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -91,7 +92,7 @@ export default function Hero() {
           className="mb-[var(--space-2xl)]"
         >
           <a href="#invitation" className="btn-atelier">
-            <span>SNSで美容情報をフォロー</span>
+            <span className="tracking-[0.1em]">毎日の美しさを育む、SNSでのお手紙</span>
             <span className="arrow">→</span>
           </a>
         </motion.div>
@@ -104,12 +105,12 @@ export default function Hero() {
           className="w-[1px] h-20 bg-[var(--color-text-mocha)] opacity-15 mx-auto origin-top"
         />
 
-        {/* Medical disclaimer — minimal, bottom */}
+        {/* Medical disclaimer: 11px & opacity-70 で誠実にリスクを開示 */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1.5 }}
-          className="text-[0.7rem] text-[var(--color-text-muted)] mt-[var(--space-xl)] tracking-[0.03em] opacity-40"
+          className="text-[11px] text-[var(--color-text-muted)] mt-[var(--space-xl)] tracking-[0.03em] opacity-70"
         >
           ※自由診療のため公的医療保険は適用されません。効果には個人差がございます。
         </motion.p>

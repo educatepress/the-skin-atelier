@@ -23,15 +23,23 @@ export default function BlogPreview() {
               <Link href={`/blog/${metadata.slug}`} className="block group cursor-pointer space-y-[var(--space-md)]">
                 {/* Image placeholder area with hover expansion effect */}
                 <div className="overflow-hidden bg-[var(--color-surface)]">
-                  <div className="h-64 md:h-80 bg-gradient-to-br from-[var(--color-surface)] via-[var(--color-marble-warm)] to-[var(--color-champagne-light)] grayscale opacity-80 group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-[1200ms]">
-                    <div className="w-full h-full flex items-center justify-center">
-                      <span className="font-brand text-[1.5rem] text-[var(--color-pink-gold)] opacity-20">✦</span>
-                    </div>
+                  <div className="h-64 md:h-80 bg-gradient-to-br from-[var(--color-surface)] via-[var(--color-marble-warm)] to-[var(--color-champagne-light)] relative">
+                    {metadata.image ? (
+                      <img 
+                        src={metadata.image} 
+                        alt={metadata.title} 
+                        className="w-full h-full object-cover grayscale opacity-80 group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-[1200ms]"
+                      />
+                    ) : (
+                      <div className="w-full h-full grayscale opacity-80 group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-[1200ms] flex items-center justify-center">
+                        <span className="font-brand text-[1.5rem] text-[var(--color-pink-gold)] opacity-20">✦</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 <div className="space-y-[var(--space-xs)]">
-                  <p className="font-brand text-[0.5rem] tracking-[0.4em] text-[var(--color-text-muted)] uppercase">
+                  <p className="font-brand text-[11px] tracking-[0.4em] text-[var(--color-text-muted)] uppercase">
                     {metadata.date}
                   </p>
 

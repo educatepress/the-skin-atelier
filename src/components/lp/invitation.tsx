@@ -106,7 +106,7 @@ export default function Invitation() {
 
         {/* Trust signals */}
         <FadeIn delay={0.4}>
-          <div className="mt-[var(--space-2xl)] flex flex-wrap justify-center gap-[var(--space-xl)] text-[0.7rem] text-[var(--color-text-muted)] tracking-[0.08em]">
+          <div className="mt-[var(--space-2xl)] flex flex-wrap justify-center gap-[var(--space-xl)] text-[11px] text-[var(--color-text-muted)] tracking-[0.08em]">
             <span>✦ エビデンスに基づく情報</span>
             <span>✦ 医師監修コンテンツ</span>
             <span>✦ 毎日更新</span>

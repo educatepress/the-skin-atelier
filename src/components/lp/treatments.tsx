@@ -57,7 +57,7 @@ export default function Treatments() {
         <div className="flex flex-col md:flex-row justify-between items-end gap-8">
           <FadeIn>
             <div className="space-y-[var(--space-sm)]">
-              <p className="font-brand text-[0.7rem] tracking-[0.5em] text-[var(--color-text-muted)] uppercase">
+              <p className="font-brand text-[11px] tracking-[0.5em] text-[var(--color-text-muted)] uppercase">
                 Curated Services
               </p>
               <h2 className="font-brand text-[clamp(1.8rem,4vw,3rem)] tracking-[0.15em] text-[var(--color-text-mocha)] italic">
@@ -94,7 +94,7 @@ export default function Treatments() {
                 {/* Content */}
                 <div className="space-y-[var(--space-sm)]">
                   {/* Numbered category */}
-                  <p className="font-brand text-[0.7rem] tracking-[0.4em] text-[var(--color-pink-gold-deep)] uppercase">
+                  <p className="font-brand text-[11px] tracking-[0.4em] text-[var(--color-pink-gold-deep)] uppercase">
                     {t.number}. {t.category}
                   </p>
 
@@ -129,7 +129,7 @@ export default function Treatments() {
         {/* Medical disclaimer */}
         <FadeIn delay={0.6}>
           <div className="mt-[var(--space-xl)] text-center">
-            <p className="text-[0.7rem] text-[var(--color-text-muted)] tracking-[0.03em] opacity-50">
+            <p className="text-[11px] text-[var(--color-text-muted)] tracking-[0.03em] opacity-70">
               ※ 効果には個人差がございます。施術には副作用・リスクを伴う場合があります。
               <br />
               料金・詳しい施術内容は、カウンセリング時にご案内いたします。

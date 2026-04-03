@@ -39,11 +39,12 @@ export default function Experience() {
       <div className="relative z-10 max-w-[1100px] mx-auto px-6">
         <FadeIn>
           <div className="mb-[var(--space-2xl)]">
-            <p className="font-brand text-[0.7rem] tracking-[0.4em] text-[var(--color-text-muted)] uppercase mb-[var(--space-md)]">
-              The Journey
+            {/* text-[0.7rem] -> text-[11px] */}
+            <p className="font-brand text-[11px] tracking-[0.4em] text-[var(--color-text-muted)] uppercase mb-[var(--space-md)]">
+              美しさを育む軌跡
             </p>
             <h2 className="font-brand text-[clamp(1.8rem,4vw,3rem)] tracking-[0.1em] text-[var(--color-text-mocha)] italic leading-[1.4]">
-              The Atelier Experience
+              アトリエで過ごす、特別な時間
               <span className="block font-body-jp text-[1.2rem] text-[var(--color-text-soft)] tracking-[0.08em] mt-[var(--space-md)] not-italic font-normal">
                 あなただけの、美しさを育む時間
               </span>
@@ -94,8 +95,9 @@ export default function Experience() {
               <br className="hidden md:block"/>
               アトリエでの特別な時間が、そのきっかけになれば幸いです。
             </p>
-            <a href="#invitation" className="btn-atelier inline-flex justify-center text-[0.7rem]">
-              <span>公式LINEで相談をはじめる</span>
+            {/* CTAのコピーを機能的なものから情緒的に */}
+            <a href="#invitation" className="btn-atelier inline-flex justify-center text-xs">
+              <span className="tracking-[0.1em]">あなたの肌の物語を、お聞かせください</span>
               <span className="arrow">→</span>
             </a>
           </div>

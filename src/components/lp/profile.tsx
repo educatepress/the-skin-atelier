@@ -28,7 +28,7 @@ export default function Profile() {
           {/* Right: Bio only — no credentials */}
           <FadeIn delay={0.2} className="w-full md:w-7/12 space-y-[var(--space-lg)]">
             <div>
-              <p className="font-brand text-[0.7rem] tracking-[0.4em] text-[var(--color-text-muted)] uppercase mb-[var(--space-xs)]">
+              <p className="font-brand text-[11px] tracking-[0.4em] text-[var(--color-text-muted)] uppercase mb-[var(--space-xs)]">
                 About
               </p>
               <h3 className="text-[1.8rem] tracking-[0.1em] text-[var(--color-text-mocha)] leading-[1.4]">
@@ -41,15 +41,48 @@ export default function Profile() {
 
             <div className="divider-gold" />
 
-            <div className="space-y-[var(--space-md)]">
-              <p className="text-[0.95rem] leading-[2.2] text-[var(--color-text-soft)] tracking-[0.03em]">
-                美容皮膚科医として診療を続ける中で、外側のケアだけでなく、
-                身体の内側（分子栄養学）からのアプローチが肌の根本的な変化に繋がると実感。
-              </p>
-              <p className="text-[0.95rem] leading-[2.2] text-[var(--color-text-soft)] tracking-[0.03em]">
-                このサイトでは、肌と美容について、医師として正直な目線でお届けしています。
-                難しい情報をわかりやすく、そして飾らずに。
-              </p>
+            <div className="space-y-[var(--space-lg)]">
+              
+              {/* 略歴 */}
+              <div>
+                <h4 className="font-brand text-[0.85rem] tracking-[0.15em] text-[var(--color-text-mocha)] font-medium mb-[var(--space-sm)]">
+                  略歴
+                </h4>
+                <ul className="text-[0.9rem] leading-[2] text-[var(--color-text-soft)] tracking-[0.03em] space-y-1">
+                  <li>・ 札幌医科大学医学部 卒業</li>
+                  <li>・ 日本赤十字社医療センター 初期研修修了</li>
+                  <li>・ 都内美容皮膚科にて勤務、院長などを歴任</li>
+                </ul>
+              </div>
+
+              {/* 資格・所属学会 */}
+              <div>
+                <h4 className="font-brand text-[0.85rem] tracking-[0.15em] text-[var(--color-text-mocha)] font-medium mb-[var(--space-sm)]">
+                  資格・所属学会
+                </h4>
+                <ul className="text-[0.9rem] leading-[2] text-[var(--color-text-soft)] tracking-[0.03em] space-y-1">
+                  <li>・ 日本美容皮膚科学会 会員</li>
+                  <li>・ アラガン・ジャパン社 ボトックスビスタ® 認定医</li>
+                </ul>
+              </div>
+
+              {/* 専門・得意分野 */}
+              <div>
+                <h4 className="font-brand text-[0.85rem] tracking-[0.15em] text-[var(--color-text-mocha)] font-medium mb-[var(--space-sm)]">
+                  専門・得意分野
+                </h4>
+                <ul className="text-[0.9rem] leading-[2.2] text-[var(--color-text-soft)] tracking-[0.03em] space-y-4">
+                  <li>
+                    <span className="block text-[var(--color-text-mocha)] font-medium">・ 肌育治療（Skin Quality Improvement）</span>
+                    <span className="block text-[0.85rem] mt-1">最新の美容機器を駆使し、肌の土台から健やかさを引き出す治療。</span>
+                  </li>
+                  <li>
+                    <span className="block text-[var(--color-text-mocha)] font-medium">・ ボトックス注入（Facial Contouring）</span>
+                    <span className="block text-[0.85rem] mt-1">自然な表情を保ちつつ、シワやたるみを改善する精密な注入。</span>
+                  </li>
+                </ul>
+              </div>
+
             </div>
           </FadeIn>
 

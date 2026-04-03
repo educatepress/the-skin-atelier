@@ -70,7 +70,6 @@ const faqs = [
 export default function FaqSection() {
   return (
     <section id="faq" className="section-padding relative">
-      {/* JSON-LD for FAQ */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -91,14 +90,15 @@ export default function FaqSection() {
 
       <div className="max-w-3xl mx-auto px-6">
         <FadeIn>
-          <p className="font-brand text-[0.75rem] tracking-[0.3em] text-[var(--color-text-muted)] uppercase text-center mb-[var(--space-sm)]">
-            Questions
+          {/* 冷たい英語を「体温のある日本語」へ */}
+          <p className="font-brand text-[11px] tracking-[0.3em] text-[var(--color-text-muted)] uppercase text-center mb-[var(--space-sm)]">
+            あなたの不安に寄り添って
           </p>
         </FadeIn>
 
         <FadeIn delay={0.1}>
-          <h2 className="text-[clamp(1.2rem,2.5vw,1.8rem)] text-center leading-[1.8] tracking-[0.06em] text-[var(--color-text-mocha)] mb-[var(--space-md)]">
-            よくいただくご質問
+          <h2 className="text-[clamp(1.2rem,2.5vw,1.8rem)] text-center leading-[1.6] tracking-[0.06em] text-[var(--color-text-mocha)] mb-[var(--space-md)]">
+            心に浮かぶ、いくつかの疑問へ
           </h2>
         </FadeIn>
 
@@ -111,18 +111,23 @@ export default function FaqSection() {
             <FadeIn key={i} delay={0.15 + i * 0.08}>
               <details className="group border-b border-[var(--color-marble-vein)] last:border-b-0">
                 <summary className="flex items-start gap-[var(--space-md)] py-[var(--space-lg)] cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                  <span className="font-brand text-[0.75rem] text-[var(--color-pink-gold)] tracking-[0.15em] mt-1 shrink-0">
+                  {/* Qマークは濃い色（pink-gold-deep）にする */}
+                  <span className="font-brand text-[15px] text-[var(--color-pink-gold-deep)] font-medium tracking-[0.15em] mt-1 shrink-0">
                     Q.
                   </span>
-                  <span className="text-[1rem] leading-[1.9] text-[var(--color-text-mocha)] tracking-[0.03em] group-hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300">
+                  <span className="text-[1rem] leading-[1.6] text-[var(--color-text-mocha)] tracking-[0.03em] group-hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300">
                     {faq.q}
                   </span>
-                  <span className="ml-auto text-[var(--color-pink-gold)] text-[0.85rem] shrink-0 transition-transform duration-300 group-open:rotate-45 mt-1">
+                  <span className="ml-auto text-[var(--color-pink-gold-deep)] text-[1.2rem] shrink-0 transition-transform duration-300 group-open:rotate-45 mt-1">
                     +
                   </span>
                 </summary>
-                <div className="pb-[var(--space-lg)] pl-[calc(var(--space-md)+1rem)]">
-                  <p className="text-[1rem] leading-[2.4] text-[var(--color-text-soft)] tracking-[0.02em]">
+                {/* 回答部分に A. を装飾として付与（ブログと同じUI体験） */}
+                <div className="pb-[var(--space-lg)] pl-[calc(var(--space-md)+1.5rem)] relative">
+                  <span className="absolute left-[0.2rem] top-[0.1rem] font-brand text-lg text-[#D4C1B3] leading-none">
+                    A.
+                  </span>
+                  <p className="text-[0.95rem] leading-[2.2] text-[var(--color-text-soft)] tracking-[0.02em]">
                     {faq.a}
                   </p>
                 </div>
