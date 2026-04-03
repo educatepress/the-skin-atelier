@@ -54,33 +54,7 @@ export default function Hero() {
           The Skin Atelier by Dr. Miyaka
         </motion.p>
 
-        {/* Doctor Portrait & Badge - Focal Point for FV */}
-        <motion.div
-           initial={{ opacity: 0, scale: 0.95 }}
-           animate={{ opacity: 1, scale: 1 }}
-           transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-           className="relative mx-auto w-32 h-40 md:w-36 md:h-48 mb-[var(--space-2xl)]"
-        >
-           {/* Elegant Arch/Pill Shape Mask */}
-           <div className="w-full h-full rounded-t-full rounded-b-full overflow-hidden shadow-[0_20px_40px_-15px_rgba(212,184,169,0.3)] ring-1 ring-white/60">
-             <Image 
-               src="/images/profile/dr-miyaka-1.jpg"
-               alt="Dr. Miyaka Portrait"
-               fill
-               className="object-cover object-top"
-               priority
-             />
-           </div>
-           
-           {/* Authority Badge */}
-           <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap bg-[var(--color-surface)] px-4 py-1.5 rounded-full border border-[var(--color-marble-vein)] shadow-sm">
-             <span className="text-[10px] tracking-[0.15em] text-[var(--color-text-mocha)]">
-               美容皮膚科医 <span className="font-brand opacity-60">Dr. MIYAKA</span>
-             </span>
-           </div>
-        </motion.div>
-
-        {/* Main catch copy: 行間を leading-[1.8] -> [1.4] に引き締め、言葉の力を高める */}
+        {/* Main catch copy */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

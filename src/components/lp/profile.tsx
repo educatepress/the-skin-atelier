@@ -19,7 +19,7 @@ export default function Profile() {
                   alt="Dr. Miyaka"
                   width={500}
                   height={625}
-                  className="w-full h-full object-cover max-md:grayscale-0 md:grayscale md:hover:grayscale-0 transition-all duration-[2000ms] brightness-105"
+                  className="w-full h-full object-cover transition-all duration-[2000ms] brightness-105 hover:scale-[1.02]"
                 />
               </div>
             </div>

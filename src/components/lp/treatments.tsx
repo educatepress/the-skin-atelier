@@ -87,7 +87,7 @@ export default function Treatments() {
                     alt={`${t.nameEn} — ${t.nameJp}`}
                     width={600}
                     height={750}
-                    className="w-full h-full object-cover max-md:grayscale-0 md:grayscale brightness-105 md:group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-[1200ms]"
+                    className="w-full h-full object-cover brightness-105 group-hover:scale-[1.03] transition-all duration-[1200ms]"
                   />
                 </div>
 

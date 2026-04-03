@@ -70,13 +70,20 @@ async function performDeepResearch(theme: string) {
  */
 async function fetchAestheticImage(): Promise<string> {
   try {
-    const poolDir = path.join(process.cwd(), "public", "images", "pool");
-    if (fs.existsSync(poolDir)) {
-      const files = fs.readdirSync(poolDir).filter((f: string) => f.match(/\.(jpg|jpeg|png|webp)$/i));
-      if (files.length > 0) {
-        const idx = Math.floor(Math.random() * files.length);
-        return `/images/pool/${files[idx]}`;
+    // pool と optimized の両方からランダム選択
+    const candidates: { dir: string; prefix: string }[] = [
+      { dir: path.join(process.cwd(), "public", "images", "pool"), prefix: "/images/pool/" },
+      { dir: path.join(process.cwd(), "public", "images", "optimized"), prefix: "/images/optimized/" },
+    ];
+    const allFiles: string[] = [];
+    for (const { dir, prefix } of candidates) {
+      if (fs.existsSync(dir)) {
+        const files = fs.readdirSync(dir).filter((f: string) => f.match(/\.(jpg|jpeg|png|webp)$/i));
+        allFiles.push(...files.map(f => `${prefix}${f}`));
       }
+    }
+    if (allFiles.length > 0) {
+      return allFiles[Math.floor(Math.random() * allFiles.length)];
     }
   } catch(e) { console.error("Pool search error:", e); }
   return ""; // Fallback no image
@@ -139,15 +146,22 @@ async function reviewArticle(articleMdx: string) {
 
   const reviewPrompt = `
     あなたは医療法務部およびVOGUEの編集長です。
-    以下の【ブログ原稿】を厳格に検閲し、問題があれば修正した完全なMDXを返してください。
-    問題がなければ、そのままのMDXを返してください。
+    以下の【ブログ原稿】を厳格に検閲し、問題があれば修正してください。
 
-    【検閲基準：シルクトーン・フィルタ5箇条】
+    【検閲基準：シルクトーン・フィルタ6箇条】
     1. 過剰なセールスの排除（Trust First）: 「絶対治る」「最高」「No.1」などの誇大・断定表現がないか。
     2. 「あなた・私」の黄金比（Empathy）: 説教臭くなっていないか。親しい友人に宛てた手紙のような、優しく品のある日本語（余白を感じる文体）になっているか。
     3. 専門医としての客観的トーン（Safety）: 流行りに乗るだけでなく、「いまのあなたには強いかもしれない」といった誠実さがあるか。
-    4. フォーマット: 指定された見出し（Dear You, や、まず、お伝えしたい大切なこと、など）や、見出し「あなたの不安に寄り添って」の中に必ずFAQ（Q&A形式で働く女性目線の人肌感ある回答）とサイン画像が入っているか。
-    5. 秘密保持（Confidentiality）: 「白金高輪」「広尾」といった具体的な地名や、自身のクリニックの「開業・開院」に関する予告・言及がないか。
+    4. フォーマット: 指定された見出し（Dear You, や、まず、お伝えしたい大切なこと、など）や、見出し「あなたの不安に寄り添って」の中にFAQ（Q&A形式で働く女性目線の人肌感ある回答）とサイン画像が入っているか。
+    5. 秘密保持（Confidentiality）: 「白金高輪」「広尾」といった具体的な地名や、自身のクリニックの「開業・開院」に関する予告・言及がないか。「当院では」「The Skin Atelierでは」等も禁止。
+    6. パラグラフ・ライティングの徹底（Readability）: 1つの段落に複数のトピックが詰め込まれていないか。各段落の最初の1文で結論が述べられているか。
+
+    【絶対厳守の出力ルール】
+    - あなたの検閲結果やコメント、感想は一切出力しないでください。
+    - 「承知いたしました」「検閲結果」「修正点」等の前置き文言も一切不要です。
+    - 出力は「---」で始まるfrontmatterから始まるMDXの本文のみにしてください。
+    - コードフェンス（\`\`\`markdown や \`\`\`mdx）で囲まないでください。
+    - 修正の有無に関わらず、完全なMDXのみを返してください。
 
     【ブログ原稿】
     ${articleMdx}
@@ -191,9 +205,15 @@ async function main() {
     const reviewedMdx = await reviewArticle(rawMdx);
     console.log("✅ 自動検閲・修正完了\n");
 
-    // ⑤ MDXの中身だけを抽出
-    const cleanMdx = reviewedMdx?.replace(/^```markdown\n/, "").replace(/\n```$/, "") || "";
-    fs.writeFileSync("tmp-hayfever-blog.md", cleanMdx);
+    // ⑤ MDXの中身だけを抽出（AIがコードフェンスやコメントを付けた場合のクリーンアップ）
+    let cleanMdx = reviewedMdx || "";
+    // コードフェンスの除去
+    cleanMdx = cleanMdx.replace(/^```(?:markdown|mdx)?\n/gm, "").replace(/\n```$/gm, "").trim();
+    // AIの前置きコメントが残った場合、frontmatter(---)より前を全て除去
+    const frontmatterStart = cleanMdx.indexOf('---');
+    if (frontmatterStart > 0) {
+      cleanMdx = cleanMdx.substring(frontmatterStart);
+    }
 
     // ⑥ Google Sheetsへ保存 (キュー登録)
     const newRow = {
@@ -231,6 +251,12 @@ async function main() {
             style: 'primary',
             action_id: 'approve_content',
             value: JSON.stringify({ id: contentId, batchId: 'auto-blog', brand: 'atelier' }),
+          },
+          {
+            type: 'button',
+            text: { type: 'plain_text', text: '✏️ 修正依頼', emoji: true },
+            action_id: 'revise_content',
+            value: JSON.stringify({ id: contentId, brand: 'atelier' }),
           },
           {
             type: 'button',
