@@ -38,7 +38,7 @@ export default function BlogArticleClient({
           >
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-[0.6rem] font-brand tracking-[0.3em] text-[var(--color-text-muted)] uppercase hover:text-[#E8D3C9] transition-colors duration-500 mb-6 md:mb-12"
+              className="inline-flex items-center gap-2 text-[11px] font-brand tracking-[0.3em] text-[var(--color-text-muted)] uppercase hover:text-[var(--color-pink-gold-deep)] transition-colors duration-500 mb-6 md:mb-12"
             >
               ← Journal
             </Link>
@@ -51,11 +51,11 @@ export default function BlogArticleClient({
             transition={{ duration: 1, delay: 0.1 }}
             className="flex items-center gap-4 mb-8"
           >
-            <span className="font-brand text-[0.5rem] tracking-[0.5em] text-[#E8D3C9] uppercase">
+            <span className="font-brand text-[11px] tracking-[0.5em] text-[var(--color-pink-gold-deep)] uppercase">
               {metadata.category}
             </span>
             <span className="w-8 h-[1px] bg-[var(--color-marble-vein)]" />
-            <span className="font-brand text-[0.5rem] text-[var(--color-text-muted)] tracking-[0.15em]">
+            <span className="font-brand text-[11px] text-[var(--color-text-muted)] tracking-[0.15em]">
               {metadata.date}
             </span>
           </motion.div>
@@ -89,7 +89,7 @@ export default function BlogArticleClient({
               <p className="text-[0.75rem] text-[var(--color-text-mocha)] tracking-[0.03em]">
                 Dr. みやか
               </p>
-              <p className="font-brand text-[0.5rem] tracking-[0.2em] text-[var(--color-text-muted)] uppercase">
+              <p className="font-brand text-[11px] tracking-[0.2em] text-[var(--color-text-muted)] uppercase">
                 {metadata.readTime}
               </p>
             </div>
@@ -108,7 +108,7 @@ export default function BlogArticleClient({
           {children}
 
           {/* Medical disclaimer */}
-          <p className="text-[0.5rem] text-[var(--color-text-muted)] mt-14 tracking-[0.03em] opacity-40 leading-[2]">
+          <p className="text-[11px] text-[var(--color-text-muted)] mt-14 tracking-[0.03em] opacity-70 leading-[2]">
             ※ この記事は一般的な情報提供を目的としたものであり、個別の医療アドバイスではありません。
             効果には個人差がございます。具体的な治療については専門医にご相談ください。
           </p>

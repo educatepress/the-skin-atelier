@@ -10,7 +10,7 @@ export default function Footer() {
             <p className="font-brand text-[0.8rem] tracking-[0.2em] text-[var(--color-text-mocha)] uppercase mb-[var(--space-sm)]">
               The Skin Atelier
             </p>
-            <p className="font-brand text-[0.6rem] tracking-[0.15em] text-[var(--color-text-muted)] uppercase mb-[var(--space-lg)]">
+            <p className="font-brand text-[11px] tracking-[0.15em] text-[var(--color-text-muted)] uppercase mb-[var(--space-lg)]">
               by Dr. Miyaka
             </p>
             <p className="text-[0.75rem] leading-[2] text-[var(--color-text-muted)] tracking-[0.02em]">
@@ -20,7 +20,7 @@ export default function Footer() {
 
           {/* Navigation */}
           <div>
-            <p className="font-brand text-[0.65rem] tracking-[0.2em] text-[var(--color-text-muted)] uppercase mb-[var(--space-md)]">
+            <p className="font-brand text-[11px] tracking-[0.2em] text-[var(--color-text-muted)] uppercase mb-[var(--space-md)]">
               Navigation
             </p>
             <div className="flex flex-col gap-[var(--space-sm)]">
@@ -44,7 +44,7 @@ export default function Footer() {
 
           {/* Contact / SNS */}
           <div>
-            <p className="font-brand text-[0.65rem] tracking-[0.2em] text-[var(--color-text-muted)] uppercase mb-[var(--space-md)]">
+            <p className="font-brand text-[11px] tracking-[0.2em] text-[var(--color-text-muted)] uppercase mb-[var(--space-md)]">
               Connect
             </p>
             <div className="flex flex-col gap-[var(--space-sm)]">
@@ -67,19 +67,19 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-[var(--space-2xl)] pt-[var(--space-lg)] border-t border-[var(--color-marble-vein)]">
           <div className="flex flex-col md:flex-row justify-between items-center gap-[var(--space-md)]">
-            <p className="text-[0.65rem] text-[var(--color-text-muted)] tracking-[0.05em]">
+            <p className="text-[11px] text-[var(--color-text-muted)] tracking-[0.05em]">
               © 2026 The Skin Atelier by Dr. Miyaka. All rights reserved.
             </p>
             <div className="flex gap-[var(--space-lg)]">
               <a
                 href="#"
-                className="text-[0.6rem] text-[var(--color-text-muted)] hover:text-[var(--color-text-soft)] transition-colors tracking-[0.05em]"
+                className="text-[11px] text-[var(--color-text-muted)] hover:text-[var(--color-text-soft)] transition-colors tracking-[0.05em]"
               >
                 プライバシーポリシー
               </a>
               <a
                 href="#"
-                className="text-[0.6rem] text-[var(--color-text-muted)] hover:text-[var(--color-text-soft)] transition-colors tracking-[0.05em]"
+                className="text-[11px] text-[var(--color-text-muted)] hover:text-[var(--color-text-soft)] transition-colors tracking-[0.05em]"
               >
                 特定商取引法に基づく表記
               </a>
@@ -87,7 +87,7 @@ export default function Footer() {
           </div>
 
           {/* Medical advertising compliance */}
-          <p className="text-[0.55rem] text-[var(--color-text-muted)] text-center mt-[var(--space-lg)] leading-[1.8] tracking-[0.03em]">
+          <p className="text-[11px] text-[var(--color-text-muted)] text-center mt-[var(--space-lg)] leading-[1.8] tracking-[0.03em] opacity-70">
             ※ 当サイトは医療広告ガイドラインに準拠しています。掲載されている治療には個人差があり、効果を保証するものではありません。
             <br />
             治療のリスク・副作用・費用については、カウンセリング時に詳しくご説明いたします。
