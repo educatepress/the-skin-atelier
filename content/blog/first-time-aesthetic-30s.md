@@ -5,7 +5,7 @@ category: "Beginner"
 date: "2026.04"
 readTime: "6 min read"
 featured: false
-image: "/images/optimized/susan-wilkinson-hFvWfVxHlaY-unsplash.webp"
+image: "/images/pool/pool-img-35.webp"
 ---
 
 **「美容医療に興味はあるけど、何から始めればいいかわからない」**——30代で美容クリニックのドアを初めて叩く方から、最も多くいただく質問です。答えはシンプル。まず「土台」を整えることから始めましょう。

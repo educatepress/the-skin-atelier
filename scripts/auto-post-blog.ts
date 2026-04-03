@@ -70,23 +70,15 @@ async function performDeepResearch(theme: string) {
  */
 async function fetchAestheticImage(): Promise<string> {
   try {
-    // pool と optimized の両方からランダム選択
-    const candidates: { dir: string; prefix: string }[] = [
-      { dir: path.join(process.cwd(), "public", "images", "pool"), prefix: "/images/pool/" },
-      { dir: path.join(process.cwd(), "public", "images", "optimized"), prefix: "/images/optimized/" },
-    ];
-    const allFiles: string[] = [];
-    for (const { dir, prefix } of candidates) {
-      if (fs.existsSync(dir)) {
-        const files = fs.readdirSync(dir).filter((f: string) => f.match(/\.(jpg|jpeg|png|webp)$/i));
-        allFiles.push(...files.map(f => `${prefix}${f}`));
+    const poolDir = path.join(process.cwd(), "public", "images", "pool");
+    if (fs.existsSync(poolDir)) {
+      const files = fs.readdirSync(poolDir).filter((f: string) => f.match(/\.(jpg|jpeg|png|webp)$/i));
+      if (files.length > 0) {
+        return `/images/pool/${files[Math.floor(Math.random() * files.length)]}`;
       }
     }
-    if (allFiles.length > 0) {
-      return allFiles[Math.floor(Math.random() * allFiles.length)];
-    }
   } catch(e) { console.error("Pool search error:", e); }
-  return ""; // Fallback no image
+  return "";
 }
 
 /**

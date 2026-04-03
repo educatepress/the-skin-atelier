@@ -5,7 +5,7 @@ category: "Inner Care"
 date: "2026.03"
 readTime: "7 min read"
 featured: true
-image: "/images/optimized/caroline-badran-0hqk0cLS0k0-unsplash.webp"
+image: "/images/pool/pool-img-24.webp"
 ---
 
 **「高い化粧品を使っているのに、なぜか肌がくすむ」**——そんな経験はありませんか？ 実は、肌の美しさの80%は「内側」で決まります。分子栄養学という視点を持つことで、スキンケアの常識が根本から変わります。
