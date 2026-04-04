@@ -36,10 +36,16 @@ export default function Philosophy() {
             <FadeIn delay={0.2}>
               <div className="space-y-[var(--space-lg)] text-[var(--color-text-soft)] leading-[2.3]">
                 <p className="text-[0.95rem] tracking-[0.03em]">
-                  10代の頃、私はニキビに悩み、自分の肌に強いコンプレックスを持っていました。鏡を見るのが辛かったあの頃、私自身も一人の患者でした。
+                  10代の頃、私はニキビに悩み、<br className="md:hidden" />
+                  自分の肌に強いコンプレックスを<br className="md:hidden" />持っていました。<br className="hidden md:block" />
+                  鏡を見るのが辛かったあの頃、<br className="md:hidden" />
+                  私自身も一人の患者でした。
                 </p>
                 <p className="text-[0.95rem] tracking-[0.03em]">
-                  しかし、その経験があったからこそ、私は美容皮膚科医として患者様の悩みに寄り添いたいと強く願うようになりました。
+                  しかし、その経験があったからこそ、<br className="md:hidden" />
+                  私は美容医療の専門家として<br className="hidden md:block" />
+                  患者様の悩みに寄り添いたいと<br className="md:hidden" />
+                  強く願うようになりました。
                 </p>
               </div>
             </FadeIn>
@@ -47,10 +53,15 @@ export default function Philosophy() {
             <FadeIn delay={0.3}>
               <div className="space-y-[var(--space-lg)] text-[var(--color-text-soft)] leading-[2.3]">
                 <p className="text-[0.95rem] tracking-[0.03em]">
-                  美容医療は魔法ではありません。しかし、毎日のコツコツとした積み重ねに、肌は必ず応えてくれます。
+                  美容医療は魔法ではありません。<br className="md:hidden" />
+                  しかし、毎日のコツコツとした積み重ねに、<br className="md:hidden" />
+                  肌は必ず応えてくれます。
                 </p>
                 <p className="text-[0.95rem] tracking-[0.03em]">
-                  私自身、適切な治療とスキンケアを10年継続したことで、今ではノーファンデーションで過ごせる肌を手に入れることができました。
+                  私自身、適切な治療と<br className="md:hidden" />
+                  スキンケアを10年継続したことで、<br className="hidden md:block" />
+                  今ではノーファンデーションで過ごせる肌を<br className="md:hidden" />
+                  手に入れることができました。
                 </p>
               </div>
             </FadeIn>
@@ -58,7 +69,10 @@ export default function Philosophy() {
             <FadeIn delay={0.4}>
               <div className="space-y-[var(--space-lg)] text-[var(--color-text-soft)] leading-[2.3]">
                 <p className="text-[0.95rem] tracking-[0.03em]">
-                  育児や仕事など、女性の毎日は多忙を極めます。けれど、肌の老化もまた待ってはくれません。完璧を目指さなくても大丈夫です。できる範囲で、今日からエイジングケアを始めてみませんか？
+                  育児や仕事など、<br className="md:hidden" />女性の毎日は多忙を極めます。<br className="md:hidden" />
+                  けれど、肌の老化もまた待ってはくれません。<br className="hidden md:block" />
+                  完璧を目指さなくても大丈夫です。<br className="md:hidden" />
+                  できる範囲で、<br className="md:hidden" />今日からエイジングケアを始めてみませんか？
                 </p>
               </div>
             </FadeIn>

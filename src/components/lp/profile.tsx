@@ -74,11 +74,19 @@ export default function Profile() {
                 <ul className="text-[0.9rem] leading-[2.2] text-[var(--color-text-soft)] tracking-[0.03em] space-y-4">
                   <li>
                     <span className="block text-[var(--color-text-mocha)] font-medium">・ 肌育治療（Skin Quality Improvement）</span>
-                    <span className="block text-[0.85rem] mt-1">最新の美容機器を駆使し、肌の土台から健やかさを引き出す治療。</span>
+                    <span className="block text-[0.85rem] mt-1">
+                      最新の美容機器を駆使し、<br className="md:hidden" />
+                      肌の土台から<br className="md:hidden" />
+                      健やかさを引き出す治療。
+                    </span>
                   </li>
                   <li>
                     <span className="block text-[var(--color-text-mocha)] font-medium">・ ボトックス注入（Facial Contouring）</span>
-                    <span className="block text-[0.85rem] mt-1">自然な表情を保ちつつ、シワやたるみを改善する精密な注入。</span>
+                    <span className="block text-[0.85rem] mt-1">
+                      自然な表情を保ちつつ、<br className="md:hidden" />
+                      シワやたるみを改善する<br className="md:hidden" />
+                      精密な注入。
+                    </span>
                   </li>
                 </ul>
               </div>

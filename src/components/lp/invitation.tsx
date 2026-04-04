@@ -42,19 +42,17 @@ export default function Invitation() {
         {/* Body — silk tone compliant (NOT elitist) */}
         <FadeIn delay={0.2}>
           <p className="text-[0.95rem] leading-[2.4] text-[var(--color-text-soft)] tracking-[0.03em] mb-[var(--space-md)]">
-            心地よく美しさを育みたい方へ、
-            <br />
-            SNSにて美容医療の正しい知識や
-            <br />
+            心地よく美しさを育みたい方へ、<br className="hidden md:block" />
+            SNSにて美容医療の正しい知識や<br className="md:hidden" />
             日々のスキンケアのヒントをお届けしています。
           </p>
         </FadeIn>
 
         <FadeIn delay={0.25}>
           <p className="text-[0.95rem] leading-[2.4] text-[var(--color-text-muted)] tracking-[0.03em] mb-[var(--space-xl)]">
-            あなたの「美しさのかかりつけ医」として、
-            <br />
-            日常に寄り添う情報を丁寧にお届けいたします。
+            あなたの「美しさのかかりつけ医」として、<br className="md:hidden" />
+            日常に寄り添う情報を<br className="md:hidden" />
+            丁寧にお届けいたします。
           </p>
         </FadeIn>
 
