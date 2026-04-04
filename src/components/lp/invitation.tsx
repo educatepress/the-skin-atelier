@@ -78,11 +78,11 @@ export default function Invitation() {
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M22.5 9.8c0-4.3-4.3-7.8-9.6-7.8s-9.6 3.5-9.6 7.8c0 3.8 3.4 7.1 8 7.7.4.1.9.2 1 .5.1.3 0 .7 0 .7l-.2 1.2c0 .1-.1.4.3.6.4.2.9-.1 1-.2 1.1-.9 6.2-5 6.2-5 .2-.2.3-.4.3-.6.1-1.6 2.6-3 2.6-4.9z"/>
               </svg>
-              公式LINEで無料相談・予約する
+              公式LINEで美容Tipsを受け取る
             </motion.a>
           </div>
           <p className="text-[0.75rem] text-[var(--color-text-muted)] tracking-[0.1em] mt-[var(--space-md)]">
-            パーソナル美肌診断を実施中
+            Dr.みやかの肌タイプ別ケア情報を配信中
           </p>
         </FadeIn>
 

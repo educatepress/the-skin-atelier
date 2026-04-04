@@ -2,3 +2,8 @@ shell-init: error retrieving current directory: getcwd: cannot access parent dir
 /bin/bash: /Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/run-x-patrol.sh: Operation not permitted
 shell-init: error retrieving current directory: getcwd: cannot access parent directories: Operation not permitted
 /bin/bash: /Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/run-x-patrol.sh: Operation not permitted
+npm notice
+npm notice New minor version of npm available! 11.9.0 -> 11.12.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.12.1
+npm notice To update run: npm install -g npm@11.12.1
+npm notice

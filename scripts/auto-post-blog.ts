@@ -175,13 +175,34 @@ async function main() {
 
   const todayStr = new Date().toISOString().split('T')[0];
   const args = process.argv.slice(2);
-  const todayTheme = args[0] || "春のゆらぎ肌と花粉による肌荒れのメカニズムと正しいスキンケア";
+  let todayTheme = args[0];
+  let searchKeywords = "";
+  let isFromSheet = false;
+
+  if (!todayTheme) {
+    console.log("📥 引数なしのため、ThemeScheduleから今日の未執筆テーマを取得します...");
+    const schedules = await SheetsDB.getThemeSchedule() || [];
+    const pending = schedules.find(s => s.brand === "atelier" && s.status === "pending");
+    if (pending) {
+      todayTheme = pending.theme;
+      searchKeywords = pending.searchKeywords;
+      isFromSheet = true;
+      console.log(`🎯 シートから取得しました: ${todayTheme}`);
+    } else {
+      todayTheme = "美容皮膚科における最新のスキンケアトレンドと肌質改善";
+      console.log(`⚠️ 保留中のテーマが見つからないため、デフォルトテーマで進行します: ${todayTheme}`);
+    }
+  }
+
   const slug = `blog-auto-${todayStr}-${Math.random().toString(36).substring(7)}`;
   const contentId = `blog-${todayStr}-${slug}`;
 
+  // 検索・リサーチ用のキーワード構築
+  const researchTarget = searchKeywords ? `${todayTheme} (${searchKeywords})` : todayTheme;
+
   try {
     // 1. レポート用のリサーチ実行
-    const researchResult = await performDeepResearch(todayTheme);
+    const researchResult = await performDeepResearch(researchTarget);
     console.log("✅ リサーチ完了\n");
 
     // ② 写真の自動取得
@@ -282,7 +303,23 @@ async function main() {
       console.error(`❌ Slack通知エラー:`, error);
     }
 
-    console.log(`🎉 キュー登録＆Slack通知完了！`);
+    // ⑨ X（Twitter）スレッドの連携生成とステータス更新
+    try {
+      if (isFromSheet) {
+        await SheetsDB.updateThemeScheduleStatus(todayTheme, "completed");
+        console.log("✅ ThemeScheduleのステータスを'completed'に更新しました。");
+      }
+      
+      console.log("\n🚀 引き続き X (Twitter) 用の投稿を生成します...");
+      const { execSync } = require('child_process');
+      // X投稿スクリプトを呼び出し（引数として、同じテーマと背景コンテキストを渡す）
+      execSync(`npx tsx scripts/auto-publish/generate-x-post.ts "${todayTheme}" "日々の診察や最新の美容ニュースから"`, { stdio: 'inherit' });
+      console.log("✅ X 投稿の生成フローが完了しました！");
+    } catch (e) {
+      console.error("⚠️ X用投稿スクリプトの呼び出し中にエラーが発生しました:", e);
+    }
+
+    console.log(`\n🎉 すべての自動化プロセスが完了しました！`);
 
   } catch (error) {
     console.error("❌ エラーが発生しました:", error);

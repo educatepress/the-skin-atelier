@@ -54,6 +54,16 @@ export interface PromptsRow {
   forbidden_rules: string;
 }
 
+export interface ThemeScheduleRow {
+  date: string;
+  brand: string;
+  themeArea: string;
+  theme: string;
+  searchKeywords: string;
+  referenceUrl: string;
+  status: string;
+}
+
 export class SheetsDB {
   private static async getClient() {
     if (!SPREADSHEET_ID) throw new Error('GOOGLE_SHEETS_QUEUE_ID is not set in .env');
@@ -161,5 +171,68 @@ export class SheetsDB {
       return true;
     }
     return false;
+  }
+
+  // --- ThemeSchedule 関連のメソッド ---
+
+  static async getThemeSchedule(): Promise<ThemeScheduleRow[]> {
+    const sheets = await this.getClient();
+    const res = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: 'ThemeSchedule!A2:G'
+    }).catch(() => null);
+
+    const rows = res?.data?.values || [];
+    return rows.map(r => ({
+      date: r[0] || '',
+      brand: r[1] || '',
+      themeArea: r[2] || '',
+      theme: r[3] || '',
+      searchKeywords: r[4] || '',
+      referenceUrl: r[5] || '',
+      status: r[6] || ''
+    }));
+  }
+
+  static async appendThemeSchedule(rows: ThemeScheduleRow[]) {
+    if (rows.length === 0) return;
+    const sheets = await this.getClient();
+
+    const values = rows.map(r => [
+      r.date, r.brand, r.themeArea, r.theme, r.searchKeywords, r.referenceUrl, r.status
+    ]);
+
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: 'ThemeSchedule!A2:G',
+      valueInputOption: 'USER_ENTERED',
+      requestBody: { values }
+    });
+  }
+
+  static async updateThemeScheduleStatus(theme: string, newStatus: string) {
+    const sheets = await this.getClient();
+    
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: 'ThemeSchedule!A2:G'
+    });
+    
+    const rows = response.data.values || [];
+    const rowIndex = rows.findIndex(row => row[3] === theme); // column D is theme
+    
+    if (rowIndex === -1) {
+      console.warn(`Theme: ${theme} not found in ThemeSchedule.`);
+      return false;
+    }
+
+    const actualRowNumber = rowIndex + 2;
+    await sheets.spreadsheets.values.update({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `ThemeSchedule!G${actualRowNumber}`,
+      valueInputOption: 'USER_ENTERED',
+      requestBody: { values: [[newStatus]] }
+    });
+    return true;
   }
 }

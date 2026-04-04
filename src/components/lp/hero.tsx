@@ -104,7 +104,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 1.2 }}
           className="text-[11px] text-[var(--color-text-muted)] mt-[var(--space-xl)] tracking-[0.03em] opacity-70"
         >
-          ※自由診療のため公的医療保険は適用されません。効果には個人差がございます。
+          ※当サイトの情報は美容・健康に関する一般的な知識を提供するものであり、医療行為を代替するものではありません。
         </motion.p>
       </motion.div>
 

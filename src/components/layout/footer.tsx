@@ -26,9 +26,6 @@ export default function Footer() {
             <div className="flex flex-col gap-[var(--space-sm)]">
               {[
                 { label: "Philosophy", href: "/#philosophy" },
-                { label: "Treatments", href: "/#treatments" },
-                { label: "Menu", href: "/menu" },
-                { label: "Access", href: "/access" },
                 { label: "Journal", href: "/#blog" },
               ].map((link) => (
                 <a
@@ -88,9 +85,9 @@ export default function Footer() {
 
           {/* Medical advertising compliance */}
           <p className="text-[11px] text-[var(--color-text-muted)] text-center mt-[var(--space-lg)] leading-[1.8] tracking-[0.03em] opacity-70">
-            ※ 当サイトは医療広告ガイドラインに準拠しています。掲載されている治療には個人差があり、効果を保証するものではありません。
+            ※当サイトは美容医療に関する一般的な情報を提供するメディアであり、特定の医療機関での診療を代替するものではありません。
             <br />
-            治療のリスク・副作用・費用については、カウンセリング時に詳しくご説明いたします。
+            ご自身の肌質や体質に合わせた個別の判断については、身近な医療機関にご相談ください。
           </p>
         </div>
       </div>

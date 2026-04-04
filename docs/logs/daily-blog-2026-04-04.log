@@ -1,0 +1,122 @@
+════════════════════════════════════════
+📝 Daily Blog Generation — 2026-04-04 10:00:00
+════════════════════════════════════════
+[dotenv@17.3.1] injecting env (25) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+🚀 ブログ自動生成プロセスを開始します...
+
+🔍 テーマ「春のゆらぎ肌と花粉による肌荒れのメカニズムと正しいスキンケア」についてDeep Researchを実行中...
+✅ リサーチ完了
+
+📸 LP用のサムネイル画像を取得中...
+✍️ 記事を生成中（Elegant Letter Style）...
+✅ 記事生成完了
+
+🧐 生成された記事を自動で検閲・修正中...
+✅ 自動検閲・修正完了
+
+📦 Google Sheets にブログ記事をキュー登録中...
+❌ エラーが発生しました: GaxiosError: invalid_grant
+    at Gaxios._request (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/gaxios/src/gaxios.ts:213:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async OAuth2Client.refreshTokenNoCache (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/google-auth-library/build/src/auth/oauth2client.js:259:19)
+    at async OAuth2Client.getRequestMetadataAsync (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/google-auth-library/build/src/auth/oauth2client.js:372:17)
+    at async OAuth2Client.requestAsync (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/google-auth-library/build/src/auth/oauth2client.js:457:23)
+    at async createAPIRequestAsync (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/googleapis-common/build/src/apirequest.js:308:25)
+    at async SheetsDB.appendRows (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/lib/sheets-db.ts:112:5)
+    at async main (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-post-blog.ts:224:5) {
+  config: {
+    retry: true,
+    retryConfig: {
+      httpMethodsToRetry: [Array],
+      currentRetryAttempt: 0,
+      retry: 3,
+      noResponseRetries: 2,
+      retryDelayMultiplier: 2,
+      timeOfFirstRequest: 1775264539626,
+      totalTimeout: 9007199254740991,
+      maxRetryDelay: 9007199254740991,
+      statusCodesToRetry: [Array]
+    },
+    method: 'POST',
+    url: URL {
+      href: 'https://oauth2.googleapis.com/token',
+      origin: 'https://oauth2.googleapis.com',
+      protocol: 'https:',
+      username: '',
+      password: '',
+      host: 'oauth2.googleapis.com',
+      hostname: 'oauth2.googleapis.com',
+      port: '',
+      pathname: '/token',
+      search: '',
+      searchParams: URLSearchParams {},
+      hash: ''
+    },
+    data: URLSearchParams {
+      'refresh_token' => '[REDACTED]',
+      'client_id' => '163809178502-r2s0d8k5gtc0bh66l78p6l5v4cop28b3.apps.googleusercontent.com',
+      'client_secret' => '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+      'grant_type' => '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.' },
+    body: URLSearchParams {
+      'refresh_token' => '[REDACTED]',
+      'client_id' => '163809178502-r2s0d8k5gtc0bh66l78p6l5v4cop28b3.apps.googleusercontent.com',
+      'client_secret' => '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+      'grant_type' => '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.' },
+    validateStatus: [Function: validateStatus],
+    responseType: 'unknown',
+    errorRedactor: [Function: defaultErrorRedactor],
+    duplex: 'half',
+    headers: Headers {
+      'x-goog-api-client': 'gl-node/24.14.0',
+      'User-Agent': 'google-api-nodejs-client/10.6.2'
+    }
+  },
+  response: Response {
+    size: 0,
+    data: {
+      error: 'invalid_grant',
+      error_description: 'Token has been expired or revoked.'
+    },
+    config: {
+      retry: true,
+      retryConfig: [Object],
+      method: 'POST',
+      url: URL {},
+      data: [Object],
+      body: [Object],
+      validateStatus: [Function: validateStatus],
+      responseType: 'unknown',
+      errorRedactor: [Function: defaultErrorRedactor],
+      duplex: 'half',
+      headers: Headers {
+        'x-goog-api-client': 'gl-node/24.14.0',
+        'User-Agent': 'google-api-nodejs-client/10.6.2'
+      }
+    },
+    Symbol(Body internals): {
+      body: [Gunzip],
+      stream: [Gunzip],
+      boundary: null,
+      disturbed: true,
+      error: null
+    },
+    Symbol(Response internals): {
+      type: 'default',
+      url: 'https://oauth2.googleapis.com/token',
+      status: 400,
+      statusText: 'Bad Request',
+      headers: [Object],
+      counter: 0,
+      highWaterMark: 16384
+    }
+  },
+  code: 400,
+  status: 400,
+  error: undefined,
+  Symbol(gaxios-gaxios-error): '7.1.4',
+  [cause]: { message: 'invalid_grant', code: 400, status: 'Bad Request' }
+}
+
+✅ 完了: 10:02:19
