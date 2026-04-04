@@ -32,7 +32,7 @@ export default function BlogListClient({ articles }: { articles: Article[] }) {
                 <motion.article key={article.slug} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.2 + i * 0.15 }} className="bg-[#FDFCFA] group">
                   <Link href={`/blog/${article.slug}`} className="block p-10 md:p-14">
                     <div className="aspect-[4/3] bg-gradient-to-br from-[var(--color-surface)] via-[var(--color-marble-warm)] to-[var(--color-champagne-light)] mb-8 overflow-hidden relative">
-                      {article.image ? <img src={article.image} alt={article.title} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-[1200ms]"/> : <div className="w-full h-full flex items-center justify-center"><span className="font-brand text-[2rem] text-[var(--color-pink-gold-deep)] opacity-20">✦</span></div>}
+                      {article.image ? <img src={article.image} alt={article.title} className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-[1200ms]"/> : <div className="w-full h-full flex items-center justify-center"><span className="font-brand text-[2rem] text-[var(--color-pink-gold-deep)] opacity-20">✦</span></div>}
                     </div>
                     <div className="space-y-3">
                       <div className="flex items-center gap-4">
@@ -64,7 +64,7 @@ export default function BlogListClient({ articles }: { articles: Article[] }) {
               <motion.article key={article.slug} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: i * 0.1 }} viewport={{ once: true }} className="group">
                 <Link href={`/blog/${article.slug}`} className="block space-y-3">
                   <div className="aspect-[4/5] bg-gradient-to-br from-[var(--color-surface)] to-[var(--color-marble-warm)] overflow-hidden relative">
-                    {article.image ? <img src={article.image} alt={article.title} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1200ms]"/> : <div className="w-full h-full flex items-center justify-center"><span className="font-brand text-[1.5rem] text-[var(--color-pink-gold-deep)] opacity-15">✦</span></div>}
+                    {article.image ? <img src={article.image} alt={article.title} className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1200ms]"/> : <div className="w-full h-full flex items-center justify-center"><span className="font-brand text-[1.5rem] text-[var(--color-pink-gold-deep)] opacity-15">✦</span></div>}
                   </div>
                   <div className="flex items-center gap-3 pt-2">
                     <span className="font-brand text-[11px] font-medium tracking-[0.2em] text-[#A88D82] uppercase">{article.category}</span>

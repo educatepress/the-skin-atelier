@@ -28,10 +28,10 @@ export default function BlogPreview() {
                       <img 
                         src={metadata.image} 
                         alt={metadata.title} 
-                        className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1200ms]"
+                        className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1200ms]"
                       />
                     ) : (
-                      <div className="w-full h-full group-hover:scale-105 transition-all duration-[1200ms] flex items-center justify-center">
+                      <div className="w-full h-full grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1200ms] flex items-center justify-center">
                         <span className="font-brand text-[1.5rem] text-[var(--color-pink-gold)] opacity-20">✦</span>
                       </div>
                     )}

@@ -44,16 +44,6 @@ export default function Hero() {
         style={{ opacity, y }}
         className="relative z-10 text-center px-6 max-w-4xl mx-auto pt-24"
       >
-        {/* Brand label: 0.7rem -> 11px */}
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="font-brand text-[11px] sm:text-xs tracking-[0.4em] text-[var(--color-text-muted)] uppercase mb-[var(--space-xl)]"
-        >
-          The Skin Atelier by Dr. Miyaka
-        </motion.p>
-
         {/* Main catch copy */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
