@@ -99,7 +99,17 @@ async function sendSlackApprovalMessage(contentId: string, slug: string, caption
           type: 'button',
           text: { type: 'plain_text', text: '✨ この案で手動ポスト/編集する (Xアプリ起動)', emoji: true },
           style: 'primary',
-          url: `https://x.com/intent/tweet?text=${encodeURIComponent(captionText)}`.substring(0, 3000),
+          url: (() => {
+            let encoded = encodeURIComponent(captionText);
+            if (encoded.length > 2900) {
+              let trimmed = captionText;
+              while (encodeURIComponent(trimmed).length > 2900) {
+                trimmed = trimmed.slice(0, -10);
+              }
+              encoded = encodeURIComponent(trimmed);
+            }
+            return `https://x.com/intent/tweet?text=${encoded}`;
+          })(),
           action_id: `intent_tweet_${contentId}`
         }
       ]

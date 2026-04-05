@@ -241,7 +241,17 @@ async function sendProposalToSlack(tweetDetails: any, evaluation: any) {
           type: "button",
           text: { type: 'plain_text', text: '✨ この案でリプライする (Xアプリ起動)', emoji: true },
           style: 'primary',
-          url: `https://x.com/intent/tweet?in_reply_to=${tweetDetails.id}&text=${encodeURIComponent(evaluation.draftReply)}`.substring(0, 3000),
+          url: (() => {
+            let encoded = encodeURIComponent(evaluation.draftReply);
+            if (encoded.length > 2900) {
+              let trimmed = evaluation.draftReply;
+              while (encodeURIComponent(trimmed).length > 2900) {
+                trimmed = trimmed.slice(0, -10);
+              }
+              encoded = encodeURIComponent(trimmed);
+            }
+            return `https://x.com/intent/tweet?in_reply_to=${tweetDetails.id}&text=${encoded}`;
+          })(),
           action_id: `intent_reply_${tweetDetails.id}`
         }
       ]
