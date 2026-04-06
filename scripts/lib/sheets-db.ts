@@ -62,6 +62,8 @@ export interface ThemeScheduleRow {
   searchKeywords: string;
   referenceUrl: string;
   status: string;
+  evidenceTier?: string;
+  limitations?: string;
 }
 
 export class SheetsDB {
@@ -179,7 +181,7 @@ export class SheetsDB {
     const sheets = await this.getClient();
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
-      range: 'ThemeSchedule!A2:G'
+      range: 'ThemeSchedule!A2:I'
     }).catch(() => null);
 
     const rows = res?.data?.values || [];
@@ -190,7 +192,9 @@ export class SheetsDB {
       theme: r[3] || '',
       searchKeywords: r[4] || '',
       referenceUrl: r[5] || '',
-      status: r[6] || ''
+      status: r[6] || '',
+      evidenceTier: r[7] || '',
+      limitations: r[8] || ''
     }));
   }
 
@@ -199,12 +203,12 @@ export class SheetsDB {
     const sheets = await this.getClient();
 
     const values = rows.map(r => [
-      r.date, r.brand, r.themeArea, r.theme, r.searchKeywords, r.referenceUrl, r.status
+      r.date, r.brand, r.themeArea, r.theme, r.searchKeywords, r.referenceUrl, r.status, r.evidenceTier || '', r.limitations || ''
     ]);
 
     await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
-      range: 'ThemeSchedule!A2:G',
+      range: 'ThemeSchedule!A2:I',
       valueInputOption: 'USER_ENTERED',
       requestBody: { values }
     });

@@ -49,7 +49,10 @@ async function performDeepResearch(theme: string) {
   console.log(`🔍 テーマ「${theme}」についてDeep Researchを実行中...`);
   
   const researchPrompt = `
-    あなたは美容医学のリサーチャーです。以下のテーマについて、最新の医学的知見やトレンドをGoogle検索を用いて調査し、要点をまとめてください。
+    あなたは美容医学のシニア・リサーチ・エディターです。以下のテーマについて、最新の医学的知見やトレンドをGoogle検索を用いて調査し、要点をまとめてください。
+    【重要制約ルール】
+    - マウス・細胞を使った動物実験等（Tier C）のデータはエビデンスとして不十分なため除外してください。
+    - メタアナリス、系統的レビュー、RCT、大規模観察研究など「ヒトに対する有効性が確立されたデータ（Tier A/B）」のみを収集してください。
     テーマ: ${theme}
   `;
 
@@ -112,11 +115,12 @@ async function generateBlogPost(theme: string, researchData: string, imageUrl: s
     image: "${imageUrl}"
     ---
     
-    ## 1. Dear You, 
-    ## 2. まず、お伝えしたい大切なこと
-    ## 3. 美しさを紐解く、専門医の視点
-    ## 4. あなたの不安に寄り添って
-    ## 5. 最後に、心を込めて。
+    ## （見出しなしでのリード文）
+    ## 深掘りセクション（機序と臨床データ）
+    ## 専門医のアドバイス（注意点とライフスタイルへの統合）
+    ## あなたの不安に寄り添って
+    ## 結びに
+    ## 参考文献
 
     ![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)
   `;
