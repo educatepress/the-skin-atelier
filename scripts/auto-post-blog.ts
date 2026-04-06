@@ -182,7 +182,19 @@ async function main() {
   if (!todayTheme) {
     console.log("📥 引数なしのため、ThemeScheduleから今日の未執筆テーマを取得します...");
     const schedules = await SheetsDB.getThemeSchedule() || [];
-    const pending = schedules.find(s => s.brand === "atelier" && s.status === "pending");
+    const normalizeDate = (d: string) => {
+      if (!d) return "";
+      const parts = d.replace(/\//g, '-').split('-');
+      if (parts.length === 3) {
+        return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+      }
+      return d;
+    };
+    const pending = schedules.find(s => 
+      s.brand === "atelier" && 
+      s.status === "pending" && 
+      normalizeDate(s.date) === todayStr
+    );
     if (pending) {
       todayTheme = pending.theme;
       searchKeywords = pending.searchKeywords;
