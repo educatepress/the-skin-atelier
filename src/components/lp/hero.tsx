@@ -61,31 +61,30 @@ export default function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-md mx-auto mb-[var(--space-2xl)]"
+          className="max-w-lg mx-auto mb-[var(--space-2xl)]"
         >
-          <p className="text-[13px] md:text-[1rem] leading-[2.1] text-[var(--color-text-soft)] tracking-[0.04em]">
-            自らも肌荒れに悩み、
-            <br className="block md:hidden" />
-            遠回りをしてきたからこそ伝えたい。
-            <br />
-            情報に疲れた大人の肌に、
-            <br />
-            皮膚科学という明確な答えと、
-            <br className="block md:hidden" />
-            『引き算の美容医療』を。
+          <p className="text-[1rem] leading-[2.4] text-[var(--color-text-soft)] tracking-[0.04em]">
+            <span className="inline-block">自らも肌荒れに悩み、</span>
+            <span className="inline-block">遠回りをしてきたからこそ</span>
+            <span className="inline-block">伝えたい。</span>
+            <br className="hidden md:block" />
+            <span className="inline-block">情報に疲れた大人の肌に、</span>
+            <br className="hidden md:block" />
+            <span className="inline-block">皮膚科学という明確な答えと、</span>
+            <span className="inline-block">『引き算の美容医療』を。</span>
           </p>
         </motion.div>
 
-        {/* CTA: 機械的なコピーから情緒的なコピーへ */}
+        {/* CTA: リンク先を /blog へ変更。whitespace-nowrap で文字落ちを完全防止 */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="mb-[var(--space-2xl)]"
+          transition={{ duration: 0.6, delay: 0.9 }}
+          className="mb-[var(--space-2xl)] flex justify-center"
         >
-          <a href="#invitation" className="btn-atelier">
-            <span className="tracking-[0.1em]">毎日の美しさを育む、無料の美容情報</span>
-            <span className="arrow">→</span>
+          <a href="/blog" className="btn-atelier whitespace-nowrap">
+            <span className="tracking-[0.1em]">美しさを育む、美容ジャーナルへ</span>
+            <span className="arrow ml-2">→</span>
           </a>
         </motion.div>
 

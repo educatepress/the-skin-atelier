@@ -40,19 +40,22 @@ export default function Invitation() {
         </FadeIn>
 
         {/* Body — silk tone compliant (NOT elitist) */}
+        {/* Body — inline-block で意図しない改行を防ぐ */}
         <FadeIn delay={0.2}>
           <p className="text-[0.95rem] leading-[2.4] text-[var(--color-text-soft)] tracking-[0.03em] mb-[var(--space-md)]">
-            心地よく美しさを育みたい方へ、<br className="hidden md:block" />
-            SNSにて美容医療の正しい知識や<br className="md:hidden" />
-            日々のスキンケアのヒントをお届けしています。
+            <span className="inline-block">心地よく美しさを育みたい方へ、</span>
+            <span className="inline-block">SNSにて美容医療の正しい知識や</span>
+            <br className="md:hidden" />
+            <span className="inline-block">日々のスキンケアのヒントを</span>
+            <span className="inline-block">お届けしています。</span>
           </p>
         </FadeIn>
 
         <FadeIn delay={0.25}>
           <p className="text-[0.95rem] leading-[2.4] text-[var(--color-text-muted)] tracking-[0.03em] mb-[var(--space-xl)]">
-            あなたの「美しさのかかりつけ医」として、<br className="md:hidden" />
-            日常に寄り添う情報を<br className="md:hidden" />
-            丁寧にお届けいたします。
+            <span className="inline-block">あなたの「美しさのかかりつけ医」として、</span>
+            <span className="inline-block">日常に寄り添う情報を</span>
+            <span className="inline-block">丁寧にお届けいたします。</span>
           </p>
         </FadeIn>
 
@@ -62,7 +65,8 @@ export default function Invitation() {
           </p>
         </FadeIn>
 
-        {/* Official LINE CTA */}
+        {/* Official LINE CTA 
+            [NOTE] 「ジャーナルでファン化」の動線に集中するため一時的にLINE導線を非表示（コメントアウト）にし、シルクトーンの気品を保護しています。
         <FadeIn delay={0.35}>
           <div className="flex flex-col items-center justify-center gap-4">
             <motion.a
@@ -76,13 +80,14 @@ export default function Invitation() {
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M22.5 9.8c0-4.3-4.3-7.8-9.6-7.8s-9.6 3.5-9.6 7.8c0 3.8 3.4 7.1 8 7.7.4.1.9.2 1 .5.1.3 0 .7 0 .7l-.2 1.2c0 .1-.1.4.3.6.4.2.9-.1 1-.2 1.1-.9 6.2-5 6.2-5 .2-.2.3-.4.3-.6.1-1.6 2.6-3 2.6-4.9z"/>
               </svg>
-              公式LINEで美容Tipsを受け取る
+              公式LINEで美容Tipsを受取る
             </motion.a>
           </div>
           <p className="text-[0.75rem] text-[var(--color-text-muted)] tracking-[0.1em] mt-[var(--space-md)]">
             Dr.みやかの肌タイプ別ケア情報を配信中
           </p>
         </FadeIn>
+        */}
 
         {/* Trust signals */}
         <FadeIn delay={0.4}>
