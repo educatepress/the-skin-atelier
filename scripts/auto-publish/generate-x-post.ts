@@ -21,6 +21,23 @@ const ai = new GoogleGenAI({ apiKey });
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
 /**
+ * Helper: リトライ付きAPI呼び出し (503対策)
+ */
+async function withRetry<T>(fn: () => Promise<T>, maxRetries = 10, baseDelay = 15000): Promise<T> {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (err: any) {
+      if (attempt === maxRetries || err?.status !== 503) throw err;
+      const delay = baseDelay * Math.pow(2, attempt - 1);
+      console.log(`⏳ API混雑中 (503)… ${delay / 1000}秒後にリトライ (${attempt}/${maxRetries})`);
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
+  throw new Error("Unreachable");
+}
+
+/**
  * X (Twitter) 用の投稿文を生成する（3〜5ポストのスレッド形式）
  */
 async function generateXPost(theme: string, sceneContext: string) {
@@ -44,10 +61,10 @@ async function generateXPost(theme: string, sceneContext: string) {
     ※余計なマークダウン（\`\`\`など）を使わず、そのままコピペして使えるプレーンテキストを出力してください。スレッドの区切りは「---」としてください。
   `;
 
-  const response = await ai.models.generateContent({
+  const response = await withRetry(() => ai.models.generateContent({
     model: "gemini-2.5-flash",
     contents: prompt,
-  });
+  }));
 
   return response.text;
 }
