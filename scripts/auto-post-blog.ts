@@ -27,7 +27,7 @@ const slackClient = new WebClient(SLACK_BOT_TOKEN);
 /**
  * Helper: リトライ付きAPI呼び出し (503対策)
  */
-async function withRetry<T>(fn: () => Promise<T>, maxRetries = 3, baseDelay = 10000): Promise<T> {
+async function withRetry<T>(fn: () => Promise<T>, maxRetries = 10, baseDelay = 15000): Promise<T> {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await fn();
@@ -58,7 +58,7 @@ async function performDeepResearch(theme: string) {
 
   // Gemini 2.5 Pro + Google Search Grounding（リトライ付き）
   const response = await withRetry(() => ai.models.generateContent({
-    model: "gemini-2.5-pro",
+    model: "gemini-2.5-flash",
     contents: researchPrompt,
     config: {
       tools: [{ googleSearch: {} }],
@@ -126,7 +126,7 @@ async function generateBlogPost(theme: string, researchData: string, imageUrl: s
   `;
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.5-pro",
+    model: "gemini-2.5-flash",
     contents: writingPrompt,
   });
 
@@ -164,7 +164,7 @@ async function reviewArticle(articleMdx: string) {
   `;
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.5-pro",
+    model: "gemini-2.5-flash",
     contents: reviewPrompt,
   });
 
