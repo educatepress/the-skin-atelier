@@ -115,11 +115,11 @@ async function generateBlogPost(theme: string, researchData: string, imageUrl: s
     image: "${imageUrl}"
     ---
     
-    ## （見出しなしでのリード文）
-    ## 深掘りセクション（機序と臨床データ）
-    ## 専門医のアドバイス（注意点とライフスタイルへの統合）
+    ## あなたへ、
+    ## まず、お伝えしたい大切なこと
+    ## 美しさを紐解く、専門医の視点
     ## あなたの不安に寄り添って
-    ## 結びに
+    ## 最後に、心を込めて。
     ## 参考文献
 
     ![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)
