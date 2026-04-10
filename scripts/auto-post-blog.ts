@@ -177,7 +177,9 @@ async function reviewArticle(articleMdx: string) {
 async function main() {
   console.log("🚀 ブログ自動生成プロセスを開始します...\n");
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const targetDate = new Date();
+  targetDate.setDate(targetDate.getDate() + 1);
+  const tomorrowStr = targetDate.toISOString().split('T')[0];
   const args = process.argv.slice(2);
   let todayTheme = args[0];
   let searchKeywords = "";
@@ -197,21 +199,21 @@ async function main() {
     const pending = schedules.find(s => 
       s.brand === "atelier" && 
       s.status === "pending" && 
-      normalizeDate(s.date) === todayStr
+      normalizeDate(s.date) === tomorrowStr
     );
     if (pending) {
       todayTheme = pending.theme;
       searchKeywords = pending.searchKeywords;
       isFromSheet = true;
-      console.log(`🎯 シートから取得しました: ${todayTheme}`);
+      console.log(`🎯 シートから翌日分のテーマを取得しました: ${todayTheme}`);
     } else {
       todayTheme = "美容皮膚科における最新のスキンケアトレンドと肌質改善";
-      console.log(`⚠️ 保留中のテーマが見つからないため、デフォルトテーマで進行します: ${todayTheme}`);
+      console.log(`⚠️ 明日の保留中テーマが見つからないため、デフォルトテーマで進行します: ${todayTheme}`);
     }
   }
 
-  const slug = `blog-auto-${todayStr}-${Math.random().toString(36).substring(7)}`;
-  const contentId = `blog-${todayStr}-${slug}`;
+  const slug = `blog-auto-${tomorrowStr}-${Math.random().toString(36).substring(7)}`;
+  const contentId = `blog-${tomorrowStr}-${slug}`;
 
   // 検索・リサーチ用のキーワード構築
   const researchTarget = searchKeywords ? `${todayTheme} (${searchKeywords})` : todayTheme;

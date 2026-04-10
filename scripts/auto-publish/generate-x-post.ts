@@ -152,12 +152,14 @@ async function sendSlackApprovalMessage(contentId: string, slug: string, caption
  * メイン実行関数
  */
 async function main() {
-  const todayStr = new Date().toISOString().split('T')[0];
+  const targetDate = new Date();
+  targetDate.setDate(targetDate.getDate() + 1);
+  const tomorrowStr = targetDate.toISOString().split('T')[0];
   const args = process.argv.slice(2);
   const theme = args[0] || "春のゆらぎ肌と花粉によるスキンケア";
   const sceneContext = args[1] || "最新の医学論文や自身のスキンケア経験から得られた客観的な気づき。架空の患者は絶対に出さないこと。";
-  const slug = `x-${todayStr}-${Math.random().toString(36).substring(7)}`;
-  const contentId = `x-${todayStr}-${slug}`;
+  const slug = `x-${tomorrowStr}-${Math.random().toString(36).substring(7)}`;
+  const contentId = `x-${tomorrowStr}-${slug}`;
 
   try {
     // 1. AIで投稿文を生成
