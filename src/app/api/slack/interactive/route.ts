@@ -4,6 +4,8 @@ import { SheetsDB } from '../../../../../scripts/lib/sheets-db';
 import { Octokit } from '@octokit/rest';
 import { WebClient } from '@slack/web-api';
 
+// Vercel上で動作するSlack承認受け口（Webhook）
+export async function POST(req: Request) {
   // --- Vercel Serverless Function Helper & Error Catcher ---
   let payloadStr: string | null = null;
   let payload: any = null;
