@@ -1,209 +1,182 @@
-import { NextResponse, after } from 'next/server';
-import { getEnvVar } from '@/lib/env-helper';
-import { updateSheetRow } from '@/lib/sheets-rest';
+import { NextResponse } from 'next/server';
+import { TwitterApi } from 'twitter-api-v2';
+import { SheetsDB } from '../../../../../scripts/lib/sheets-db';
+import { Octokit } from '@octokit/rest';
+import { WebClient } from '@slack/web-api';
 
-const SLACK_BOT_TOKEN = getEnvVar('SLACK_BOT_TOKEN');
+  // --- Vercel Serverless Function Helper & Error Catcher ---
+  let payloadStr: string | null = null;
+  let payload: any = null;
 
-async function updateSlackMessage(channel: string, ts: string, text: string, blocks: any[]) {
-  if (!SLACK_BOT_TOKEN) {
-    console.error('[updateSlackMessage] No Slack Bot Token found.');
-    return;
-  }
-  const res = await fetch('https://slack.com/api/chat.update', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${SLACK_BOT_TOKEN}`
-    },
-    body: JSON.stringify({ channel, ts, text, blocks })
-  });
-  const data = await res.json();
-  if (!data.ok) {
-    console.error('[updateSlackMessage] Failed:', data.error);
-  }
-}
-
-export async function POST(req: Request) {
   try {
-    const formData = await req.formData();
-    const payloadStr = formData.get('payload');
-
-    if (!payloadStr || typeof payloadStr !== 'string') {
+    const rawBody = await req.text();
+    const params = new URLSearchParams(rawBody);
+    payloadStr = params.get('payload');
+    
+    if (!payloadStr) {
       return NextResponse.json({ error: 'No payload' }, { status: 400 });
     }
 
-    const payload = JSON.parse(payloadStr);
+    payload = JSON.parse(payloadStr);
 
-    // =========================================================================
-    // 1. Handle Button Clicks (Block Actions)
-    // =========================================================================
-    if (payload.type === 'block_actions') {
-      const action = payload.actions?.[0];
-      if (!action) return NextResponse.json({ ok: true });
-
-      if (action.action_id === 'approve_content') {
-        const parsedValue = JSON.parse(action.value || '{}');
-        const contentId = parsedValue.id;
-        const channel = payload.container?.channel_id;
-        const ts = payload.container?.message_ts;
-        const blocks = payload.message?.blocks;
-
-        // ⚡ Slackは3秒以内の応答を要求するため、重い処理はafter構文でバックグラウンド実行
-        after(async () => {
-          try {
-            const today = new Date().toISOString().split('T')[0];
-            await updateSheetRow(contentId, {
-              status: 'approved',
-              scheduled_date: today
-            });
-            console.log(`[Slack API] ✅ Successfully approved ${contentId} in Google Sheets.`);
-          } catch (err) {
-            console.error('[Slack API] Failed to update Google Sheets on approve:', err);
-          }
-
-          // --- Automatically publish pending Drafts for Webpage.new ---
-          try {
-            const fs = require('fs');
-            const path = require('path');
-            const slugMatch = contentId.match(/^blog-(.+?)-\d+$/);
-            const rawSlug = slugMatch ? slugMatch[1] : contentId;
-
-            const jpBlogPath = path.join(process.cwd(), 'src/content/blog/jp', `${rawSlug}.mdx.pending`);
-            const enBlogPath = path.join(process.cwd(), 'src/content/blog/en', `${rawSlug}-en.mdx.pending`);
-            
-            if (fs.existsSync(jpBlogPath)) {
-              fs.renameSync(jpBlogPath, jpBlogPath.replace('.pending', ''));
-              console.log(`✅ Auto-published: ${rawSlug}.mdx`);
-            }
-            if (fs.existsSync(enBlogPath)) {
-              fs.renameSync(enBlogPath, enBlogPath.replace('.pending', ''));
-              console.log(`✅ Auto-published: ${rawSlug}-en.mdx`);
-            }
-          } catch (postErr) {
-            console.error('[Slack API] Failed to auto-publish pending MDX file:', postErr);
-          }
-
-          if (channel && ts && blocks) {
-            const actionBlockIndex = blocks.findIndex((b: any) => b.type === 'actions');
-            if (actionBlockIndex !== -1) {
-              blocks[actionBlockIndex] = {
-                type: 'section',
-                text: {
-                  type: 'mrkdwn',
-                  text: `✅ *承認済み* (明朝の自動投稿キューに登録されました)`
-                }
-              };
-              await updateSlackMessage(channel, ts, '承認されました', blocks);
-            }
-          }
-        });
-
-        // 処理のキューイング完了後、即座にSlackへ200 OKを返す
-        return NextResponse.json({ ok: true });
-      }
-
-      // ❌ [Reject] -> Open Modal for reason
-      if (action.action_id === 'reject_content') {
-        const parsedValue = JSON.parse(action.value || '{}');
-        const contentId = parsedValue.id;
-
-        console.log(`[Slack API] Opening rejection modal for: ${contentId}`);
-
-        // Save original message context to update it after submission
-        const privateMetadata = JSON.stringify({
-          id: contentId,
-          channel: payload.container?.channel_id,
-          ts: payload.container?.message_ts,
-          blocks: payload.message?.blocks
-        });
-
-        if (SLACK_BOT_TOKEN) {
-          await fetch('https://slack.com/api/views.open', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${SLACK_BOT_TOKEN}`
-            },
-            body: JSON.stringify({
-              trigger_id: payload.trigger_id,
-              view: {
-                type: 'modal',
-                callback_id: 'reject_modal_submission',
-                private_metadata: privateMetadata,
-                title: { type: 'plain_text', text: '却下理由の入力' },
-                submit: { type: 'plain_text', text: '却下する', emoji: true },
-                close: { type: 'plain_text', text: 'キャンセル', emoji: true },
-                blocks: [
-                  {
-                    type: 'input',
-                    block_id: 'reason_block',
-                    label: { type: 'plain_text', text: '修正指示・却下理由を詳しく書いてください' },
-                    element: {
-                      type: 'plain_text_input',
-                      action_id: 'reason_input',
-                      multiline: true,
-                      placeholder: { type: 'plain_text', text: '例: フックが弱いです。「35歳以上」というキーワードを含めてリライトしてください。' }
-                    }
-                  }
-                ]
-              }
-            })
-          });
-        }
-        return NextResponse.json({ ok: true });
-      }
-    }
-
-    // =========================================================================
-    // 2. Handle Modal Submission (View Submission)
-    // =========================================================================
-    if (payload.type === 'view_submission' && payload.view?.callback_id === 'reject_modal_submission') {
-      const stateValues = payload.view.state.values;
-      const reason = stateValues?.reason_block?.reason_input?.value || '理由なし';
+    if (payload.type === 'block_actions' && payload.actions && payload.actions[0]) {
+      const action_id = payload.actions[0].action_id;
       
-      const privateMetadata = JSON.parse(payload.view.private_metadata || '{}');
-      const contentId = privateMetadata.id;
-
-      after(async () => {
-        let success = false;
+      if (action_id === 'approve_content' || action_id === 'reject_content') {
+        let valueParsed: any = {};
         try {
-          await updateSheetRow(contentId, {
-            status: 'rejected',
-            rej_reason: reason
-          });
-          console.log(`[Slack API] Successfully recorded rejection for ${contentId} in Google Sheets. Reason: ${reason}`);
-          success = true;
-        } catch (err) {
-          console.error('[Slack API] Failed to update Google Sheets:', err);
-        }
+          valueParsed = JSON.parse(payload.actions[0].value);
+        } catch(e){}
+        const { id } = valueParsed;
+        
+        // ------------------------------------------------------------
+        // Timeout Wrapper to prevent Vercel 10s hang (and Slack 3s dispatch_failed)
+        // ------------------------------------------------------------
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error("FUNCTION_TIMEOUT: The process took too long. Check if Google Auth is hanging on prompt or if API is slow.")), 8000);
+        });
 
-        // Update the original Slack message to show the rejection
-        if (privateMetadata.channel && privateMetadata.ts && privateMetadata.blocks) {
-          const blocks = privateMetadata.blocks;
-          const actionBlockIndex = blocks.findIndex((b: any) => b.type === 'actions');
+        const mainTask = async () => {
+          // Check ENV sanity
+          const missingEnvs = [];
+          if (!process.env.GOOGLE_OAUTH_TOKEN_JSON) missingEnvs.push("GOOGLE_OAUTH_TOKEN_JSON");
+          if (!process.env.GOOGLE_OAUTH_CLIENT_ID) missingEnvs.push("GOOGLE_OAUTH_CLIENT_ID");
+          if (!process.env.GOOGLE_OAUTH_CLIENT_SECRET) missingEnvs.push("GOOGLE_OAUTH_CLIENT_SECRET");
+          if (!process.env.GOOGLE_SHEETS_QUEUE_ID) missingEnvs.push("GOOGLE_SHEETS_QUEUE_ID");
           
-          if (actionBlockIndex !== -1) {
-            blocks[actionBlockIndex] = {
-              type: 'section',
-              text: {
-                type: 'mrkdwn',
-                text: `❌ *却下済み*\n*理由:* ${reason}${!success ? ' (※queue.jsonの更新に失敗)' : ''}`
-              }
-            };
-            await updateSlackMessage(privateMetadata.channel, privateMetadata.ts, '却下されました', blocks);
+          if (missingEnvs.length > 0) {
+            throw new Error(`MISSING_ENV: ${missingEnvs.join(', ')}`);
           }
-        }
-      });
 
-      // Clear the modal
-      return NextResponse.json({
-        response_action: 'clear'
-      });
+          // Try to purely parse the token to identify JSON syntax issues in Vercel
+          try {
+            JSON.parse(process.env.GOOGLE_OAUTH_TOKEN_JSON as string);
+          } catch(err) {
+            throw new Error("JSON_PARSE_ERROR: GOOGLE_OAUTH_TOKEN_JSON is not a valid JSON. Check Vercel Environment Variables. Avoid trailing/leading quotes.");
+          }
+
+          if (action_id === 'reject_content') {
+             await SheetsDB.updateRow(id || '', { status: 'rejected' });
+             const slackClient = new WebClient(process.env.SLACK_BOT_TOKEN);
+             if (payload.message && payload.channel?.id && id) {
+               await slackClient.chat.update({
+                 channel: payload.channel.id,
+                 ts: payload.message.ts,
+                 text: `コンテンツ ${id} — ❌ 却下されました`,
+                 blocks: [
+                   {
+                     type: 'section',
+                     text: { type: 'mrkdwn', text: `❌ *このコンテンツは却下（Reject）されました。*\nID: ${id}` }
+                   }
+                 ]
+               });
+             }
+             return { msg: "✅ 却下処理が完了しました。" };
+          }
+
+          // --- Approve Logic ---
+          let queueItems = await SheetsDB.getRows();
+          const targetRow = queueItems.find(r => r.content_id === id);
+          if (!targetRow) {
+            throw new Error(`NOT_FOUND: 指定されたコンテンツ(${id})がキューに見つかりません。`);
+          }
+
+          let recipe: any = {};
+          try { recipe = JSON.parse(targetRow.generation_recipe || '{}'); } catch (e) {}
+          const captionText = recipe.captionText || '';
+
+          const slackClient = new WebClient(process.env.SLACK_BOT_TOKEN);
+
+          // X (Twitter)
+          if (id && id.startsWith('x-')) {
+            const missingXEnvs = [];
+            if (!process.env.TWITTER_API_KEY) missingXEnvs.push("TWITTER_API_KEY");
+            if (!process.env.TWITTER_ACCESS_TOKEN) missingXEnvs.push("TWITTER_ACCESS_TOKEN");
+            if (missingXEnvs.length > 0) throw new Error(`MISSING_X_ENV: ${missingXEnvs.join(', ')}`);
+
+            const twitterClient = new TwitterApi({
+              appKey: process.env.TWITTER_API_KEY!,
+              appSecret: process.env.TWITTER_API_SECRET!,
+              accessToken: process.env.TWITTER_ACCESS_TOKEN!,
+              accessSecret: process.env.TWITTER_ACCESS_SECRET!,
+            });
+            await twitterClient.v2.tweet(captionText);
+            await SheetsDB.updateRow(id, { status: 'posted', posted_at: new Date().toISOString() });
+            
+            if (payload.message && payload.channel?.id) {
+               await slackClient.chat.update({
+                 channel: payload.channel.id,
+                 ts: payload.message.ts,
+                 text: `🐦 X投稿 ${targetRow.title} — ✅ 投稿完了`,
+                 blocks: [{ type: 'section', text: { type: 'mrkdwn', text: `✅ *X（Twitter）への投稿が完了しました！*\n\n> ${captionText}` } }]
+               });
+            }
+            return { msg: "X posted successfully" };
+          }
+
+          // Blog
+          if (id && id.startsWith('blog-')) {
+            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+            const owner = process.env.GITHUB_OWNER || 'educatepress';
+            const repo = process.env.GITHUB_REPO || 'the-skin-atelier';
+            const slug = targetRow.title;
+            const filePath = `content/blog/${slug}.md`;
+            const contentEncoded = Buffer.from(captionText).toString('base64');
+
+            let fileSha = undefined;
+            try {
+              const { data } = await octokit.repos.getContent({ owner, repo, path: filePath });
+              if (!Array.isArray(data)) fileSha = (data as any).sha;
+            } catch (err) {} 
+
+            await octokit.repos.createOrUpdateFileContents({
+              owner, repo, path: filePath, message: `Auto-publish blog: ${slug}`,
+              content: contentEncoded, sha: fileSha,
+            });
+
+            await SheetsDB.updateRow(id, { status: 'posted', posted_at: new Date().toISOString() });
+
+            if (payload.message && payload.channel?.id) {
+               await slackClient.chat.update({
+                 channel: payload.channel.id,
+                 ts: payload.message.ts,
+                 text: `📝 ブログ投稿 ${slug} — ✅ デプロイ開始`,
+                 blocks: [{ type: 'section', text: { type: 'mrkdwn', text: `✅ *GitHubへの連携が完了し、Vercelのデプロイが開始されました！*\n約1〜2分後にサイトに公開されます。\n\n> 記事スラッグ: ${slug}` } }]
+               });
+            }
+            return { msg: "Blog pushed successfully" };
+          }
+          
+          return { msg: "ID unknown format" };
+        };
+
+        // Execute task with timeout
+        await Promise.race([mainTask(), timeoutPromise]);
+        
+        return NextResponse.json({ ok: true });
+      }
     }
 
     return NextResponse.json({ ok: true });
   } catch (error: any) {
-    console.error('[Slack API] Unhandled error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Webhook error:', error);
+    
+    // Attempt to notify Slack of the specific programmatic error so user knows instead of blind "dispatch_failed"
+    try {
+      if (payload && payload.channel && payload.channel.id && process.env.SLACK_BOT_TOKEN) {
+        const slackClient = new WebClient(process.env.SLACK_BOT_TOKEN);
+        await slackClient.chat.postMessage({
+          channel: payload.channel.id,
+          thread_ts: payload.message?.ts, // Post as a reply to the approval message
+          text: `⚠️ *システムエラー発生*\n詳細: \`${error.message}\``
+        });
+      }
+    } catch(replyErr) {
+       console.error("Could not send error reply to Slack", replyErr);
+    }
+    
+    // Slack still requires 200 within 3s or it shows dispatch_failed. To hide dispatch failed we could return 200, but we return 500 to signal true failure.
+    // However, if we sent a slack message, returning 200 avoids the scary red warning.
+    return NextResponse.json({ text: `エラー: ${error.message}` }, { status: 200 });
   }
 }
