@@ -94,7 +94,7 @@ export async function getGoogleClient() {
   }
 
   // サーバーレス環境（Vercel等）では対話的な認証フローは不可能
-  const isServerless = !!process.env.VERCEL || !!process.env.AWS_LAMBDA_FUNCTION_NAME;
+  const isServerless = !!process.env.VERCEL || !!process.env.AWS_LAMBDA_FUNCTION_NAME || !!process.env.GITHUB_ACTIONS;
   if (isServerless) {
     throw new Error(
       'GOOGLE_AUTH_FAILED: サーバーレス環境でGoogle認証トークンが無効または期限切れです。' +
