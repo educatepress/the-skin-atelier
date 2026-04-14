@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
-import { SheetsDB } from "./lib/sheets-db";
+import { SheetsDB, ThemeScheduleRow } from "./lib/sheets-db";
 import { WebClient } from '@slack/web-api';
 import { createClient } from 'pexels';
 
@@ -39,6 +39,115 @@ async function withRetry<T>(fn: () => Promise<T>, maxRetries = 10, baseDelay = 1
     }
   }
   throw new Error("Unreachable");
+}
+
+/**
+ * 0. テーマ自動生成（ThemeScheduleが空の場合にplan-10day-themesと同等の処理を実行）
+ */
+async function autoGenerateThemes(brand: string): Promise<ThemeScheduleRow[]> {
+  console.log(`\n🤖 ThemeScheduleにテーマがないため、10日分のテーマを自動生成します...`);
+
+  const pastSchedules = await SheetsDB.getThemeSchedule() || [];
+  const brandSchedules = pastSchedules.filter(s => s.brand === brand);
+  const recentThemes = brandSchedules.slice(-20).map(t => t.theme).join(" / ");
+
+  const prompt = `
+あなたは美容皮膚科・アンチエイジング専門医の視点を持つ「シニア・リサーチ・エディター」です。
+直近のSNSと最新論文トレンドから、今後10日間（1日1記事）で執筆すべき「全く新しいバズテーマ10個」を提案してください。
+
+【最優先ミッションと選定アルゴリズム】
+「ヒトに対する有効性が確立された（Tier A/B）」最新の美容医学エビデンスに基づくテーマを選定してください。
+※マウス・細胞実験（Tier C）は、美容領域では再現性が低いため「採用禁止」とします。
+1. ティアA（最優先）：メタアナリス・系統的レビュー・RCT（ヒト臨床試験）
+2. ティアB（採用可）：観察研究・大規模コホート研究（ヒトデータ）
+3. ティアC（禁止）：動物実験・試験管内での細胞実験。
+
+【厳守事項】
+1. 直近で以下のテーマは既に執筆済みです。これらと文脈が被るテーマは絶対に避けてください。
+  - [既存テーマ]: ${recentThemes || "(まだ履歴なし)"}
+
+2. 各テーマは以下の5つの大枠（ThemeArea）からそれぞれ2個ずつ、合計10個生成してください。
+    ①最新成分ディープダイブ（例: レバーエキス、エクソソーム、レチノール代替成分など）
+    ②美容医療トレンド（例: ピコレーザーの真実、ポテンツァのダウンタイムなど）
+    ③自宅スキンケアの落とし穴（例: クレンジングの罠、摩擦レスの副作用など）
+    ④季節の肌トラブル（例: 紫外線と隠れシミ、花粉とゆらぎ肌など）
+    ⑤論文ベースの神話崩し（例: コラーゲンサプリは効くか？ 経皮吸収の限界など）
+
+3. 後日AIが内容を深掘り検索（ディープリサーチ）するための「検索キーワード（主に英語の医学用語や成分名など）」を付与してください。
+4. 【絶対禁止ワード】「当院では」「私のクリニックでは」「私のアトリエでは」などの表現をテーマに含めないこと。
+
+【出力フォーマット】
+以下の形式のJSONのみ出力してください（\`\`\`json などのマークダウン修飾は省略してください）。
+evidenceTier には必ず "A" または "B" を指定。 "C" の場合はエラーとして再選定すること。
+[
+  {
+    "themeArea": "①最新成分ディープダイブ",
+    "theme": "生成されたテーマタイトル",
+    "searchKeywords": "Exosome OR Niacinamide mechanism 2024",
+    "referenceUrl": "",
+    "evidenceTier": "Tier A",
+    "limitations": "ヒトでの大規模介入研究はまだ発展途上である点..."
+  },
+  ...(必ず10件)
+]
+  `;
+
+  const response = await withRetry(() => ai.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents: prompt,
+  }));
+
+  let rawText = response.text || "[]";
+  rawText = rawText.replace(/^```json\n/gm, "").replace(/^```\n/gm, "").replace(/```$/gm, "").trim();
+
+  try {
+    const data = JSON.parse(rawText);
+
+    const today = new Date();
+    const rows: ThemeScheduleRow[] = [];
+
+    // スケジュールの開始日を決定（既存の未来の予定があればその翌日から）
+    let startDate = new Date();
+    if (brandSchedules.length > 0) {
+      const lastRow = brandSchedules[brandSchedules.length - 1];
+      if (lastRow.date) {
+        const lastDate = new Date(lastRow.date);
+        if (lastDate >= today) {
+          startDate = new Date(lastDate.getTime() + 24 * 60 * 60 * 1000);
+        }
+      }
+    }
+
+    for (let i = 0; i < 10; i++) {
+      const targetDate = new Date(startDate.getTime() + (i * 24 * 60 * 60 * 1000));
+      const dateStr = targetDate.toISOString().split('T')[0];
+      const item = data[i] || {};
+
+      rows.push({
+        date: dateStr,
+        brand,
+        themeArea: item.themeArea || "未分類",
+        theme: item.theme || "未設定のテーマ",
+        searchKeywords: item.searchKeywords || "",
+        referenceUrl: item.referenceUrl || "",
+        status: "pending",
+        evidenceTier: item.evidenceTier || "",
+        limitations: item.limitations || ""
+      });
+    }
+
+    // シートに保存
+    if (rows.length > 0) {
+      await SheetsDB.appendThemeSchedule(rows);
+      console.log(`✅ ${rows.length}日分のテーマをThemeScheduleに自動追加しました。`);
+    }
+
+    return rows;
+  } catch (error) {
+    console.error("❌ テーマ自動生成のJSON解析に失敗:", error);
+    console.error("RAW TEXT:", rawText);
+    return [];
+  }
 }
 
 /**
@@ -125,10 +234,10 @@ async function generateBlogPost(theme: string, researchData: string, imageUrl: s
     ![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)
   `;
 
-  const response = await ai.models.generateContent({
+  const response = await withRetry(() => ai.models.generateContent({
     model: "gemini-2.5-flash",
     contents: writingPrompt,
-  });
+  }));
 
   return response.text;
 }
@@ -163,10 +272,10 @@ async function reviewArticle(articleMdx: string) {
     ${articleMdx}
   `;
 
-  const response = await ai.models.generateContent({
+  const response = await withRetry(() => ai.models.generateContent({
     model: "gemini-2.5-flash",
     contents: reviewPrompt,
-  });
+  }));
 
   return response.text;
 }
@@ -190,11 +299,14 @@ async function main() {
     const schedules = await SheetsDB.getThemeSchedule() || [];
     const normalizeDate = (d: string) => {
       if (!d) return "";
-      const parts = d.replace(/\//g, '-').split('-');
+      // スペースやT以降(時刻部分)を除去し、/を-に統一
+      const datePart = d.trim().split(/[T\s]/)[0].replace(/\//g, '-');
+      const parts = datePart.split('-');
       if (parts.length === 3) {
-        return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+        const [y, m, day] = parts;
+        return `${y}-${m.padStart(2, '0')}-${day.padStart(2, '0')}`;
       }
-      return d;
+      return datePart;
     };
     const pending = schedules.find(s => 
       s.brand === "atelier" && 
@@ -207,8 +319,29 @@ async function main() {
       isFromSheet = true;
       console.log(`🎯 シートから翌日分のテーマを取得しました: ${todayTheme}`);
     } else {
-      todayTheme = "美容皮膚科における最新のスキンケアトレンドと肌質改善";
-      console.log(`⚠️ 明日の保留中テーマが見つからないため、デフォルトテーマで進行します: ${todayTheme}`);
+      console.log(`⚠️ 明日(${tomorrowStr})の保留中テーマが見つかりません。テーマを自動生成します...`);
+
+      // テーマ10日分を自動生成してシートに保存
+      const newThemes = await autoGenerateThemes("atelier");
+
+      // 生成したテーマから翌日分を再検索
+      const newPending = newThemes.find(s => s.date === tomorrowStr && s.status === "pending");
+      if (newPending) {
+        todayTheme = newPending.theme;
+        searchKeywords = newPending.searchKeywords;
+        isFromSheet = true;
+        console.log(`🎯 自動生成テーマから翌日分を取得しました: ${todayTheme}`);
+      } else if (newThemes.length > 0) {
+        // 翌日分が日付ズレで見つからない場合、最初のテーマを使用
+        todayTheme = newThemes[0].theme;
+        searchKeywords = newThemes[0].searchKeywords;
+        isFromSheet = true;
+        console.log(`🎯 自動生成テーマの先頭を使用します: ${todayTheme}`);
+      } else {
+        // テーマ生成自体が失敗した場合のフォールバック
+        todayTheme = "美容皮膚科における最新のスキンケアトレンドと肌質改善";
+        console.log(`⚠️ テーマ自動生成にも失敗したため、デフォルトテーマで進行します: ${todayTheme}`);
+      }
     }
   }
 
@@ -339,8 +472,20 @@ async function main() {
 
     console.log(`\n🎉 すべての自動化プロセスが完了しました！`);
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("❌ エラーが発生しました:", error);
+
+    // Slackにエラー通知を送信（自動実行時もエラーが見えるようにする）
+    try {
+      if (SLACK_BOT_TOKEN) {
+        await slackClient.chat.postMessage({
+          channel: TARGET_CHANNEL,
+          text: `🚨 *ブログ自動生成パイプラインでエラーが発生しました*\n\`\`\`${error.message || error}\`\`\`\nテーマ: ${todayTheme || '不明'}`,
+        });
+      }
+    } catch (slackErr) {
+      console.error("⚠️ Slackへのエラー通知も失敗しました:", slackErr);
+    }
   }
 }
 

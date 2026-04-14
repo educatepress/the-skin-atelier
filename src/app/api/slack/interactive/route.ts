@@ -83,6 +83,10 @@ export async function POST(req: Request) {
             throw new Error(`NOT_FOUND: 指定されたコンテンツ(${id})がキューに見つかりません。`);
           }
 
+          if (targetRow.status === 'posted') {
+            throw new Error(`ALREADY_POSTED: このコンテンツ(${id})は既に投稿済みです。`);
+          }
+
           let recipe: any = {};
           try { recipe = JSON.parse(targetRow.generation_recipe || '{}'); } catch (e) {}
           const captionText = recipe.captionText || '';
@@ -118,10 +122,20 @@ export async function POST(req: Request) {
 
           // Blog
           if (id && id.startsWith('blog-')) {
+            if (!captionText) {
+              throw new Error(`EMPTY_CONTENT: ブログ本文(captionText)が空です。content_id: ${id}`);
+            }
+
             const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+            if (!process.env.GITHUB_TOKEN) {
+              throw new Error('MISSING_ENV: GITHUB_TOKEN が設定されていません。');
+            }
             const owner = process.env.GITHUB_OWNER || 'educatepress';
             const repo = process.env.GITHUB_REPO || 'the-skin-atelier';
             const slug = targetRow.title;
+            if (!slug) {
+              throw new Error(`EMPTY_SLUG: ブログのslug(title列)が空です。content_id: ${id}`);
+            }
             const filePath = `content/blog/${slug}.md`;
             const contentEncoded = Buffer.from(captionText).toString('base64');
 

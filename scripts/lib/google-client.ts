@@ -9,7 +9,7 @@ dotenv.config({ path: path.resolve(__dirname, '..', '..', '.env.local') });
 
 const OAUTH_CLIENT_ID = process.env.GOOGLE_OAUTH_CLIENT_ID || '';
 const OAUTH_CLIENT_SECRET = process.env.GOOGLE_OAUTH_CLIENT_SECRET || '';
-const REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob'; // Desktop app fallback
+const REDIRECT_URI = 'http://localhost:8080'; // Replaced OOB due to Google deprecation
 const OAUTH_TOKEN_PATH = path.join(process.cwd(), 'scripts', 'data', 'token.json');
 
 const SCOPES = [
@@ -55,10 +55,52 @@ export async function getGoogleClient() {
   if (tokenData) {
     try {
       oAuth2Client.setCredentials(tokenData);
-      return oAuth2Client;
+
+      // access_token の期限切れを検知して自動リフレッシュ
+      const now = Date.now();
+      const expiryDate = tokenData.expiry_date || 0;
+      if (expiryDate < now + 60_000) {
+        // 期限切れ or 1分以内に切れる場合
+        if (tokenData.refresh_token) {
+          console.log('🔄 Google OAuth access_token が期限切れです。refresh_token で自動更新中...');
+          const { credentials } = await oAuth2Client.refreshAccessToken();
+          oAuth2Client.setCredentials(credentials);
+
+          // 更新されたトークンをファイルに保存（refresh_token が消えないよう元のを維持）
+          // Vercel等の読み取り専用ファイルシステムでは保存をスキップ
+          const merged = { ...tokenData, ...credentials };
+          if (!merged.refresh_token) merged.refresh_token = tokenData.refresh_token;
+          try {
+            if (!fs.existsSync(path.dirname(OAUTH_TOKEN_PATH))) {
+              fs.mkdirSync(path.dirname(OAUTH_TOKEN_PATH), { recursive: true });
+            }
+            fs.writeFileSync(OAUTH_TOKEN_PATH, JSON.stringify(merged, null, 2));
+            console.log('✅ トークンを自動更新し、ファイルに保存しました。');
+          } catch {
+            // Vercel serverless 等ではファイル書き込みが失敗するが、インメモリのトークンは有効
+            console.log('✅ トークンを自動更新しました（サーバーレス環境のためファイル保存はスキップ）。');
+          }
+        } else {
+          console.warn('⚠️ access_token が期限切れですが refresh_token がありません。再認証が必要です。');
+          // refresh_token がない場合は再認証フローにフォールスルー
+          tokenData = null;
+        }
+      }
+
+      if (tokenData) return oAuth2Client;
     } catch (e) {
-      console.error('Error setting credentials, requiring re-auth.', e);
+      console.error('Error setting/refreshing credentials, requiring re-auth.', e);
     }
+  }
+
+  // サーバーレス環境（Vercel等）では対話的な認証フローは不可能
+  const isServerless = !!process.env.VERCEL || !!process.env.AWS_LAMBDA_FUNCTION_NAME;
+  if (isServerless) {
+    throw new Error(
+      'GOOGLE_AUTH_FAILED: サーバーレス環境でGoogle認証トークンが無効または期限切れです。' +
+      'Vercelの環境変数 GOOGLE_OAUTH_TOKEN_JSON に refresh_token を含む有効なトークンを設定してください。' +
+      '（ローカルで npx tsx scripts/reauth.ts を実行してトークンを取得できます）'
+    );
   }
 
   // Initial Auth flow
@@ -76,9 +118,15 @@ export async function getGoogleClient() {
     console.log('\n以下の URL をブラウザで手動で開いてください:');
     console.log('\n' + authUrl + '\n');
   }
-  console.log('\nGoogleでログインし、「アクセスを許可」した後、表示されたコードをコピーしてください。');
+  console.log('\nGoogleでログインし、「アクセスを許可」した後、表示された「http://localhost...」から始まるURL全体をコピーしてください。（ページがエラーになってもURLをコピーすればOKです）');
 
-  const code = await askQuestion('👉 表示されたコードを貼り付けて Enter: ');
+  const rawCode = await askQuestion('👉 アドレスバーのURL（またはコード）を貼り付けて Enter: ');
+  
+  let code = rawCode.trim();
+  if (code.startsWith('http')) {
+    const url = new URL(code);
+    code = url.searchParams.get('code') || code;
+  }
 
   try {
     const { tokens } = await oAuth2Client.getToken(code);
@@ -105,4 +153,15 @@ export async function getDriveClient(): Promise<drive_v3.Drive> {
 export async function getSheetsClient(): Promise<sheets_v4.Sheets> {
   const auth = await getGoogleClient();
   return google.sheets({ version: 'v4', auth });
+}
+
+export async function downloadFileJSON(
+  drive: drive_v3.Drive,
+  fileId: string
+): Promise<any> {
+  const res = await drive.files.get({
+    fileId,
+    alt: 'media',
+  });
+  return res.data;
 }

@@ -23,6 +23,9 @@ export async function generateMetadata({
   };
 }
 
+// ビルド時に存在しない新規ブログ記事もSSRで表示できるようにする
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const { getPostSlugs } = await import("@/lib/blog");
   const slugs = getPostSlugs();
