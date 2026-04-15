@@ -4,12 +4,22 @@ on:
   schedule:
     # 毎日 JST 12:00 (= UTC 03:00)
     - cron: '0 3 * * *'
-  workflow_dispatch: # 手動実行ボタンも許可
+  workflow_dispatch:
+    inputs:
+      attempt:
+        description: 'Retry attempt number (auto-set by retry workflow)'
+        required: false
+        default: '1'
+
+# 同時実行を防ぐ（再実行が重ならないように）
+concurrency:
+  group: daily-blog
+  cancel-in-progress: false
 
 jobs:
   generate-content:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
@@ -36,3 +46,60 @@ jobs:
 
       # X (Twitter) 投稿は auto-post-blog.ts 内で自動生成されるため、
       # 個別ステップは不要（二重生成防止）
+
+  # 失敗時に時間を空けて自動再実行（最大3回）
+  retry-on-failure:
+    needs: generate-content
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine retry attempt
+        id: retry
+        run: |
+          CURRENT=${{ github.event.inputs.attempt || '1' }}
+          NEXT=$((CURRENT + 1))
+          echo "current=$CURRENT" >> $GITHUB_OUTPUT
+          echo "next=$NEXT" >> $GITHUB_OUTPUT
+          echo "🔄 現在の試行: $CURRENT 回目（最大3回）"
+
+      - name: Wait before retry
+        if: steps.retry.outputs.current < 3
+        run: |
+          ATTEMPT=${{ steps.retry.outputs.current }}
+          if [ "$ATTEMPT" = "1" ]; then
+            WAIT=1800  # 1回目失敗 → 30分待ち
+          else
+            WAIT=3600  # 2回目失敗 → 1時間待ち
+          fi
+          echo "⏳ ${WAIT}秒 ($(( WAIT / 60 ))分) 待機してから再実行します..."
+          sleep $WAIT
+
+      - name: Trigger retry
+        if: steps.retry.outputs.current < 3
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'auto-daily-content.yml',
+              ref: 'main',
+              inputs: {
+                attempt: '${{ steps.retry.outputs.next }}'
+              }
+            });
+            console.log('🚀 再実行をトリガーしました (試行 ${{ steps.retry.outputs.next }})');
+
+      - name: Max retries reached - notify Slack
+        if: steps.retry.outputs.current >= 3
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        run: |
+          curl -X POST https://slack.com/api/chat.postMessage \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "channel": "skin-atelier_jp",
+              "text": "🚨 *ブログ自動生成が3回連続で失敗しました*\nGemini APIの混雑が続いている可能性があります。手動での確認が必要です。\nhttps://github.com/${{ github.repository }}/actions"
+            }'

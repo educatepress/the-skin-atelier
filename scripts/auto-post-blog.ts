@@ -25,41 +25,24 @@ const TARGET_CHANNEL = 'skin-atelier_jp';
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
 /**
- * Helper: リトライ付きAPI呼び出し (503対策 + フォールバックモデル)
- *
- * 1. プライマリモデルで最大5回リトライ（10s→20s→40s→60s→60s）
- * 2. それでも503なら fallbackModel に切り替えて最大3回リトライ
+ * Helper: リトライ付きAPI呼び出し (503対策)
+ * gemini-2.5-flash のみ使用（クオリティ維持）。
+ * 5回リトライしてダメなら失敗 → workflow レベルで時間を空けて再実行。
  */
-const PRIMARY_MODEL = "gemini-2.5-flash";
-const FALLBACK_MODEL = "gemini-2.0-flash";
+const MODEL = "gemini-2.5-flash";
 
 async function withRetry<T>(
   fn: (model: string) => Promise<T>,
   maxRetries = 5,
   baseDelay = 10000
 ): Promise<T> {
-  // Phase 1: プライマリモデル
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      return await fn(PRIMARY_MODEL);
+      return await fn(MODEL);
     } catch (err: any) {
-      if (err?.status !== 503) throw err;
-      if (attempt === maxRetries) break; // フォールバックへ
+      if (attempt === maxRetries || err?.status !== 503) throw err;
       const delay = Math.min(baseDelay * Math.pow(2, attempt - 1), 60000);
-      console.log(`⏳ API混雑中 (503)… ${delay / 1000}秒後にリトライ (${attempt}/${maxRetries}) [${PRIMARY_MODEL}]`);
-      await new Promise(r => setTimeout(r, delay));
-    }
-  }
-
-  // Phase 2: フォールバックモデル
-  console.log(`🔄 ${PRIMARY_MODEL} が混雑中のため ${FALLBACK_MODEL} にフォールバックします...`);
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    try {
-      return await fn(FALLBACK_MODEL);
-    } catch (err: any) {
-      if (attempt === 3 || err?.status !== 503) throw err;
-      const delay = Math.min(baseDelay * attempt, 30000);
-      console.log(`⏳ API混雑中 (503)… ${delay / 1000}秒後にリトライ (${attempt}/3) [${FALLBACK_MODEL}]`);
+      console.log(`⏳ API混雑中 (503)… ${delay / 1000}秒後にリトライ (${attempt}/${maxRetries})`);
       await new Promise(r => setTimeout(r, delay));
     }
   }
