@@ -200,9 +200,22 @@ async function fetchAestheticImage(): Promise<string> {
 async function generateBlogPost(theme: string, researchData: string, imageUrl: string) {
   console.log(`✍️ 記事を生成中（Elegant Letter Style）...`);
 
-  const promptPath = path.join(process.cwd(), "..", "the-skin-atelier", "prompts", "blog-writing-guide.md");
+  // プロンプトファイルのパス解決（ローカル・GitHub Actions 両対応）
+  const promptCandidates = [
+    path.join(process.cwd(), "prompts", "blog-writing-guide.md"),                          // GitHub Actions (cwd = project root)
+    path.join(process.cwd(), "..", "the-skin-atelier", "prompts", "blog-writing-guide.md"), // ローカル (cwd = hiroo-open/the-skin-atelier)
+    path.resolve(__dirname, "..", "..", "prompts", "blog-writing-guide.md"),                 // __dirname ベース
+  ];
   let masterPrompt = "";
-  try { masterPrompt = fs.readFileSync(promptPath, "utf-8"); } catch (e) { console.error("Could not read prompt MD", e); }
+  for (const p of promptCandidates) {
+    try {
+      if (fs.existsSync(p)) {
+        masterPrompt = fs.readFileSync(p, "utf-8");
+        break;
+      }
+    } catch {}
+  }
+  if (!masterPrompt) console.warn("⚠️ blog-writing-guide.md が見つかりません。プロンプトなしで記事を生成します。");
 
   const writingPrompt = `
     以下の【The Skin Atelier — ブログ執筆ガイドライン＆プロンプト】に完全に従って、ブログ記事を作成してください。

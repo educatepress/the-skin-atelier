@@ -43,9 +43,22 @@ async function withRetry<T>(fn: () => Promise<T>, maxRetries = 10, baseDelay = 1
 async function generateXPost(theme: string, sceneContext: string) {
   console.log(`✍️ 拡散スレッド（X/Twitter）を生成中...`);
 
-  const promptPath = path.join(process.cwd(), "..", "the-skin-atelier", "prompts", "multi-platform-content-prompts.md");
+  // プロンプトファイルのパス解決（ローカル・GitHub Actions 両対応）
+  const promptCandidates = [
+    path.join(process.cwd(), "prompts", "multi-platform-content-prompts.md"),
+    path.join(process.cwd(), "..", "the-skin-atelier", "prompts", "multi-platform-content-prompts.md"),
+    path.resolve(__dirname, "..", "..", "prompts", "multi-platform-content-prompts.md"),
+  ];
   let masterPrompt = "";
-  try { masterPrompt = fs.readFileSync(promptPath, "utf-8"); } catch (e) { console.error("Could not read prompt MD", e); }
+  for (const p of promptCandidates) {
+    try {
+      if (fs.existsSync(p)) {
+        masterPrompt = fs.readFileSync(p, "utf-8");
+        break;
+      }
+    } catch {}
+  }
+  if (!masterPrompt) console.warn("⚠️ multi-platform-content-prompts.md が見つかりません。");
 
   const prompt = `
     以下のルールに従いXのスレッド（3〜5ポスト）を作成してください。
