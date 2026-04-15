@@ -322,35 +322,33 @@ async function main() {
       }
       return datePart;
     };
-    const pending = schedules.find(s => 
-      s.brand === "atelier" && 
-      s.status === "pending" && 
-      normalizeDate(s.date) === tomorrowStr
-    );
-    if (pending) {
-      todayTheme = pending.theme;
-      searchKeywords = pending.searchKeywords;
+    // 1. まず翌日日付でマッチするテーマを探す
+    const allPending = schedules.filter(s => s.brand === "atelier" && s.status === "pending");
+    const exactMatch = allPending.find(s => normalizeDate(s.date) === tomorrowStr);
+
+    if (exactMatch) {
+      todayTheme = exactMatch.theme;
+      searchKeywords = exactMatch.searchKeywords;
       isFromSheet = true;
       console.log(`🎯 シートから翌日分のテーマを取得しました: ${todayTheme}`);
+    } else if (allPending.length > 0) {
+      // 2. 翌日分がなくても、未使用のpendingテーマがあればそれを使う（テーマ生成をスキップ）
+      const picked = allPending[0];
+      todayTheme = picked.theme;
+      searchKeywords = picked.searchKeywords;
+      isFromSheet = true;
+      console.log(`📋 翌日分のテーマはありませんが、未使用テーマを使用します: ${todayTheme}`);
     } else {
-      console.log(`⚠️ 明日(${tomorrowStr})の保留中テーマが見つかりません。テーマを自動生成します...`);
+      // 3. pendingテーマが完全にゼロの場合のみ、テーマ自動生成を実行
+      console.log(`⚠️ 未使用テーマが0件です。10日分のテーマを自動生成します...`);
 
-      // テーマ10日分を自動生成してシートに保存
       const newThemes = await autoGenerateThemes("atelier");
 
-      // 生成したテーマから翌日分を再検索
-      const newPending = newThemes.find(s => s.date === tomorrowStr && s.status === "pending");
-      if (newPending) {
-        todayTheme = newPending.theme;
-        searchKeywords = newPending.searchKeywords;
-        isFromSheet = true;
-        console.log(`🎯 自動生成テーマから翌日分を取得しました: ${todayTheme}`);
-      } else if (newThemes.length > 0) {
-        // 翌日分が日付ズレで見つからない場合、最初のテーマを使用
+      if (newThemes.length > 0) {
         todayTheme = newThemes[0].theme;
         searchKeywords = newThemes[0].searchKeywords;
         isFromSheet = true;
-        console.log(`🎯 自動生成テーマの先頭を使用します: ${todayTheme}`);
+        console.log(`🎯 自動生成テーマから取得しました: ${todayTheme}`);
       } else {
         // テーマ生成自体が失敗した場合のフォールバック
         todayTheme = "美容皮膚科における最新のスキンケアトレンドと肌質改善";
