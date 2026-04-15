@@ -2,8 +2,8 @@ name: Daily Auto Content Generation (Blog & X/Threads)
 
 on:
   schedule:
-    # 毎日 JST 12:00 (= UTC 03:00)
-    - cron: '0 3 * * *'
+    # 毎日 JST 04:00 (= UTC 19:00) — Gemini API混雑を避けるため早朝に実行
+    - cron: '0 19 * * *'
   workflow_dispatch:
     inputs:
       attempt:
