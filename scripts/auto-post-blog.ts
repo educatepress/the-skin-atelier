@@ -245,12 +245,13 @@ async function generateBlogPost(theme: string, researchData: string, imageUrl: s
     image: "${imageUrl}"
     ---
     
-    ## あなたへ、
+    ## あなたへ
     ## まず、お伝えしたい大切なこと
     ## 美しさを紐解く、専門医の視点
     ## あなたの不安に寄り添って
     ## 最後に、心を込めて。
     ## 参考文献
+    （リサーチデータ内で実際に参照した論文を著者名・雑誌名・年・PMID付きで記載。曖昧な「信頼できる情報源に基づき〜」は禁止。該当論文がなければこのセクション自体を省略。）
 
     ![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)
   `;

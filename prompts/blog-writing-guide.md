@@ -82,7 +82,7 @@
 
 【出力フォーマット: 洗練された手紙風 × サイエンス (Elegant Letter Style)】
 
-## あなたへ、
+## あなたへ
 （本日の結論と、採用したヒト臨床試験の概要。読者がドキッとする事実や共感を優しく語る）
 
 ## まず、お伝えしたい大切なこと
@@ -100,7 +100,10 @@
 （行動を促す、穏やかで前向きな締めの言葉）
 
 ## 参考文献
-（PMID付き主論文のみをリスト化）
+（【厳守】リサーチデータ内で実際に参照・引用した論文のみを、著者名・雑誌名・年・PMID付きでリスト化すること。「本記事は信頼できる医療情報源に基づき〜」等の曖昧な一文は絶対に書かないこと。該当論文がない場合は「参考文献」セクション自体を省略すること。）
+例:
+- Bissett DL, et al. Niacinamide: A B vitamin that improves aging facial skin appearance. *Dermatol Surg*. 2005;31(7 Pt 2):860-5. PMID: 16029679
+- Navarrete-Solís J, et al. A double-blind, randomized clinical trial of niacinamide 4% versus hydroquinone 4% in the treatment of melasma. *Dermatol Res Pract*. 2011. PMID: 21747839
 
 
 ## サイン画像（記事の末尾に必ず付与）
