@@ -27,13 +27,14 @@ const slackClient = new WebClient(SLACK_BOT_TOKEN);
 /**
  * Helper: リトライ付きAPI呼び出し (503対策)
  */
-async function withRetry<T>(fn: () => Promise<T>, maxRetries = 10, baseDelay = 15000): Promise<T> {
+async function withRetry<T>(fn: () => Promise<T>, maxRetries = 10, baseDelay = 10000): Promise<T> {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await fn();
     } catch (err: any) {
       if (attempt === maxRetries || err?.status !== 503) throw err;
-      const delay = baseDelay * Math.pow(2, attempt - 1);
+      // 最大60秒でキャップ（指数バックオフが際限なく伸びるのを防ぐ）
+      const delay = Math.min(baseDelay * Math.pow(2, attempt - 1), 60000);
       console.log(`⏳ API混雑中 (503)… ${delay / 1000}秒後にリトライ (${attempt}/${maxRetries})`);
       await new Promise(r => setTimeout(r, delay));
     }
