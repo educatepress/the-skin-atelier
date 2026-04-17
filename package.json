@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "slack:x": "npx tsx scripts/auto-publish/generate-x-post.ts",
-    "slack:patrol": "npx tsx scripts/auto-publish/x-prospecting-patrol.ts",
-    "plan:themes": "npx tsx scripts/plan-10day-themes.ts"
+    "slack:patrol": "npx tsx scripts/auto-publish/x-prospecting-patrol.ts"
   },
   "dependencies": {
     "@google/genai": "^1.46.0",

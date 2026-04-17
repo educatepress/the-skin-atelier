@@ -7,3 +7,52 @@ npm notice New minor version of npm available! 11.9.0 -> 11.12.1
 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.12.1
 npm notice To update run: npm install -g npm@11.12.1
 npm notice
+❌ Gemini API 評価エラー: ApiError: {"error":{"code":503,"message":"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.","status":"UNAVAILABLE"}}
+    at throwErrorIfNotOK (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@google/genai/dist/node/index.cjs:13085:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async /Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@google/genai/dist/node/index.cjs:12788:13
+    at async Models.generateContent (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@google/genai/dist/node/index.cjs:14189:24)
+    at async evaluateTweetsWithAI (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/x-prospecting-patrol.ts:180:22)
+    at async main (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/x-prospecting-patrol.ts:288:23) {
+  status: 503
+}
+npm notice
+npm notice New minor version of npm available! 11.9.0 -> 11.12.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.12.1
+npm notice To update run: npm install -g npm@11.12.1
+npm notice
+❌ Gemini API 評価エラー: [TypeError: fetch failed] {
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -54,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}
+❌ Gemini API 評価エラー: [TypeError: fetch failed] {
+  [cause]: ConnectTimeoutError: Connect Timeout Error (attempted addresses: 142.250.21.95:443, timeout: 10000ms)
+      at onConnectTimeout (node:internal/deps/undici/undici:1936:23)
+      at Immediate._onImmediate (node:internal/deps/undici/undici:1917:11)
+      at process.processImmediate (node:internal/timers:504:21) {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+Error: Unknown system error -11: Unknown system error -11, read
+    at async readFileHandle (node:internal/fs/promises:553:24)
+    at async readPackageJson (file:///Users/satoutakuma/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1776380873368:2:524)
+    at async findPackageJson (file:///Users/satoutakuma/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1776380873368:2:792)
+    at async getPackageType (file:///Users/satoutakuma/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1776380873368:2:928)
+    at async resolve (file:///Users/satoutakuma/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/esm/index.mjs?1776380873368:2:5543)
+    at async nextResolve (node:internal/modules/esm/hooks:785:22)
+    at async AsyncLoaderHooksOnLoaderHookWorker.resolve (node:internal/modules/esm/hooks:269:24)
+    at async handleMessage (node:internal/modules/esm/worker:251:18) {
+  errno: -11,
+  code: 'Unknown system error -11',
+  syscall: 'read'
+}
+
+Node.js v24.14.0

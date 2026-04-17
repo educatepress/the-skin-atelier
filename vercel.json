@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/daily-publisher",
+      "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/cron/pre-patrol",
+      "schedule": "15 6 * * *"
+    }
+  ]
+}

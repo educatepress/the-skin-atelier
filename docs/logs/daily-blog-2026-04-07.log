@@ -1,0 +1,53 @@
+════════════════════════════════════════
+📝 Daily Blog Generation — 2026-04-07 10:00:02
+════════════════════════════════════════
+[dotenv@17.3.1] injecting env (25) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+🚀 ブログ自動生成プロセスを開始します...
+
+📥 引数なしのため、ThemeScheduleから今日の未執筆テーマを取得します...
+🎯 シートから取得しました: 次世代レチノール？「バクチオール」のシワ改善効果、本家レチノールとの直接対決RCTから見る本当の実力と使い分け
+🔍 テーマ「次世代レチノール？「バクチオール」のシワ改善効果、本家レチノールとの直接対決RCTから見る本当の実力と使い分け (Bakuchiol AND Retinol, randomized controlled trial, anti-aging, wrinkles, comparative study, skin irritation)」についてDeep Researchを実行中...
+⏳ API混雑中 (503)… 10秒後にリトライ (1/3)
+⏳ API混雑中 (503)… 20秒後にリトライ (2/3)
+❌ エラーが発生しました: ApiError: {"error":{"code":503,"message":"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.","status":"UNAVAILABLE"}}
+    at throwErrorIfNotOK (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@google/genai/dist/node/index.cjs:13085:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async /Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@google/genai/dist/node/index.cjs:12788:13
+    at async Models.generateContent (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@google/genai/dist/node/index.cjs:14189:24)
+    at async withRetry (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-post-blog.ts:33:14)
+    at async performDeepResearch (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-post-blog.ts:60:20)
+    at async main (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-post-blog.ts:221:28) {
+  status: 503
+}
+
+✅ 完了: 10:01:17
+════════════════════════════════════════
+📝 Daily Blog Generation — 2026-04-07 15:14:15
+════════════════════════════════════════
+[dotenv@17.3.1] injecting env (25) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+🚀 ブログ自動生成プロセスを開始します...
+
+📥 引数なしのため、ThemeScheduleから今日の未執筆テーマを取得します...
+🎯 シートから取得しました: 次世代レチノール？「バクチオール」のシワ改善効果、本家レチノールとの直接対決RCTから見る本当の実力と使い分け
+🔍 テーマ「次世代レチノール？「バクチオール」のシワ改善効果、本家レチノールとの直接対決RCTから見る本当の実力と使い分け (Bakuchiol AND Retinol, randomized controlled trial, anti-aging, wrinkles, comparative study, skin irritation)」についてDeep Researchを実行中...
+⏳ API混雑中 (503)… 10秒後にリトライ (1/3)
+⏳ API混雑中 (503)… 20秒後にリトライ (2/3)
+✅ リサーチ完了
+
+📸 LP用のサムネイル画像を取得中...
+✍️ 記事を生成中（Elegant Letter Style）...
+❌ エラーが発生しました: ApiError: {"error":{"code":503,"message":"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.","status":"UNAVAILABLE"}}
+    at throwErrorIfNotOK (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@google/genai/dist/node/index.cjs:13085:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async /Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@google/genai/dist/node/index.cjs:12788:13
+    at async Models.generateContent (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@google/genai/dist/node/index.cjs:14189:24)
+    at async generateBlogPost (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-post-blog.ts:128:20)
+    at async main (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-post-blog.ts:229:24) {
+  status: 503
+}
+
+✅ 完了: 15:16:06

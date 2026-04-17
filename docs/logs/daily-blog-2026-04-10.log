@@ -1,0 +1,80 @@
+════════════════════════════════════════
+📝 Daily Blog Generation — 2026-04-10 11:25:10
+════════════════════════════════════════
+[dotenv@17.3.1] injecting env (25) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: 🛡️ auth for agents: https://vestauth.com
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: 🛡️ auth for agents: https://vestauth.com
+🚀 ブログ自動生成プロセスを開始します...
+
+📥 引数なしのため、ThemeScheduleから今日の未執筆テーマを取得します...
+🎯 シートから取得しました: 「角栓はオイルで溶かす」の落とし穴。界面活性剤の過剰使用が招く皮膚バリア機能低下とマイクロバイオームへの影響
+🔍 テーマ「「角栓はオイルで溶かす」の落とし穴。界面活性剤の過剰使用が招く皮膚バリア機能低下とマイクロバイオームへの影響 (Double cleansing, surfactant, skin barrier, TEWL, skin microbiome, comedone, sebum oxidation)」についてDeep Researchを実行中...
+✅ リサーチ完了
+
+📸 LP用のサムネイル画像を取得中...
+✍️ 記事を生成中（Elegant Letter Style）...
+✅ 記事生成完了
+
+🧐 生成された記事を自動で検閲・修正中...
+✅ 自動検閲・修正完了
+
+📦 Google Sheets にブログ記事をキュー登録中...
+📤 Slack へ承認メッセージを送信中...
+✅ Slack親通知完了: 1775788037.690749
+✅ ThemeScheduleのステータスを'completed'に更新しました。
+
+🚀 引き続き X (Twitter) 用の投稿を生成します...
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+✍️ 拡散スレッド（X/Twitter）を生成中...
+❌ エラーが発生しました: ApiError: {"error":{"code":503,"message":"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.","status":"UNAVAILABLE"}}
+    at throwErrorIfNotOK (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@google/genai/dist/node/index.cjs:13085:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async /Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@google/genai/dist/node/index.cjs:12788:13
+    at async Models.generateContent (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@google/genai/dist/node/index.cjs:14189:24)
+    at async generateXPost (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/generate-x-post.ts:47:20)
+    at async main (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/generate-x-post.ts:147:27) {
+  status: 503
+}
+✅ X 投稿の生成フローが完了しました！
+
+🎉 すべての自動化プロセスが完了しました！
+
+✅ 完了: 11:27:31
+════════════════════════════════════════
+📝 Daily Blog Generation — 2026-04-10 12:00:06
+════════════════════════════════════════
+[dotenv@17.3.1] injecting env (25) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: 🛡️ auth for agents: https://vestauth.com
+🚀 ブログ自動生成プロセスを開始します...
+
+📥 引数なしのため、ThemeScheduleから今日の未執筆テーマを取得します...
+⚠️ 保留中のテーマが見つからないため、デフォルトテーマで進行します: 美容皮膚科における最新のスキンケアトレンドと肌質改善
+🔍 テーマ「美容皮膚科における最新のスキンケアトレンドと肌質改善」についてDeep Researchを実行中...
+⏳ API混雑中 (503)… 15秒後にリトライ (1/10)
+⏳ API混雑中 (503)… 30秒後にリトライ (2/10)
+⏳ API混雑中 (503)… 60秒後にリトライ (3/10)
+⏳ API混雑中 (503)… 120秒後にリトライ (4/10)
+⏳ API混雑中 (503)… 240秒後にリトライ (5/10)
+⏳ API混雑中 (503)… 480秒後にリトライ (6/10)
+✅ リサーチ完了
+
+📸 LP用のサムネイル画像を取得中...
+✍️ 記事を生成中（Elegant Letter Style）...
+✅ 記事生成完了
+
+🧐 生成された記事を自動で検閲・修正中...
+❌ エラーが発生しました: ApiError: {"error":{"code":503,"message":"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.","status":"UNAVAILABLE"}}
+    at throwErrorIfNotOK (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@google/genai/dist/node/index.cjs:13085:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async /Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@google/genai/dist/node/index.cjs:12788:13
+    at async Models.generateContent (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@google/genai/dist/node/index.cjs:14189:24)
+    at async reviewArticle (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-post-blog.ts:166:20)
+    at async main (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-post-blog.ts:234:25) {
+  status: 503
+}
+
+✅ 完了: 12:17:39

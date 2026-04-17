@@ -22,7 +22,8 @@ export const HEADERS = [
   'patrol_post_result',
   'cloudinary_deleted',
   'slack_ts',
-  'error_detail'
+  'error_detail',
+  'ymyl_evidence'
 ];
 
 export interface SheetsQueueRow {
@@ -99,7 +100,7 @@ export class SheetsDB {
     const sheets = await this.getClient();
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
-      range: 'A2:Q'
+      range: 'A2:R'
     }).catch(() => null);
 
     const rows = res?.data?.values || [];
@@ -123,7 +124,7 @@ export class SheetsDB {
 
     await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
-      range: 'A2:Q',
+      range: 'A2:R',
       valueInputOption: 'USER_ENTERED',
       requestBody: { values }
     });

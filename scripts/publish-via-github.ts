@@ -33,7 +33,21 @@ async function main() {
   let recipe: any = {};
   try {
     recipe = JSON.parse(targetRow.generation_recipe || '{}');
-  } catch (e) {}
+    
+    if (recipe.driveFileId) {
+      console.log(`☁️ Fetching full recipe JSON from Google Drive (ID: ${recipe.driveFileId})...`);
+      const { getDriveClient, downloadFileJSON } = await import('./lib/google-client');
+      const drive = await getDriveClient();
+      try {
+        recipe = await downloadFileJSON(drive, recipe.driveFileId);
+      } catch (e: any) {
+        console.error(`❌ Failed to fetch recipe JSON from Google Drive: ${e.message}`);
+        process.exit(1);
+      }
+    }
+  } catch (e) {
+    console.warn(`⚠️ Warning: generation_recipe parsing failed: ${e}`);
+  }
 
   const captionText = recipe.captionText || '';
   if (!captionText) {
