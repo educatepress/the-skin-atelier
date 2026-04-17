@@ -94,12 +94,12 @@ export async function GET(req: Request) {
           let textToPost = '';
           try {
             const recipe = JSON.parse(item.generation_recipe || '{}');
-            textToPost = recipe.xPost || recipe.text || '';
+            textToPost = recipe.captionText || recipe.xPost || recipe.text || '';
           } catch { textToPost = item.title; }
 
           if (!textToPost) throw new Error('投稿用テキストが空です');
 
-          const blogUrl = 'https://hiroo-open.com/blog';
+          const blogUrl = 'https://skin-atelier.jp/blog';
           const finalTweet = textToPost.includes('http') ? textToPost : `${textToPost}\n\n👇Read More\n${blogUrl}`;
 
           const tweetResult = await client.v2.tweet(finalTweet);
@@ -117,7 +117,7 @@ export async function GET(req: Request) {
             let jpContent = '';
             try {
               const recipe = JSON.parse(item.generation_recipe || '{}');
-              jpContent = recipe.jpBlog || '';
+              jpContent = recipe.captionText || recipe.jpBlog || '';
             } catch { /* */ }
 
             if (!jpContent) throw new Error('ブログのコンテンツが空です');

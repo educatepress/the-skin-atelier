@@ -51,9 +51,9 @@ export async function GET(req: Request) {
       try {
         const recipe = JSON.parse(item.generation_recipe || '{}');
         if (item.type === 'blog') {
-          contentText = `[JP BLOG]\n${recipe.jpBlog || ''}`;
+          contentText = `[JP BLOG]\n${recipe.captionText || recipe.jpBlog || ''}`;
         } else if (item.type === 'x') {
-          contentText = `[X POST]\n${recipe.xPost || ''}`;
+          contentText = `[X POST]\n${recipe.captionText || recipe.xPost || ''}`;
         } else if (item.type === 'reel') {
           const r = recipe.reelScript;
           contentText = r ? `[HOOK]\n${r.hookText}\n[AUDIO]\n${r.englishAudio}` : JSON.stringify(recipe, null, 2);
