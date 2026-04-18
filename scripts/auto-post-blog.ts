@@ -50,6 +50,39 @@ async function withRetry<T>(
 }
 
 /**
+ * 季節テーマを読み込み（今月・来月分を返す）
+ */
+function getSeasonalHints(): { currentMonth: string; hints: string[] } {
+  try {
+    const seasonalPath = path.join(process.cwd(), "scripts", "data", "seasonal-themes.json");
+    if (!fs.existsSync(seasonalPath)) return { currentMonth: "", hints: [] };
+    const data = JSON.parse(fs.readFileSync(seasonalPath, "utf-8"));
+
+    const now = new Date();
+    // JST基準の月取得
+    const jstNow = new Date(now.getTime() + 9 * 3600 * 1000);
+    const currentMonth = (jstNow.getUTCMonth() + 1).toString(); // 1-12
+    const nextMonth = ((jstNow.getUTCMonth() + 1) % 12 + 1).toString();
+
+    const currentLabel = data[currentMonth]?.monthLabel || "";
+    const nextLabel = data[nextMonth]?.monthLabel || "";
+    const currentThemes: string[] = data[currentMonth]?.themes || [];
+    const nextThemes: string[] = data[nextMonth]?.themes || [];
+
+    // 今月を優先、来月は補助
+    const hints = [
+      ...currentThemes.slice(0, 3).map((t) => `[今月=${currentLabel}] ${t}`),
+      ...nextThemes.slice(0, 2).map((t) => `[来月=${nextLabel}] ${t}`),
+    ];
+
+    return { currentMonth: currentLabel, hints };
+  } catch (e) {
+    console.warn("⚠️ seasonal-themes.json の読み込みに失敗:", e);
+    return { currentMonth: "", hints: [] };
+  }
+}
+
+/**
  * 0. テーマ自動生成（ThemeScheduleが空の場合にplan-10day-themesと同等の処理を実行）
  */
 async function autoGenerateThemes(brand: string): Promise<ThemeScheduleRow[]> {
@@ -59,10 +92,27 @@ async function autoGenerateThemes(brand: string): Promise<ThemeScheduleRow[]> {
   const brandSchedules = pastSchedules.filter(s => s.brand === brand);
   const recentThemes = brandSchedules.slice(-20).map(t => t.theme).join(" / ");
 
+  // 季節ヒント取得
+  const { currentMonth, hints } = getSeasonalHints();
+  const seasonalBlock =
+    hints.length > 0
+      ? `
+【季節コンテンツの必須組み込み (最優先)】
+10個のうち少なくとも3〜4個は、以下の「今月・来月の季節テーマ」から選ぶか、非常に近い切り口で生成してください。
+読者は「いま、まさにその悩みで検索している」ので、季節性のあるコンテンツは圧倒的に刺さります。
+
+[現在の季節=${currentMonth}]
+推奨テーマ（アレンジ可）:
+${hints.map((h) => `- ${h}`).join("\n")}
+
+残り6〜7個は、エビデンスベースの evergreen な美容皮膚科テーマから自由に選定してください。
+`
+      : "";
+
   const prompt = `
 あなたは美容皮膚科・アンチエイジング専門医の視点を持つ「シニア・リサーチ・エディター」です。
-直近のSNSと最新論文トレンドから、今後10日間（1日1記事）で執筆すべき「全く新しいバズテーマ10個」を提案してください。
-
+直近のSNSと最新論文トレンド、そして「今この瞬間の季節感」を踏まえ、今後10日間（1日1記事）で執筆すべき「読者に刺さるテーマ10個」を提案してください。
+${seasonalBlock}
 【最優先ミッションと選定アルゴリズム】
 「ヒトに対する有効性が確立された（Tier A/B）」最新の美容医学エビデンスに基づくテーマを選定してください。
 ※マウス・細胞実験（Tier C）は、美容領域では再現性が低いため「採用禁止」とします。
@@ -74,15 +124,15 @@ async function autoGenerateThemes(brand: string): Promise<ThemeScheduleRow[]> {
 1. 直近で以下のテーマは既に執筆済みです。これらと文脈が被るテーマは絶対に避けてください。
   - [既存テーマ]: ${recentThemes || "(まだ履歴なし)"}
 
-2. 各テーマは以下の5つの大枠（ThemeArea）からそれぞれ2個ずつ、合計10個生成してください。
+2. 各テーマは以下の5つの大枠（ThemeArea）からバランスよく、合計10個生成してください。
     ①最新成分ディープダイブ（例: レバーエキス、エクソソーム、レチノール代替成分など）
     ②美容医療トレンド（例: ピコレーザーの真実、ポテンツァのダウンタイムなど）
     ③自宅スキンケアの落とし穴（例: クレンジングの罠、摩擦レスの副作用など）
-    ④季節の肌トラブル（例: 紫外線と隠れシミ、花粉とゆらぎ肌など）
+    ④季節の肌トラブル（例: 紫外線と隠れシミ、花粉とゆらぎ肌など） ← 季節テーマは主にここに
     ⑤論文ベースの神話崩し（例: コラーゲンサプリは効くか？ 経皮吸収の限界など）
 
 3. 後日AIが内容を深掘り検索（ディープリサーチ）するための「検索キーワード（主に英語の医学用語や成分名など）」を付与してください。
-4. 【絶対禁止ワード】「当院では」「私のクリニックでは」「私のアトリエでは」などの表現をテーマに含めないこと。
+4. 【絶対禁止ワード】「当院では」「私のクリニックでは」「私のアトリエでは」「分子栄養学」「オーソモレキュラー」「価格」「料金」「開業」「開院」「オープン」「白金高輪」「広尾」などの表現をテーマに含めないこと。
 
 【出力フォーマット】
 以下の形式のJSONのみ出力してください（\`\`\`json などのマークダウン修飾は省略してください）。
