@@ -46,13 +46,19 @@ export default function Footer() {
             </p>
             <div className="flex flex-col gap-[var(--space-sm)]">
               <a
-                href="#"
+                href="https://www.instagram.com/dr_miyaka_skin/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram で Dr. Miyaka をフォロー"
                 className="text-[0.75rem] text-[var(--color-text-soft)] hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300 tracking-[0.03em]"
               >
                 Instagram
               </a>
               <a
-                href="#"
+                href="https://x.com/dr_miyaka"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X (Twitter) で Dr. Miyaka をフォロー"
                 className="text-[0.75rem] text-[var(--color-text-soft)] hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300 tracking-[0.03em]"
               >
                 X (Twitter)
@@ -67,20 +73,6 @@ export default function Footer() {
             <p className="text-[11px] text-[var(--color-text-muted)] tracking-[0.05em]">
               © 2026 The Skin Atelier by Dr. Miyaka. All rights reserved.
             </p>
-            <div className="flex gap-[var(--space-lg)]">
-              <a
-                href="#"
-                className="text-[11px] text-[var(--color-text-muted)] hover:text-[var(--color-text-soft)] transition-colors tracking-[0.05em]"
-              >
-                プライバシーポリシー
-              </a>
-              <a
-                href="#"
-                className="text-[11px] text-[var(--color-text-muted)] hover:text-[var(--color-text-soft)] transition-colors tracking-[0.05em]"
-              >
-                特定商取引法に基づく表記
-              </a>
-            </div>
           </div>
 
           {/* Medical advertising compliance */}

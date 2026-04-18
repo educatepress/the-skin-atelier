@@ -74,3 +74,27 @@ export function getAllPosts(): Post[] {
     .sort((post1, post2) => (post1.metadata.date > post2.metadata.date ? -1 : 1));
   return posts;
 }
+
+/**
+ * Get related posts: same category first, then recent others.
+ * Excludes the current post itself.
+ */
+export function getRelatedPosts(currentSlug: string, limit = 3): PostMetadata[] {
+  const all = getAllPosts();
+  const current = all.find((p) => p.metadata.slug === currentSlug);
+  if (!current) return [];
+
+  const others = all.filter((p) => p.metadata.slug !== currentSlug);
+
+  // Same category first, sorted by date desc (already sorted by getAllPosts)
+  const sameCategory = others.filter(
+    (p) => p.metadata.category === current.metadata.category
+  );
+  const differentCategory = others.filter(
+    (p) => p.metadata.category !== current.metadata.category
+  );
+
+  return [...sameCategory, ...differentCategory]
+    .slice(0, limit)
+    .map((p) => p.metadata);
+}

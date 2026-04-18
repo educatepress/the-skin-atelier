@@ -56,3 +56,68 @@ Error: Unknown system error -11: Unknown system error -11, read
 }
 
 Node.js v24.14.0
+❌ Slack通知エラー: Error: An API error occurred: not_in_channel
+    at platformErrorFromResult (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@slack/web-api/src/errors.ts:119:5)
+    at WebClient.apiCall (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@slack/web-api/src/WebClient.ts:405:36)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async sendProposalToSlack (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/x-prospecting-patrol.ts:263:5)
+    at async main (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/x-prospecting-patrol.ts:302:7) {
+  code: 'slack_webapi_platform_error',
+  data: {
+    ok: false,
+    error: 'not_in_channel',
+    response_metadata: { scopes: [Array], acceptedScopes: [Array] }
+  }
+}
+❌ Slack通知エラー: Error: An API error occurred: not_in_channel
+    at platformErrorFromResult (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@slack/web-api/src/errors.ts:119:5)
+    at WebClient.apiCall (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@slack/web-api/src/WebClient.ts:405:36)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async sendProposalToSlack (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/x-prospecting-patrol.ts:263:5)
+    at async main (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/x-prospecting-patrol.ts:302:7) {
+  code: 'slack_webapi_platform_error',
+  data: {
+    ok: false,
+    error: 'not_in_channel',
+    response_metadata: { scopes: [Array], acceptedScopes: [Array] }
+  }
+}
+❌ Slack通知エラー: Error: An API error occurred: not_in_channel
+    at platformErrorFromResult (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@slack/web-api/src/errors.ts:119:5)
+    at WebClient.apiCall (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@slack/web-api/src/WebClient.ts:405:36)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async sendProposalToSlack (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/x-prospecting-patrol.ts:263:5)
+    at async main (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/x-prospecting-patrol.ts:302:7) {
+  code: 'slack_webapi_platform_error',
+  data: {
+    ok: false,
+    error: 'not_in_channel',
+    response_metadata: { scopes: [Array], acceptedScopes: [Array] }
+  }
+}
+❌ Slack通知エラー: Error: An API error occurred: not_in_channel
+    at platformErrorFromResult (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@slack/web-api/src/errors.ts:119:5)
+    at WebClient.apiCall (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@slack/web-api/src/WebClient.ts:405:36)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async sendProposalToSlack (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/x-prospecting-patrol.ts:263:5)
+    at async main (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/x-prospecting-patrol.ts:302:7) {
+  code: 'slack_webapi_platform_error',
+  data: {
+    ok: false,
+    error: 'not_in_channel',
+    response_metadata: { scopes: [Array], acceptedScopes: [Array] }
+  }
+}
+❌ Slack通知エラー: Error: An API error occurred: not_in_channel
+    at platformErrorFromResult (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@slack/web-api/src/errors.ts:119:5)
+    at WebClient.apiCall (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/node_modules/@slack/web-api/src/WebClient.ts:405:36)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async sendProposalToSlack (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/x-prospecting-patrol.ts:263:5)
+    at async main (/Users/satoutakuma/Desktop/hiroo-open/the-skin-atelier/scripts/auto-publish/x-prospecting-patrol.ts:302:7) {
+  code: 'slack_webapi_platform_error',
+  data: {
+    ok: false,
+    error: 'not_in_channel',
+    response_metadata: { scopes: [Array], acceptedScopes: [Array] }
+  }
+}

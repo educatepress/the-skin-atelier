@@ -37,7 +37,7 @@ const menuCategories = [
     ],
   },
   {
-    category: "インナーケア（分子栄養学）",
+    category: "インナーケア",
     description: "血液検査のデータから、身体の内側からの美しさをサポートします。",
     items: [
       { name: "詳細血液検査＋栄養解析レポート", price: "¥25,000", isFeatured: true },
