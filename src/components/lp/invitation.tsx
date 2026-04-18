@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import FadeIn from "@/components/common/fade-in";
 
@@ -63,6 +64,30 @@ export default function Invitation() {
           <p className="text-[0.95rem] leading-[2.4] text-[var(--color-text-soft)] tracking-[0.04em] mb-[var(--space-xl)]">
             ぜひ、お気軽にフォローしてみてください。
           </p>
+        </FadeIn>
+
+        {/* Free Guide CTA */}
+        <FadeIn delay={0.35}>
+          <div className="my-[var(--space-2xl)] bg-white/80 border border-[var(--color-marble-vein)] p-8 md:p-10">
+            <p className="font-brand text-[11px] tracking-[0.4em] text-[var(--color-pink-gold-deep)] uppercase mb-4">
+              Free Guide
+            </p>
+            <h3 className="text-[1.05rem] md:text-[1.2rem] leading-[1.8] tracking-[0.08em] text-[var(--color-text-mocha)] mb-6">
+              10年後の自分を、もっと好きになる。
+              <br />
+              <span className="italic text-[var(--color-pink-gold-deep)]">3つの「引き算」ガイド</span>
+            </h3>
+            <p className="text-[0.9rem] leading-[2.2] text-[var(--color-text-soft)] tracking-[0.03em] mb-8 max-w-[480px] mx-auto">
+              エビデンスとインナーウェルネスに基づく、最小で最大の変化を生む3つの習慣を、メールアドレスの登録で無料でお届けします。
+            </p>
+            <Link
+              href="/guide"
+              className="btn-atelier inline-flex justify-center items-center text-xs px-8 py-4"
+            >
+              <span className="tracking-[0.15em]">ガイドを受け取る</span>
+              <span className="arrow ml-2">→</span>
+            </Link>
+          </div>
         </FadeIn>
 
         {/* Official LINE CTA 
