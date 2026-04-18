@@ -205,7 +205,7 @@ async function fetchAestheticImage(): Promise<string> {
  * 3. 記事の生成
  * ※プロンプトは後日推敲予定のため、ガイドラインの内容を簡易的に埋め込んでいます。
  */
-async function generateBlogPost(theme: string, researchData: string, imageUrl: string) {
+async function generateBlogPost(theme: string, researchData: string, imageUrl: string, publishDate: string) {
   console.log(`✍️ 記事を生成中（Elegant Letter Style）...`);
 
   // プロンプトファイルのパス解決（ローカル・GitHub Actions 両対応）
@@ -234,11 +234,17 @@ async function generateBlogPost(theme: string, researchData: string, imageUrl: s
 
     【テーマ】: ${theme}
     【リサーチデータ】: ${researchData}
-    
+
+    【出力frontmatterの厳格ルール】
+    - date フィールドには必ず「${publishDate}」をそのまま使用すること（ISO形式 YYYY-MM-DD）。過去日や未来日に勝手に変更しないこと。
+    - title, excerpt は記事内容に応じて適切に生成すること。
+    - category は "Skincare" / "Treatment" / "Injectable" / "Inner Care" から最適なものを選ぶこと。
+    - readTime は本文の長さから見積もった「〇 min read」。
+
     ---
     title: "記事のタイトル"
     excerpt: "100文字程度の概要"
-    date: "YYYY-MM-DD"
+    date: "${publishDate}"
     category: "Skincare"
     readTime: "〇 min read"
     featured: false
@@ -289,6 +295,7 @@ async function reviewArticle(articleMdx: string) {
     - 出力は「---」で始まるfrontmatterから始まるMDXの本文のみにしてください。
     - コードフェンス（\`\`\`markdown や \`\`\`mdx）で囲まないでください。
     - 修正の有無に関わらず、完全なMDXのみを返してください。
+    - frontmatterの date フィールドは絶対に書き換えないこと（元原稿の値をそのまま維持）。
 
     【ブログ原稿】
     ${articleMdx}
@@ -381,7 +388,7 @@ async function main() {
     const imageUrl = await fetchAestheticImage();
 
     // ③ 執筆
-    const articleMdx = await generateBlogPost(todayTheme, researchResult || "", imageUrl);
+    const articleMdx = await generateBlogPost(todayTheme, researchResult || "", imageUrl, tomorrowStr);
     console.log("✅ 記事生成完了\n");
 
     // ④ 検閲・自己修正

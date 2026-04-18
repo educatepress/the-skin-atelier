@@ -2,7 +2,7 @@
 title: "肌の翳りを防ぐ、グルタチオンを超えるアミノ酸「エルゴチオネイン」の驚くべき細胞保護効果"
 excerpt: "美容医療と分子栄養学の視点から紐解く、新しいエイジングケアのアプローチ。内側から細胞を慈しむ「エルゴチオネイン」の真実をお伝えします。"
 category: "Skincare"
-date: "2026.04"
+date: "2026-04-04"
 readTime: "3 min read"
 featured: false
 image: "/images/pool/pool-img-12.webp"

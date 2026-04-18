@@ -2,7 +2,7 @@
 title: "「やりすぎない」ヒアルロン酸。\n0.1mlへのこだわり。"
 excerpt: "注入治療で最も大切なのは「引き算」の美学。あなたの骨格と表情に合わせたデザインで、気づかれないほど自然な変化を。"
 category: "Injectable"
-date: "2026.04"
+date: "2026-04-10"
 readTime: "4 min read"
 featured: false
 image: "/images/pool/pool-img-36.webp"

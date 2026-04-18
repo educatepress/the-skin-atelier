@@ -2,7 +2,7 @@
 title: "皮膚科医のスキンケアルーティン。\n本当に必要なものだけ。"
 excerpt: "10ステップの韓国式ケアに疲れたあなたへ。皮膚科医が毎日使うのは、たった3つのアイテムです。"
 category: "Skincare"
-date: "2026.04"
+date: "2026-04-12"
 readTime: "3 min read"
 featured: false
 image: "/images/pool/pool-img-28.webp"

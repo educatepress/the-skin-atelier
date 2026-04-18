@@ -2,7 +2,7 @@
 title: "IPL治療（光治療）とレーザーの違い。\n正しい選び方とは。"
 excerpt: "「シミ取り＝レーザー」と思い込んでいませんか？ 実はIPL治療（光治療）とレーザーでは、肌へのアプローチが根本的に異なります。"
 category: "Treatment"
-date: "2026.03"
+date: "2026-03-25"
 readTime: "5 min read"
 featured: true
 image: "/images/pool/pool-img-31.webp"

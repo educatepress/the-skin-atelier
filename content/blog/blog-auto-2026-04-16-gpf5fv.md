@@ -1,7 +1,7 @@
 ---
 title: 「切らないリフトアップ」HIFUの真実。効果のピーク、持続期間、そして知っておきたいリスク
 excerpt: 切らないリフトアップとして注目されるHIFU。その効果のピークや持続期間、そして気になる神経損傷のリスクについて、美容皮膚科医の視点から紐解きます。
-date: "2023-10-27"
+date: "2026-04-16"
 category: "Skincare"
 readTime: "5 min read"
 featured: false

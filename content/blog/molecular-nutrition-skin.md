@@ -2,7 +2,7 @@
 title: "美容皮膚科医が自分の肌で実感した、\n分子栄養学の力。"
 excerpt: "外側からの美容医療だけで満足していた私が、インナーケアの世界に足を踏み入れた理由。"
 category: "Inner Care"
-date: "2026.03"
+date: "2026-03-20"
 readTime: "7 min read"
 featured: true
 image: "/images/pool/pool-img-24.webp"

@@ -2,7 +2,7 @@
 title: "30代、はじめての美容医療。\n「何から始めればいい？」"
 excerpt: "最初の一歩が最も大切。遠回りしないための、美容皮膚科医からのロードマップ。"
 category: "Beginner"
-date: "2026.04"
+date: "2026-04-06"
 readTime: "6 min read"
 featured: false
 image: "/images/pool/pool-img-35.webp"

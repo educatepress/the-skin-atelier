@@ -2,7 +2,7 @@
 title: "ボトックスは何回打てばいい？\n持続期間と最適な頻度。"
 excerpt: "「打ち続けないといけないの？」その不安にエビデンスで答えます。"
 category: "Injectable"
-date: "2026.04"
+date: "2026-04-02"
 readTime: "4 min read"
 featured: false
 image: "/images/pool/pool-img-34.webp"
