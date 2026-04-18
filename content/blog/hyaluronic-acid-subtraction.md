@@ -48,6 +48,12 @@ image: "/images/pool/pool-img-36.webp"
 ヒアルロン酸はヒアルロニダーゼという酵素で溶解できるため、万が一仕上がりに満足できない場合でも元に戻すことが可能です。この可逆性がヒアルロン酸の大きな安心材料です。
 
 ---
-「やりすぎない」美容医療で、あなただけの自然な美しさを。まずは無料カウンセリングで、理想のデザインを一緒に描きましょう。
+「やりすぎない」美容医療で、あなただけの自然な美しさを。流行や量ではなく、あなたの骨格と表情に合う「引き算のデザイン」を、信頼できる医師と一緒に選んでいけたら、それが遠回りしない注入治療の入口になります。
+
+## 参考文献
+
+- Kyriazidis I, Spyropoulou GA, Zambacos G, et al. *Adverse Events Associated with Hyaluronic Acid Filler Injection for Non-surgical Facial Aesthetics: A Systematic Review of High Level of Evidence Studies.* Aesthetic Plast Surg. 2023;48(4):719-741. PMID: 37563436. [DOI: 10.1007/s00266-023-03465-1](https://doi.org/10.1007/s00266-023-03465-1)
+
+*本記事はPubMed掲載のTier A論文（システマティックレビュー）に基づき執筆しています。*
 
 ![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)

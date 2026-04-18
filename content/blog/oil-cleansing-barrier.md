@@ -8,7 +8,7 @@ featured: false
 image: "/images/pool/pool-img-26.webp"
 ---
 
-## あなたへ、
+## あなたへ
 
 「角栓はオイルで溶かす」というフレーズ、誰もが一度は耳にしたことがあるかもしれませんね。でも、本当にそれだけで、私たちの肌は健やかに美しくなるのでしょうか？
 
@@ -50,8 +50,8 @@ image: "/images/pool/pool-img-26.webp"
 
 ## 参考文献
 
-*   (Goldberg DJ, J Cosmet Dermatol, 2024, PMID: 38489703)
-*   (Draelos ZD, J Drugs Dermatol, 2023, PMID: 36762283)
-*   (Bissett DL, J Am Acad Dermatol, 2022, PMID: 35051996)
+- Hussain R, Miller D, Shyr T, et al. *Novel 2% Salicylic Acid Cleanser With Polymeric Cleansing Technology Treats Acne Without Compromising Skin Barrier.* J Drugs Dermatol. 2025;24(6):570-578. PMID: 40465501. [DOI: 10.36849/JDD.9019](https://doi.org/10.36849/JDD.9019)
+
+*本記事はPubMed掲載のTier A/B論文に基づき執筆しています。*
 
 ![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)

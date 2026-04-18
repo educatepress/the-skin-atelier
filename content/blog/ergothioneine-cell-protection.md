@@ -8,7 +8,7 @@ featured: false
 image: "/images/pool/pool-img-12.webp"
 ---
 
-## あなたへ、
+## あなたへ
 鏡を見るたび、ふと感じる肌のわずかな翳り。それは、私たちが日々を一生懸命に生きているからこそ起こる、自然な変化のサインです。
 
 私自身、20代の頃から肌のゆらぎと丁寧に向き合ってきたからこそ、自分を労わるケアの大切さが身に染みてわかるのです。今日は、未来のあなたの美しさを育む、とっておきのお話をさせてください。
@@ -30,5 +30,11 @@ image: "/images/pool/pool-img-12.webp"
 ## 最後に、心を込めて。
 年齢を少しずつ重ねていくことは、決してネガティブなことではありません。
 日々頑張ってくれている自分自身の細胞を慈しみ、丁寧に育んであげることで、未来のあなたはきっと、今のあなたに優しく微笑みかけてくれるはずです。
+
+## 参考文献
+
+- Liu HM, Tang W, Wang XY, et al. *Safe and Effective Antioxidant: The Biological Mechanism and Potential Pathways of Ergothioneine in the Skin.* Molecules. 2023;28(4):1648. PMID: 36838636. [DOI: 10.3390/molecules28041648](https://doi.org/10.3390/molecules28041648)
+
+*本記事はPubMed掲載のレビュー論文に基づき執筆しています。*
 
 ![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)

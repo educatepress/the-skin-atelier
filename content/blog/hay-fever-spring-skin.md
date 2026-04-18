@@ -8,7 +8,7 @@ featured: false
 image: "/images/pool/pool-img-6.webp"
 ---
 
-## あなたへ、
+## あなたへ
 
 春のやわらかな陽射しは心躍るものですが、その一方で、鏡に映る自分の肌を見て、ふとため息をついてしまうことはありませんか。
 
@@ -63,5 +63,11 @@ image: "/images/pool/pool-img-6.webp"
 春は、肌にとっても変化の季節。焦らなくて大丈夫です。あなたの肌が本来持っている力を信じて、一緒にゆっくりと健やかな状態を仕立てていきましょう。
 
 あなたの肌が、春の陽射しのように穏やかに輝くことを願っています。
+
+## 参考文献
+
+- Celebi Sozener Z, Ozdel Ozturk B, Cerci P, et al. *Epithelial barrier hypothesis: Effect of the external exposome on the microbiome and epithelial barriers in allergic disease.* Allergy. 2022;77(5):1418-1449. PMID: 35108405. [DOI: 10.1111/all.15240](https://doi.org/10.1111/all.15240)
+
+*本記事はPubMed掲載のTier A/B論文（レビュー）に基づき執筆しています。*
 
 ![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)
