@@ -55,4 +55,12 @@ image: "/images/pool/pool-img-28.webp"
 ---
 スキンケアの「正解」は、意外とシンプル。まずは余計なものを手放すところから始めてみませんか。
 
+## 参考文献
+
+- Hughes MCB, Williams GM, Baker P, Green AC. *Sunscreen and prevention of skin aging: a randomized trial.* Ann Intern Med. 2013;158(11):781-90. PMID: 23732711. [DOI: 10.7326/0003-4819-158-11-201306040-00002](https://doi.org/10.7326/0003-4819-158-11-201306040-00002)
+- Ho ET, Trookman NS, Sperber BR, et al. *A randomized, double-blind, controlled comparative trial of the anti-aging properties of non-prescription tri-retinol 1.1% vs. prescription tretinoin 0.025%.* J Drugs Dermatol. 2012;11(1):64-9. PMID: 22206079.
+- Bissett D. *Topical niacinamide and barrier enhancement.* Cutis. 2002;70(6 Suppl):8-12. PMID: 12498532.
+
+*本記事はPubMed掲載のTier A/B論文（RCT・システマティックレビュー）に基づき執筆しています。*
+
 ![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)

@@ -54,6 +54,12 @@ image: "/images/pool/pool-img-34.webp"
 もちろん大丈夫です。初回は控えめな量から始め、2週間後に経過を見ます。「まずは少なく、様子を見て調整」が安心・安全なアプローチです。
 
 ---
-ボトックスへの「漠然とした不安」は、正しい知識で解消できます。まずは気軽にご相談ください。
+ボトックスへの「漠然とした不安」は、正しい知識で解消できます。データに基づく判断と、あなた自身の表情の個性を大切にしながら、丁寧に選んでいきましょう。
+
+## 参考文献
+
+- Camargo CP, Xia J, Costa CS, et al. *Botulinum toxin type A for facial wrinkles.* Cochrane Database Syst Rev. 2021;7(7):CD011301. PMID: 34224576. [DOI: 10.1002/14651858.CD011301.pub2](https://doi.org/10.1002/14651858.CD011301.pub2)
+
+*本記事はPubMed掲載のCochrane系統的レビュー（Tier A）に基づき執筆しています。*
 
 ![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)

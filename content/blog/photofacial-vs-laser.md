@@ -43,6 +43,13 @@ image: "/images/pool/pool-img-31.webp"
 ほぼありません。施術直後からメイクをしてお帰りいただけます。シミの部分が数日間、薄いかさぶた（マイクロクラスト）のように少し濃くなることがありますが、自然に剥がれ落ちます。
 
 ---
-あなたの肌にとっての「正解」は、あなたの肌の状態を知ることから始まります。まずはパーソナル美肌診断で、ご自身の肌の「現在地」をご確認ください。
+あなたの肌にとっての「正解」は、あなたの肌の状態を知ることから始まります。流行の施術名に流されず、肌の「現在地」と「ゴール」を信頼できる医師と一緒に見極めていけたら、それが遠回りしない美容医療の入口になります。
+
+## 参考文献
+
+- DiBernardo BE, Pozner JN. *Intense Pulsed Light Therapy for Skin Rejuvenation.* Clin Plast Surg. 2016;43(3):535-40. PMID: 27363767. [DOI: 10.1016/j.cps.2016.03.008](https://doi.org/10.1016/j.cps.2016.03.008)
+- Hughes MCB, Williams GM, Baker P, Green AC. *Sunscreen and prevention of skin aging: a randomized trial.* Ann Intern Med. 2013;158(11):781-90. PMID: 23732711. [DOI: 10.7326/0003-4819-158-11-201306040-00002](https://doi.org/10.7326/0003-4819-158-11-201306040-00002)
+
+*本記事はPubMed掲載のTier A/B論文（レビュー・RCT）に基づき執筆しています。*
 
 ![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)
