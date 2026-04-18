@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
 const navItems = [
-  { label: "Philosophy", href: "/#philosophy" },
-  { label: "Journal", href: "/#blog" },
+  { label: "Philosophy", href: "/philosophy" },
+  { label: "Journal", href: "/blog" },
 ];
 
 export default function Header() {

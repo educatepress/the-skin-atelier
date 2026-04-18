@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import FadeIn from "@/components/common/fade-in";
 
@@ -108,6 +109,19 @@ export default function Philosophy() {
                   Dr. Miyaka
                 </p>
               </motion.div>
+            </FadeIn>
+
+            {/* Link to full Philosophy page */}
+            <FadeIn delay={0.7}>
+              <div className="pt-[var(--space-xl)] flex justify-center">
+                <Link
+                  href="/philosophy"
+                  className="inline-flex items-center gap-3 text-[11px] font-brand tracking-[0.3em] text-[var(--color-text-muted)] uppercase hover:text-[var(--color-pink-gold-deep)] transition-colors duration-500 border-b border-[var(--color-marble-vein)] hover:border-[var(--color-pink-gold)] pb-2"
+                >
+                  わたしが大切にしていることを、もう少し詳しく
+                  <span>→</span>
+                </Link>
+              </div>
             </FadeIn>
           </div>
 
