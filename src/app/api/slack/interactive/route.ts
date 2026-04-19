@@ -7,7 +7,14 @@
  * 【重要】Slack は 3秒以内の応答を要求。重い処理は `after()` でバックグラウンド化する。
  */
 import { NextResponse, after } from 'next/server';
-import { updateSheetRow } from '@/lib/sheets-rest';
+
+// 【コールドスタート対策】
+// googleapis / sheets-rest は非常に重いため、モジュール読み込みを
+// 遅延させる（lazy import）ことで、Slackの3秒タイムアウトに収まる。
+async function lazyUpdateSheetRow(contentId: string, updates: Record<string, string>) {
+  const { updateSheetRow } = await import('@/lib/sheets-rest');
+  return updateSheetRow(contentId, updates);
+}
 
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || '';
 const MAKE_PUBLISH_WEBHOOK_URL = process.env.MAKE_PUBLISH_WEBHOOK_URL || '';
@@ -57,7 +64,7 @@ export async function POST(req: Request) {
             const tomorrowJst = new Date(Date.now() + 9 * 3600 * 1000 + 24 * 3600 * 1000)
               .toISOString()
               .split('T')[0];
-            await updateSheetRow(contentId, {
+            await lazyUpdateSheetRow(contentId, {
               status: 'approved',
               scheduled_date: tomorrowJst
             });
@@ -113,7 +120,7 @@ export async function POST(req: Request) {
         after(async () => {
           try {
             const newStatus = isRevision ? 'revision' : 'rejected';
-            await updateSheetRow(contentId, { status: newStatus });
+            await lazyUpdateSheetRow(contentId, { status: newStatus });
             console.log(`[Atelier Slack] ${isRevision ? '🔄' : '❌'} ${contentId} → ${newStatus}`);
           } catch (err) {
             console.error('[Atelier Slack] Failed to update status:', err);
