@@ -3,8 +3,10 @@
  *
  * 承認ボタン → Google Sheets の status を 'approved' + scheduled_date を翌日JSTに設定
  * daily-publisher cron が翌朝に投稿を実行する。
+ *
+ * 【重要】Slack は 3秒以内の応答を要求。重い処理は `after()` でバックグラウンド化する。
  */
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { updateSheetRow } from '@/lib/sheets-rest';
 
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || '';
@@ -40,7 +42,7 @@ export async function POST(req: Request) {
       const action = payload.actions?.[0];
       if (!action) return NextResponse.json({ ok: true });
 
-      // ✅ Approve
+      // ✅ Approve — 重い処理は after() でバックグラウンドに逃がして即応答
       if (action.action_id === 'approve_content') {
         const parsedValue = JSON.parse(action.value || '{}');
         const contentId = parsedValue.id;
@@ -49,83 +51,86 @@ export async function POST(req: Request) {
         const ts = payload.container?.message_ts;
         const blocks = payload.message?.blocks;
 
-        try {
-          const tomorrowJst = new Date(Date.now() + 9 * 3600 * 1000 + 24 * 3600 * 1000)
-            .toISOString()
-            .split('T')[0];
-          await updateSheetRow(contentId, {
-            status: 'approved',
-            scheduled_date: tomorrowJst
-          });
-          console.log(`[Atelier Slack] ✅ Approved ${contentId} (scheduled for ${tomorrowJst}).`);
-        } catch (err) {
-          console.error('[Atelier Slack] Failed to update Sheets:', err);
-        }
-
-        // reels-factory-atelier の場合、Make.com へ即時発射
-        if (project === 'reels-factory' && MAKE_PUBLISH_WEBHOOK_URL) {
+        // Slack 3秒ルール回避: 重い I/O (Sheets / Slack update / Make webhook) を after() へ
+        after(async () => {
           try {
-            await fetch(MAKE_PUBLISH_WEBHOOK_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                content_id: contentId,
-                action: 'publish',
-                approved_at: new Date().toISOString()
-              })
+            const tomorrowJst = new Date(Date.now() + 9 * 3600 * 1000 + 24 * 3600 * 1000)
+              .toISOString()
+              .split('T')[0];
+            await updateSheetRow(contentId, {
+              status: 'approved',
+              scheduled_date: tomorrowJst
             });
-            console.log(`[Atelier Slack] 📤 Make.com webhook triggered for ${contentId}`);
+            console.log(`[Atelier Slack] ✅ Approved ${contentId} (scheduled for ${tomorrowJst}).`);
           } catch (err) {
-            console.error('[Atelier Slack] Make.com webhook failed:', err);
+            console.error('[Atelier Slack] Failed to update Sheets:', err);
           }
-        }
 
-        if (channel && ts && blocks) {
-          const actionBlockIndex = blocks.findIndex((b: any) => b.type === 'actions');
-          if (actionBlockIndex !== -1) {
-            const statusText = project === 'reels-factory'
-              ? `✅ *承認済み* — Make.com 経由で Instagram 投稿キューに登録されました`
-              : `✅ *承認済み* (明朝の自動投稿キューに登録されました)`;
-            blocks[actionBlockIndex] = {
-              type: 'section',
-              text: { type: 'mrkdwn', text: statusText }
-            };
-            await updateSlackMessage(channel, ts, '承認されました', blocks);
+          if (project === 'reels-factory' && MAKE_PUBLISH_WEBHOOK_URL) {
+            try {
+              await fetch(MAKE_PUBLISH_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  content_id: contentId,
+                  action: 'publish',
+                  approved_at: new Date().toISOString()
+                })
+              });
+              console.log(`[Atelier Slack] 📤 Make.com webhook triggered for ${contentId}`);
+            } catch (err) {
+              console.error('[Atelier Slack] Make.com webhook failed:', err);
+            }
           }
-        }
+
+          if (channel && ts && blocks) {
+            const actionBlockIndex = blocks.findIndex((b: any) => b.type === 'actions');
+            if (actionBlockIndex !== -1) {
+              const statusText = project === 'reels-factory'
+                ? `✅ *承認済み* — Make.com 経由で Instagram 投稿キューに登録されました`
+                : `✅ *承認済み* (明朝の自動投稿キューに登録されました)`;
+              blocks[actionBlockIndex] = {
+                type: 'section',
+                text: { type: 'mrkdwn', text: statusText }
+              };
+              await updateSlackMessage(channel, ts, '承認されました', blocks);
+            }
+          }
+        });
 
         return NextResponse.json({ ok: true });
       }
 
-      // ❌ Reject
+      // ❌ Reject / Revise — こちらも after() でバックグラウンド化
       if (action.action_id === 'reject_content' || action.action_id === 'request_revision') {
         const parsedValue = JSON.parse(action.value || '{}');
         const contentId = parsedValue.id;
         const isRevision = action.action_id === 'request_revision';
-
-        try {
-          const newStatus = isRevision ? 'revision' : 'rejected';
-          await updateSheetRow(contentId, { status: newStatus });
-          console.log(`[Atelier Slack] ${isRevision ? '🔄' : '❌'} ${contentId} → ${newStatus}`);
-        } catch (err) {
-          console.error('[Atelier Slack] Failed to update status:', err);
-        }
-
         const channel = payload.container?.channel_id;
         const ts = payload.container?.message_ts;
         const blocks = payload.message?.blocks;
 
-        if (channel && ts && blocks) {
-          const actionBlockIndex = blocks.findIndex((b: any) => b.type === 'actions');
-          if (actionBlockIndex !== -1) {
-            const statusText = isRevision ? '🔄 *修正依頼されました*' : '❌ *却下されました*';
-            blocks[actionBlockIndex] = {
-              type: 'section',
-              text: { type: 'mrkdwn', text: statusText }
-            };
-            await updateSlackMessage(channel, ts, statusText, blocks);
+        after(async () => {
+          try {
+            const newStatus = isRevision ? 'revision' : 'rejected';
+            await updateSheetRow(contentId, { status: newStatus });
+            console.log(`[Atelier Slack] ${isRevision ? '🔄' : '❌'} ${contentId} → ${newStatus}`);
+          } catch (err) {
+            console.error('[Atelier Slack] Failed to update status:', err);
           }
-        }
+
+          if (channel && ts && blocks) {
+            const actionBlockIndex = blocks.findIndex((b: any) => b.type === 'actions');
+            if (actionBlockIndex !== -1) {
+              const statusText = isRevision ? '🔄 *修正依頼されました*' : '❌ *却下されました*';
+              blocks[actionBlockIndex] = {
+                type: 'section',
+                text: { type: 'mrkdwn', text: statusText }
+              };
+              await updateSlackMessage(channel, ts, statusText, blocks);
+            }
+          }
+        });
 
         return NextResponse.json({ ok: true });
       }
