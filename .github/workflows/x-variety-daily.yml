@@ -27,7 +27,8 @@ concurrency:
 jobs:
   post-variety-tweet:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # Gemini 503 で最大 ~14.5 分のリトライ累計になるため、余裕をもって 20 分
+    timeout-minutes: 20
 
     steps:
       - name: Checkout

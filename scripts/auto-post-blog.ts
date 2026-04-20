@@ -33,16 +33,19 @@ const MODEL = "gemini-2.5-flash";
 
 async function withRetry<T>(
   fn: (model: string) => Promise<T>,
-  maxRetries = 5,
+  maxRetries = 8,
   baseDelay = 10000
 ): Promise<T> {
+  // Gemini の Asia-Pacific ピーク時間帯 (昼・夜) で 503 を連発するため、
+  // 累計 ~14.5 分まで粘る。429 (rate limit) と ECONNRESET もリトライ対象。
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await fn(MODEL);
     } catch (err: any) {
-      if (attempt === maxRetries || err?.status !== 503) throw err;
-      const delay = Math.min(baseDelay * Math.pow(2, attempt - 1), 60000);
-      console.log(`⏳ API混雑中 (503)… ${delay / 1000}秒後にリトライ (${attempt}/${maxRetries})`);
+      const isRetryable = err?.status === 503 || err?.status === 429 || err?.code === 'ECONNRESET';
+      if (attempt === maxRetries || !isRetryable) throw err;
+      const delay = Math.min(baseDelay * Math.pow(2, attempt - 1), 180000);
+      console.log(`⏳ API混雑 (${err?.status || err?.code})… ${delay / 1000}秒後にリトライ (${attempt}/${maxRetries})`);
       await new Promise(r => setTimeout(r, delay));
     }
   }

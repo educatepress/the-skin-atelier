@@ -19,7 +19,8 @@ concurrency:
 jobs:
   generate-content:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # ブログ生成+X生成+検閲で複数 Gemini 呼び出しあり。503 時のリトライ累計で長くなるため 30 分
+    timeout-minutes: 30
 
     steps:
       - name: Checkout

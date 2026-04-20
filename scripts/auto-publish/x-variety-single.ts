@@ -52,14 +52,18 @@ const PATTERN_DESCRIPTIONS: Record<PatternType, string> = {
 };
 
 // ---------- withRetry ----------
-async function withRetry<T>(fn: () => Promise<T>, maxRetries = 5, baseDelay = 10000): Promise<T> {
+// Gemini 2.5 Flash は Asia-Pacific のピーク時間 (昼・夜) で 503 を連発する傾向。
+// リトライ回数を 5→8 に増やし、最大バックオフも 60s→180s に延長。
+// 累計待機時間: 10+20+40+80+160+180+180+180 = ~870秒 (~14.5分)
+async function withRetry<T>(fn: () => Promise<T>, maxRetries = 8, baseDelay = 10000): Promise<T> {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await fn();
     } catch (err: any) {
-      if (attempt === maxRetries || err?.status !== 503) throw err;
-      const delay = Math.min(baseDelay * Math.pow(2, attempt - 1), 60000);
-      console.log(`⏳ API混雑中 (503)… ${delay / 1000}秒後にリトライ (${attempt}/${maxRetries})`);
+      const isRetryable = err?.status === 503 || err?.status === 429 || err?.code === 'ECONNRESET';
+      if (attempt === maxRetries || !isRetryable) throw err;
+      const delay = Math.min(baseDelay * Math.pow(2, attempt - 1), 180000);
+      console.log(`⏳ API混雑 (${err?.status || err?.code})… ${delay / 1000}秒後にリトライ (${attempt}/${maxRetries})`);
       await new Promise((r) => setTimeout(r, delay));
     }
   }
