@@ -193,7 +193,10 @@ export async function GET(req: Request) {
 
         if (isSuccess) {
           await updateQueueItem(item.rowNumber, {
-            status: 'posted', posted_at: new Date().toISOString(), post_url: postUrl
+            status: 'posted',
+            posted_at: new Date().toISOString(),
+            post_url: postUrl,
+            error_detail: '', // 過去の失敗ログをクリア（再試行で成功したケース）
           });
           processedResults.push({ id: item.content_id, status: 'success', url: postUrl });
           console.log(`✅ [Atelier] Published [${item.type}] ${item.title}`);
