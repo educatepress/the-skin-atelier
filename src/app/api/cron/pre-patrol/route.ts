@@ -34,9 +34,10 @@ export async function GET(req: Request) {
   try {
     const queue = await getQueueItems();
 
-    // atelier ブランドかつ patrol 未実施のもの
+    // atelier ブランドかつ Slack 未送信の pending アイテム
+    // auto-post-blog.ts の Slack 送信が失敗したケースを救済するフォールバック
     const pendingItems = queue.filter(
-      item => item.brand === 'atelier' && item.status === 'pending' && item.patrol_pre_result === 'pending'
+      item => item.brand === 'atelier' && item.status === 'pending' && !item.slack_ts
     );
 
     if (pendingItems.length === 0) {
@@ -156,8 +157,11 @@ ${contentText}`;
           });
         }
 
-        await updateQueueItem(item.rowNumber, { patrol_pre_result: 'done' });
-        console.log(`✅ [Atelier Pre-Patrol] ${item.content_id} → Slack notified`);
+        await updateQueueItem(item.rowNumber, {
+          patrol_pre_result: 'done',
+          slack_ts: slackData.ts || '',
+        });
+        console.log(`✅ [Atelier Pre-Patrol] ${item.content_id} → Slack notified (ts=${slackData.ts})`);
       } catch (err) {
         console.error(`❌ [Atelier Pre-Patrol] Slack failed for ${item.content_id}:`, err);
       }

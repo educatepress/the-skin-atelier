@@ -565,8 +565,17 @@ async function main() {
         });
         await SheetsDB.updateRow(contentId, { slack_ts: result.ts });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(`❌ Slack通知エラー:`, error);
+      // Slack 送信失敗を error_detail に記録（silently swallow 防止）
+      // pre-patrol が !slack_ts のアイテムを拾って 15:15 JST に再送する
+      try {
+        await SheetsDB.updateRow(contentId, {
+          error_detail: `Slack send failed at generation: ${error?.message || String(error)}`,
+        });
+      } catch (sheetErr) {
+        console.error('Failed to record Slack error to sheet:', sheetErr);
+      }
     }
 
     // ⑨ X（Twitter）スレッドの連携生成とステータス更新

@@ -157,6 +157,8 @@ async function sendSlackApprovalMessage(contentId: string, slug: string, caption
     return result.ts as string;
   } catch (error) {
     console.error(`❌ Slack通知エラー:`, error);
+    // 失敗した場合、呼び出し側は slack_ts='' で行を登録する。
+    // pre-patrol が !slack_ts で拾って 15:15 JST に Slack を再送する。
     return undefined;
   }
 }
