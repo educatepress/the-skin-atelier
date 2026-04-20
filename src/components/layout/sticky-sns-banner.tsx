@@ -30,7 +30,7 @@ export default function StickySnsBanner() {
         >
           {/* X (Twitter) */}
           <a
-            href="https://x.com/dr_miyaka"
+            href="https://x.com/dr_miyaka_skin"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="X (Twitter)"

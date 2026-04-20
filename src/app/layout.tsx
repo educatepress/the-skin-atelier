@@ -139,7 +139,7 @@ export default function RootLayout({
               url: "https://skin-atelier.jp",
               sameAs: [
                 "https://www.instagram.com/dr_miyaka_skin/",
-                "https://x.com/dr_miyaka",
+                "https://x.com/dr_miyaka_skin",
               ],
             }),
           }}

@@ -298,7 +298,7 @@ export default function PhilosophyClient() {
                 <span className="arrow ml-2">→</span>
               </a>
               <a
-                href="https://x.com/dr_miyaka"
+                href="https://x.com/dr_miyaka_skin"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="X (Twitter) で Dr. Miyaka をフォロー"

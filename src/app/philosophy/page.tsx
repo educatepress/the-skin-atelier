@@ -52,7 +52,7 @@ export default function PhilosophyPage() {
       url: SITE_URL,
       sameAs: [
         "https://www.instagram.com/dr_miyaka_skin/",
-        "https://x.com/dr_miyaka",
+        "https://x.com/dr_miyaka_skin",
       ],
     },
   };

@@ -193,7 +193,7 @@ async function postToTwitter(tweet: string): Promise<string> {
   });
   const result = await client.v2.tweet(tweet);
   const tweetId = result.data.id;
-  return `https://twitter.com/dr_miyaka/status/${tweetId}`;
+  return `https://twitter.com/dr_miyaka_skin/status/${tweetId}`;
 }
 
 // ---------- Main ----------

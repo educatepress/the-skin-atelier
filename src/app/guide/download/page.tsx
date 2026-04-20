@@ -313,7 +313,7 @@ export default function GuideDownloadPage() {
               <span className="arrow ml-2">→</span>
             </a>
             <a
-              href="https://x.com/dr_miyaka"
+              href="https://x.com/dr_miyaka_skin"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-atelier inline-flex justify-center items-center text-xs px-8 py-4"
