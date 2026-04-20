@@ -39,8 +39,8 @@ const TARGET_CHANNEL = "skin-atelier_jp";
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
-// 5 Pattern types
-type PatternType = "myth" | "evidence" | "contrast" | "confession" | "qa";
+// 6 Pattern types
+type PatternType = "myth" | "evidence" | "contrast" | "confession" | "qa" | "daily";
 
 const PATTERN_DESCRIPTIONS: Record<PatternType, string> = {
   myth: "神話崩しツイート (controversy)",
@@ -48,6 +48,7 @@ const PATTERN_DESCRIPTIONS: Record<PatternType, string> = {
   contrast: "対比ツイート (save-bait)",
   confession: "告白ツイート (emotional)",
   qa: "Q&A即答ツイート (search + reply)",
+  daily: "生活密着シーン (共感 → 保存)",
 };
 
 // ---------- withRetry ----------
@@ -162,6 +163,7 @@ async function notifySlack(type: PatternType, tweet: string, tweetUrl?: string) 
     contrast: "⚖️",
     confession: "💌",
     qa: "💭",
+    daily: "🌙",
   }[type];
   try {
     await slackClient.chat.postMessage({
@@ -206,13 +208,19 @@ async function main() {
   const dryRun = args.includes("--dry-run");
 
   let selectedType: PatternType;
+  // daily (生活密着) を重み 2 にして日常ネタを優先
+  // 結果: 7分の2 で daily、残り 5/7 で other 5種
+  const weightedRandom: PatternType[] = [
+    "daily", "daily",          // weight 2
+    "myth", "evidence", "contrast", "confession", "qa",  // weight 1 each
+  ];
+  const validTypes = ["myth", "evidence", "contrast", "confession", "qa", "daily"];
   if (typeArg === "random") {
-    const types: PatternType[] = ["myth", "evidence", "contrast", "confession", "qa"];
-    selectedType = types[Math.floor(Math.random() * types.length)];
-  } else if (["myth", "evidence", "contrast", "confession", "qa"].includes(typeArg)) {
+    selectedType = weightedRandom[Math.floor(Math.random() * weightedRandom.length)];
+  } else if (validTypes.includes(typeArg)) {
     selectedType = typeArg as PatternType;
   } else {
-    console.error(`❌ Invalid --type: ${typeArg}. Use myth/evidence/contrast/confession/qa/random`);
+    console.error(`❌ Invalid --type: ${typeArg}. Use ${validTypes.join("/")}/random`);
     process.exit(1);
   }
 

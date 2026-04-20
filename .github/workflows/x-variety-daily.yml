@@ -6,17 +6,17 @@ name: X Variety Daily Posts
 
 on:
   schedule:
-    # JST 12:00 (UTC 03:00) — 神話崩し (myth)
+    # JST 12:00 (UTC 03:00) — 生活密着 (daily) : 昼休みの共感スクロール狙い
     - cron: '0 3 * * *'
-    # JST 18:00 (UTC 09:00) — 論文引用 (evidence)
+    # JST 18:00 (UTC 09:00) — 論文引用 (evidence) : 退勤前の権威インプット
     - cron: '0 9 * * *'
-    # JST 21:30 (UTC 12:30) — 対比 / 告白 / Q&A をランダム
+    # JST 21:30 (UTC 12:30) — 夜のスクロール向け (daily / contrast / confession / qa をローテ)
     - cron: '30 12 * * *'
 
   workflow_dispatch:
     inputs:
       pattern:
-        description: 'Pattern type (myth / evidence / contrast / confession / qa / random)'
+        description: 'Pattern type (myth / evidence / contrast / confession / qa / daily / random)'
         required: false
         default: 'random'
 
@@ -47,16 +47,19 @@ jobs:
         run: |
           # Cron time → pattern mapping
           if [ "${{ github.event.schedule }}" = "0 3 * * *" ]; then
-            echo "type=myth" >> $GITHUB_OUTPUT
+            # 昼: 生活密着 (日常シーンから共感 → 保存)
+            echo "type=daily" >> $GITHUB_OUTPUT
           elif [ "${{ github.event.schedule }}" = "0 9 * * *" ]; then
+            # 夕: 論文引用 (退勤前の権威インプット)
             echo "type=evidence" >> $GITHUB_OUTPUT
           elif [ "${{ github.event.schedule }}" = "30 12 * * *" ]; then
-            # Rotate between contrast / confession / qa by day
+            # 夜: daily / contrast / confession / qa を曜日でローテ (daily を多めに)
             DAY_OF_YEAR=$(date +%j)
-            case $((DAY_OF_YEAR % 3)) in
-              0) echo "type=contrast" >> $GITHUB_OUTPUT ;;
-              1) echo "type=confession" >> $GITHUB_OUTPUT ;;
-              2) echo "type=qa" >> $GITHUB_OUTPUT ;;
+            case $((DAY_OF_YEAR % 4)) in
+              0) echo "type=daily" >> $GITHUB_OUTPUT ;;
+              1) echo "type=contrast" >> $GITHUB_OUTPUT ;;
+              2) echo "type=confession" >> $GITHUB_OUTPUT ;;
+              3) echo "type=qa" >> $GITHUB_OUTPUT ;;
             esac
           else
             # Manual dispatch: use input or default to random
