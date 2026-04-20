@@ -99,11 +99,45 @@ export async function GET(req: Request) {
 
           if (!textToPost) throw new Error('投稿用テキストが空です');
 
+          // "---" セパレータでスレッド分割 (generate-x-post.ts の出力形式)
+          // Free Tier は 1ツイート最大280 weight（日本語1文字=2 weight）。
+          // プロンプトで1ポスト130字以内を要求している前提で、最終ポストにブログURLを付与。
           const blogUrl = 'https://skin-atelier.jp/blog';
-          const finalTweet = textToPost.includes('http') ? textToPost : `${textToPost}\n\n👇Read More\n${blogUrl}`;
+          const rawParts = textToPost
+            .split(/^---\s*$/m)
+            .map(p => p.trim())
+            .filter(Boolean);
+          const parts = rawParts.length > 0 ? rawParts : [textToPost.trim()];
 
-          const tweetResult = await client.v2.tweet(finalTweet);
-          postUrl = `https://twitter.com/user/status/${tweetResult.data.id}`;
+          // 最終ポストに Read More を付与（既にURL含む場合はスキップ）
+          const lastIdx = parts.length - 1;
+          if (!parts[lastIdx].includes('http')) {
+            parts[lastIdx] = `${parts[lastIdx]}\n\n👇Read More\n${blogUrl}`;
+          }
+
+          // Free Tier の 280 weight 制限チェック
+          // CJK 系は 2 weight、英数字は 1 weight として近似
+          const tweetWeight = (s: string) =>
+            [...s].reduce((w, ch) => w + (ch.charCodeAt(0) > 0x7F ? 2 : 1), 0);
+          const tooLong = parts.find(p => tweetWeight(p) > 280);
+          if (tooLong) {
+            throw new Error(
+              `Tweet part exceeds 280 weight (${tweetWeight(tooLong)}): "${tooLong.slice(0, 40)}..."`
+            );
+          }
+
+          // スレッド投稿: 1本目は tweet, 2本目以降は reply
+          let firstTweetId = '';
+          let prevTweetId = '';
+          for (let i = 0; i < parts.length; i++) {
+            const opts: any = prevTweetId ? { reply: { in_reply_to_tweet_id: prevTweetId } } : undefined;
+            const result = opts
+              ? await client.v2.tweet(parts[i], opts)
+              : await client.v2.tweet(parts[i]);
+            if (i === 0) firstTweetId = result.data.id;
+            prevTweetId = result.data.id;
+          }
+          postUrl = `https://twitter.com/dr_miyaka_skin/status/${firstTweetId}`;
           isSuccess = true;
 
         } else if (item.type === 'blog') {
