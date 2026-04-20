@@ -120,8 +120,11 @@ async function generateVarietyPost(type: PatternType, theme: string): Promise<st
 
     【出力要件】
     - 本文のみ（前置き、「承知しました」等一切不要）
-    - ツイート本文（日本語で140文字以内、全角換算）
-    - ハッシュタグは本文末尾に 2-4個（hashtag-strategy.md参照可能なら参照）
+    - **ツイート全体（本文＋改行＋ハッシュタグ＋絵文字）で 120 文字以内（全角換算）を厳守**
+      * Twitter Free Tier は 280 weight 制限（日本語1文字=2 weight、英数字=1 weight）
+      * ハッシュタグも必ず文字数に含めて計算すること
+      * 120 文字を絶対に超えないよう、本文を短く書き、ハッシュタグを精選すること
+    - ハッシュタグは本文末尾に 2-3 個（hashtag-strategy.md参照可能なら参照。多すぎると文字数超過するので厳選）
     - 絵文字は最小限 (1-2個まで)
     - 末尾に余計な改行や記号を付けない
     - コードブロック (\`\`\`) で囲わない
@@ -219,15 +222,30 @@ async function main() {
     const { theme } = await pickTheme();
     console.log(`📌 Theme: ${theme}`);
 
-    const tweet = await generateVarietyPost(selectedType, theme);
+    // Twitter Free Tier の 280 weight 制限 (日本語1文字=2weight, ASCII=1weight)
+    const tweetWeight = (s: string) =>
+      [...s].reduce((w, ch) => w + (ch.charCodeAt(0) > 0x7F ? 2 : 1), 0);
+
+    // 初回生成
+    let tweet = await generateVarietyPost(selectedType, theme);
+    let weight = tweetWeight(tweet);
     console.log("\n====== 生成されたツイート ======");
     console.log(tweet);
+    console.log(`(${weight} weight / ${tweet.length} chars)`);
     console.log("================================\n");
 
-    // Validation: 140 chars max (rough check; full-width chars counted)
-    if (tweet.length > 280) {
-      console.warn(`⚠️ ツイートが長すぎる可能性 (${tweet.length} chars)。送信を中止します。`);
-      await notifySlack(selectedType, `⚠️ 長すぎて送信中止: ${tweet.substring(0, 100)}...`);
+    // 長すぎたら最大 2 回「短く書き直して」と再生成
+    for (let attempt = 1; weight > 280 && attempt <= 2; attempt++) {
+      console.warn(`⚠️ 重み超過 (${weight}w). 再生成試行 ${attempt}/2 ...`);
+      const tighterTheme = `${theme}\n\n【再生成指示】前回は ${weight} weight で超過しました。今回は 240 weight（=全角120文字程度）に必ず収めてください。ハッシュタグも文字数に含めて計算。`;
+      tweet = await generateVarietyPost(selectedType, tighterTheme);
+      weight = tweetWeight(tweet);
+      console.log(`  → 再生成結果: ${weight}w`);
+    }
+
+    if (weight > 280) {
+      console.warn(`❌ 再生成でも重み超過 (${weight}w)。送信を中止します。`);
+      await notifySlack(selectedType, `⚠️ 長すぎて送信中止 (${weight}w): ${tweet.substring(0, 100)}...`);
       process.exit(1);
     }
 
