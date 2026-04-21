@@ -251,6 +251,103 @@ export async function updateThemeScheduleStatus(rowNumber: number, newStatus: st
 }
 
 // ============================================================================
+// PostMetrics シート (X パフォーマンス監視)
+// ============================================================================
+
+export type PostMetric = {
+  content_id: string;
+  tweet_id: string;
+  posted_date: string;
+  pattern_type: string;
+  impressions: number;
+  likes: number;
+  retweets: number;
+  replies: number;
+  quotes: number;
+  bookmarks: number;
+  last_updated: string;
+};
+
+const POST_METRICS_SHEET = 'PostMetrics';
+const POST_METRICS_HEADERS = [
+  'content_id', 'tweet_id', 'posted_date', 'pattern_type',
+  'impressions', 'likes', 'retweets', 'replies', 'quotes', 'bookmarks', 'last_updated'
+];
+
+export async function appendOrUpdateMetric(metric: PostMetric) {
+  const auth = await getGoogleAuthClient();
+  const sheets = google.sheets({ version: 'v4', auth: auth as any });
+
+  // 既存行を検索
+  try {
+    const res = await sheets.spreadsheets.values.get({
+      spreadsheetId: QUEUE_SPREADSHEET_ID,
+      range: `${POST_METRICS_SHEET}!A:A`,
+    });
+    const rows = res.data.values || [];
+    let existingRow = -1;
+    for (let i = 1; i < rows.length; i++) {
+      if (rows[i][0] === metric.content_id) {
+        existingRow = i + 1;
+        break;
+      }
+    }
+
+    const rowData = POST_METRICS_HEADERS.map(h => {
+      const val = metric[h as keyof PostMetric];
+      return val !== undefined ? String(val) : '';
+    });
+
+    if (existingRow > 0) {
+      // 既存行を更新
+      await sheets.spreadsheets.values.update({
+        spreadsheetId: QUEUE_SPREADSHEET_ID,
+        range: `${POST_METRICS_SHEET}!A${existingRow}:K${existingRow}`,
+        valueInputOption: 'USER_ENTERED',
+        requestBody: { values: [rowData] },
+      });
+    } else {
+      // 新規行を追加
+      await sheets.spreadsheets.values.append({
+        spreadsheetId: QUEUE_SPREADSHEET_ID,
+        range: `${POST_METRICS_SHEET}!A:K`,
+        valueInputOption: 'USER_ENTERED',
+        requestBody: { values: [rowData] },
+      });
+    }
+  } catch (e: any) {
+    // シートが存在しない場合はヘッダー行を含めて作成
+    if (e.message?.includes('Unable to parse range') || e.code === 400) {
+      console.log('📊 PostMetrics sheet not found, creating with headers...');
+      const rowData = POST_METRICS_HEADERS.map(h => {
+        const val = metric[h as keyof PostMetric];
+        return val !== undefined ? String(val) : '';
+      });
+      await sheets.spreadsheets.batchUpdate({
+        spreadsheetId: QUEUE_SPREADSHEET_ID,
+        requestBody: {
+          requests: [{ addSheet: { properties: { title: POST_METRICS_SHEET } } }],
+        },
+      });
+      await sheets.spreadsheets.values.update({
+        spreadsheetId: QUEUE_SPREADSHEET_ID,
+        range: `${POST_METRICS_SHEET}!A1:K1`,
+        valueInputOption: 'USER_ENTERED',
+        requestBody: { values: [POST_METRICS_HEADERS] },
+      });
+      await sheets.spreadsheets.values.append({
+        spreadsheetId: QUEUE_SPREADSHEET_ID,
+        range: `${POST_METRICS_SHEET}!A:K`,
+        valueInputOption: 'USER_ENTERED',
+        requestBody: { values: [rowData] },
+      });
+    } else {
+      throw e;
+    }
+  }
+}
+
+// ============================================================================
 // Prompts シート
 // ============================================================================
 

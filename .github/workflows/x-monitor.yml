@@ -1,0 +1,49 @@
+name: X Performance Monitor (Atelier)
+
+# 直近14日の X 投稿の public_metrics を取得し PostMetrics シートに蓄積。
+# Vercel Hobby cron の本数上限回避のため GitHub Actions で実行。
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # 12:00 JST (= 03:00 UTC)
+  workflow_dispatch:
+
+concurrency:
+  group: x-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Trigger Vercel x-monitor endpoint
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          HTTP_CODE=$(curl -sS -o /tmp/response.txt -w "%{http_code}" \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "https://skin-atelier.jp/api/cron/x-monitor")
+
+          cat /tmp/response.txt
+          echo ""
+          echo "HTTP status: $HTTP_CODE"
+
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "❌ x-monitor returned HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+      - name: Notify Slack on failure
+        if: failure()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        run: |
+          curl -sS -X POST https://slack.com/api/chat.postMessage \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "channel": "skin-atelier_jp",
+              "text": "🚨 *x-monitor cron が失敗しました*\nGitHub Actions → Vercel endpoint の呼び出しでエラーが発生。\nhttps://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }'
