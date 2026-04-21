@@ -134,6 +134,13 @@ async function generateVarietyPost(type: PatternType, theme: string): Promise<st
     - 末尾に余計な改行や記号を付けない
     - コードブロック (\`\`\`) で囲わない
 
+    【論文引用のフォーマット（evidence パターン等で引用する場合）】
+    - PMIDの数字だけの記載は禁止（一般読者には意味不明）
+    - 必ずAPA省略形で記載: (著者名 et al., 雑誌略称, 年)
+      例: (Hughes et al., Ann Intern Med, 2013)
+    - 雑誌名は標準略称を使用
+    - DOIやPMIDの数字列はX投稿には含めない
+
     【禁止ワード】
     - 「白金高輪」「広尾」「当院」「開業」「オープン」
     - 「分子栄養学」「オーソモレキュラー」
