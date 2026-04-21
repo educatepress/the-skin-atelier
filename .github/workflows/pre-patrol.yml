@@ -1,0 +1,50 @@
+name: Pre-Patrol AI Audit (Atelier)
+
+# Vercel Hobby cron は best-effort で遅延があるため、
+# GitHub Actions で確実に 15:15 JST にトリガーする。
+# Vercel endpoint を Bearer 認証で叩く方式（最小差分）。
+
+on:
+  schedule:
+    - cron: '15 6 * * *'  # 15:15 JST (= 06:15 UTC)
+  workflow_dispatch:
+
+concurrency:
+  group: pre-patrol
+  cancel-in-progress: false
+
+jobs:
+  patrol:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Trigger Vercel pre-patrol endpoint
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          HTTP_CODE=$(curl -sS -o /tmp/response.txt -w "%{http_code}" \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "https://skin-atelier.jp/api/cron/pre-patrol")
+
+          cat /tmp/response.txt
+          echo ""
+          echo "HTTP status: $HTTP_CODE"
+
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "❌ pre-patrol returned HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+      - name: Notify Slack on failure
+        if: failure()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        run: |
+          curl -sS -X POST https://slack.com/api/chat.postMessage \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "channel": "skin-atelier_jp",
+              "text": "🚨 *pre-patrol cron が失敗しました*\nGitHub Actions → Vercel endpoint の呼び出しでエラーが発生。\nhttps://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }'
