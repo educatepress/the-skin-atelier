@@ -59,6 +59,7 @@ const KEYWORD_GROUPS = [
 const randomGroup = KEYWORD_GROUPS[Math.floor(Math.random() * KEYWORD_GROUPS.length)];
 const SEARCH_QUERY = `${randomGroup} -is:retweet -has:links lang:ja`;
 const MAX_RESULTS = 100; // 有望な5件を抽出するため、一次取得の母数を100件に拡大
+const MAX_AUTO_REPLIES = 5; // 1回あたりの自動リプライ上限（スパム判定防止）
 
 // 履歴ファイルのパス（二度同じ人に送らないためのDB）
 const HISTORY_FILE = path.join(process.cwd(), "x-patrol-history.json");
@@ -195,77 +196,65 @@ async function evaluateTweetsWithAI(tweets: any[]) {
 }
 
 /**
- * 3. Slackへ提案（通知）
+ * 3. 自動リプライ投稿
  */
-async function sendProposalToSlack(tweetDetails: any, evaluation: any) {
-  const blocks = [
+async function postAutoReply(tweetId: string, replyText: string): Promise<string | null> {
+  try {
+    const result = await xClient.tweet(replyText, {
+      reply: { in_reply_to_tweet_id: tweetId }
+    });
+    return result.data.id;
+  } catch (error: any) {
+    console.error(`❌ リプライ投稿失敗 (tweet ${tweetId}):`, error.message);
+    return null;
+  }
+}
+
+/**
+ * 4. Slackへ事後報告
+ */
+async function sendReportToSlack(tweetDetails: any, evaluation: any, replyTweetId: string | null) {
+  const statusIcon = replyTweetId ? '✅' : '❌';
+  const statusText = replyTweetId ? '自動リプライ済み' : 'リプライ失敗';
+  const replyUrl = replyTweetId
+    ? `https://x.com/dr_miyaka_skin/status/${replyTweetId}`
+    : '';
+
+  const blocks: any[] = [
     {
-      type: "header",
+      type: "section",
       text: {
-        type: "plain_text",
-        text: `🔍 [AI パトロール] 見込み客の発見`,
-        emoji: true
+        type: "mrkdwn",
+        text: `${statusIcon} *[自動リプライ] ${statusText}*\n\n👤 *相手のポスト:*\n> ${tweetDetails.text.replace(/\n/g, '\n> ').substring(0, 200)}`
       }
     },
     {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `👤 *対象のポスト:*\n> ${tweetDetails.text.replace(/\n/g, '\n> ')}`
-      },
-      accessory: {
-        type: "button",
-        text: { type: "plain_text", text: "📱 Xを開く (いいね/RP)", emoji: true },
-        url: tweetDetails.url,
-        action_id: `open_tweet_${tweetDetails.id}`
+        text: `💬 *送信したリプライ:*\n\`\`\`${evaluation.draftReply}\`\`\``
       }
     },
-    {
-      type: "section",
-      text: {
-        type: "mrkdwn",
-        text: `💡 *ユーザーの悩み要約:*\n${evaluation.summary}`
-      }
-    },
-    {
-      type: "section",
-      text: {
-        type: "mrkdwn",
-        text: `📝 *リプライ 下書き案:*\n\`\`\`\n${evaluation.draftReply}\n\`\`\``
-      }
-    },
-    {
-      type: "actions",
-      elements: [
-        {
-          type: "button",
-          text: { type: 'plain_text', text: '✨ この案でリプライする (Xアプリ起動)', emoji: true },
-          style: 'primary',
-          url: (() => {
-            let encoded = encodeURIComponent(evaluation.draftReply);
-            if (encoded.length > 2900) {
-              let trimmed = evaluation.draftReply;
-              while (encodeURIComponent(trimmed).length > 2900) {
-                trimmed = trimmed.slice(0, -10);
-              }
-              encoded = encodeURIComponent(trimmed);
-            }
-            return `https://x.com/intent/tweet?in_reply_to=${tweetDetails.id}&text=${encoded}`;
-          })(),
-          action_id: `intent_reply_${tweetDetails.id}`
-        }
-      ]
-    },
-    { type: "divider" }
   ];
+
+  if (replyUrl) {
+    blocks.push({
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: `<${replyUrl}|リプライを見る> | <${tweetDetails.url}|元ツイートを見る>`
+      }
+    });
+  }
+
+  blocks.push({ type: "divider" });
 
   try {
     await slackClient.chat.postMessage({
       channel: TARGET_CHANNEL,
-      text: `🔍 見込み客のポストを発見しました（ID: ${tweetDetails.id}）`,
+      text: `${statusIcon} 自動リプライ ${statusText} (Tweet ID: ${tweetDetails.id})`,
       blocks,
     });
-    console.log(`✅ Slackに提案を通知しました（Tweet ID: ${tweetDetails.id}）`);
   } catch (error) {
     console.error(`❌ Slack通知エラー:`, error);
   }
@@ -291,28 +280,53 @@ async function main() {
     return;
   }
 
-  console.log(`🎯 ${evaluations.length} 件の【優良ターゲットポスト】が抽出されました。Slackへ通知します...`);
+  console.log(`🎯 ${evaluations.length} 件の【優良ターゲットポスト】が抽出されました。自動リプライを実行します...`);
 
   const proposedAuthorIds: string[] = [];
+  let successCount = 0;
+  let failCount = 0;
 
-  // 3. Slackへ通知
-  for (const evalItem of evaluations) {
+  // 3. 自動リプライ → Slack事後報告（上限あり）
+  const targetEvals = evaluations.slice(0, MAX_AUTO_REPLIES);
+  if (evaluations.length > MAX_AUTO_REPLIES) {
+    console.log(`⚠️ ${evaluations.length}件中 ${MAX_AUTO_REPLIES}件に絞ります（スパム防止上限）`);
+  }
+  for (const evalItem of targetEvals) {
     const tweetDetails = tweets.find(t => t.id === evalItem.tweetId);
-    if (tweetDetails) {
-      await sendProposalToSlack(tweetDetails, evalItem);
-      proposedAuthorIds.push(tweetDetails.author_id);
-      // 通知制限に配慮するため少しWait
-      await new Promise(r => setTimeout(r, 1000));
+    if (!tweetDetails) continue;
+
+    // リプライ投稿
+    const replyTweetId = await postAutoReply(tweetDetails.id, evalItem.draftReply);
+    if (replyTweetId) {
+      successCount++;
+      console.log(`✅ 自動リプライ完了: ${replyTweetId} → ${tweetDetails.id}`);
+    } else {
+      failCount++;
     }
+
+    // Slack に事後報告
+    await sendReportToSlack(tweetDetails, evalItem, replyTweetId);
+    proposedAuthorIds.push(tweetDetails.author_id);
+
+    // Twitter API レートリミット対策 + スパム防止（間隔を空ける）
+    await new Promise(r => setTimeout(r, 3000));
   }
 
-  // 今回提案した人たちを「アプローチ済み」として記録する
+  // 今回リプライした人たちを「アプローチ済み」として記録する
   if (proposedAuthorIds.length > 0) {
     saveHistory(proposedAuthorIds);
-    console.log(`📝 ${proposedAuthorIds.length} 名のユーザーIDをブロックリストに保存しました。`);
+    console.log(`📝 ${proposedAuthorIds.length} 名のユーザーIDを履歴に保存しました。`);
   }
 
-  console.log("\n🎉 AIパトロールがすべて完了しました！");
+  // サマリーをSlackに送信
+  try {
+    await slackClient.chat.postMessage({
+      channel: TARGET_CHANNEL,
+      text: `📊 *AIパトロール完了*: ${successCount}件リプライ成功 / ${failCount}件失敗 / 検索キーワード: ${randomGroup}`,
+    });
+  } catch {}
+
+  console.log(`\n🎉 AIパトロール完了！ ${successCount}件リプライ成功, ${failCount}件失敗`);
 }
 
 main();
