@@ -497,7 +497,7 @@ async function main() {
       cleanMdx = cleanMdx.substring(frontmatterStart);
     }
 
-    // ⑥ Google Sheetsへ保存 (キュー登録)
+    // ⑥ Google Sheetsへ保存 (承認不要 → 直接 approved で登録)
     const newRow = {
       content_id: contentId,
       brand: 'atelier',
@@ -507,60 +507,36 @@ async function main() {
         captionText: cleanMdx,
         theme: todayTheme
       }),
-      status: 'pending',
+      status: 'approved',
+      scheduled_date: tomorrowStr,
     };
 
-    console.log(`📦 Google Sheets にブログ記事をキュー登録中...`);
+    console.log(`📦 Google Sheets にブログ記事を登録中 (auto-approved, scheduled=${tomorrowStr})...`);
     await SheetsDB.appendRows([newRow]);
 
-    // ⑦ Slackへ承認メッセージを送信
-    console.log(`📤 Slack へ承認メッセージを送信中...`);
-    
+    // ⑦ Slackへ通知（承認不要・情報共有のみ）
+    console.log(`📤 Slack へ投稿予定通知を送信中...`);
+
     const blocks = [
       {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: `📝 *ブログ記事*: \`${slug}\`\n【配信先: 🟦 hiroo-open / The Skin Atelier】\n\n※本文はスレッド内のファイルをクリックして確認してください 👇`
+          text: `📝 *ブログ記事* (自動承認済): \`${slug}\`\n【配信先: 🟦 hiroo-open / The Skin Atelier】\n📅 投稿予定: ${tomorrowStr} 10:00 JST\n\n※本文はスレッド内で確認できます 👇`
         }
       },
-      {
-        type: 'actions',
-        elements: [
-          {
-            type: 'button',
-            text: { type: 'plain_text', text: '✅ 承認', emoji: true },
-            style: 'primary',
-            action_id: 'approve_content',
-            value: JSON.stringify({ id: contentId, batchId: 'auto-blog', brand: 'atelier' }),
-          },
-          {
-            type: 'button',
-            text: { type: 'plain_text', text: '✏️ 修正依頼', emoji: true },
-            action_id: 'revise_content',
-            value: JSON.stringify({ id: contentId, brand: 'atelier' }),
-          },
-          {
-            type: 'button',
-            text: { type: 'plain_text', text: '❌ 却下', emoji: true },
-            style: 'danger',
-            action_id: 'reject_content',
-            value: JSON.stringify({ id: contentId, brand: 'atelier' }),
-          },
-        ]
-      }
     ];
 
     try {
       const result = await slackClient.chat.postMessage({
         channel: TARGET_CHANNEL,
-        text: `📝 ブログ記事 ${slug} — レビュー待ち`,
+        text: `📝 ブログ記事 ${slug} — ${tomorrowStr} 自動投稿予定`,
         blocks,
       });
-      console.log(`✅ Slack親通知完了: ${result.ts}`);
-      
+      console.log(`✅ Slack通知完了: ${result.ts}`);
+
       if (result.ts) {
-        // ⑧ スレッド内にMarkdown全文を直接テキスト返信
+        // スレッド内にMarkdown全文を直接テキスト返信
         await slackClient.chat.postMessage({
            channel: TARGET_CHANNEL,
            thread_ts: result.ts,
@@ -570,11 +546,10 @@ async function main() {
       }
     } catch (error: any) {
       console.error(`❌ Slack通知エラー:`, error);
-      // Slack 送信失敗を error_detail に記録（silently swallow 防止）
-      // pre-patrol が !slack_ts のアイテムを拾って 15:15 JST に再送する
+      // Slack 通知失敗しても投稿自体は approved なので daily-publisher が処理する
       try {
         await SheetsDB.updateRow(contentId, {
-          error_detail: `Slack send failed at generation: ${error?.message || String(error)}`,
+          error_detail: `Slack notification failed: ${error?.message || String(error)}`,
         });
       } catch (sheetErr) {
         console.error('Failed to record Slack error to sheet:', sheetErr);
