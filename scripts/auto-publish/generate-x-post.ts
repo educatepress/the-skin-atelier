@@ -171,8 +171,15 @@ async function main() {
   targetDate.setDate(targetDate.getDate() + 1);
   const tomorrowStr = targetDate.toISOString().split('T')[0];
   const args = process.argv.slice(2);
-  const theme = args[0] || "春のゆらぎ肌と花粉によるスキンケア";
-  const sceneContext = args[1] || "最新の医学論文や自身のスキンケア経験から得られた客観的な気づき。架空の患者は絶対に出さないこと。";
+  // CLIフラグ（--dry-run 等）がテーマとして流入するのを防ぐ
+  const positionalArgs = args.filter(a => !a.startsWith('-'));
+  let theme = positionalArgs[0] || "";
+  if (theme && /^[a-z\-_]+$/i.test(theme) && theme.length < 30) {
+    console.warn(`⚠️ テーマ「${theme}」はCLIフラグ/英語単語のみです。デフォルトテーマに差し替えます。`);
+    theme = "";
+  }
+  if (!theme) theme = "春のゆらぎ肌と花粉によるスキンケア";
+  const sceneContext = positionalArgs[1] || "最新の医学論文や自身のスキンケア経験から得られた客観的な気づき。架空の患者は絶対に出さないこと。";
   const slug = `x-${tomorrowStr}-${Math.random().toString(36).substring(7)}`;
   const contentId = `x-${tomorrowStr}-${slug}`;
 

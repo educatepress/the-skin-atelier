@@ -410,9 +410,16 @@ async function main() {
   targetDate.setDate(targetDate.getDate() + 1);
   const tomorrowStr = targetDate.toISOString().split('T')[0];
   const args = process.argv.slice(2);
-  let todayTheme = args[0];
+  // CLIフラグ（--dry-run 等）がテーマとして流入するのを防ぐ
+  const positionalArgs = args.filter(a => !a.startsWith('-'));
+  let todayTheme = positionalArgs[0];
   let searchKeywords = "";
   let isFromSheet = false;
+
+  if (todayTheme && /^[a-z\-_]+$/i.test(todayTheme) && todayTheme.length < 30) {
+    console.warn(`⚠️ テーマ「${todayTheme}」はCLIフラグまたは英語単語のみです。美容医療テーマとして不適切な可能性があるためスキップします。`);
+    todayTheme = "";
+  }
 
   if (!todayTheme) {
     console.log("📥 引数なしのため、ThemeScheduleから今日の未執筆テーマを取得します...");
