@@ -75,16 +75,29 @@ export default function Hero() {
           </p>
         </motion.div>
 
-        {/* CTA: リンク先を /blog へ変更。whitespace-nowrap で文字落ちを完全防止 */}
+        {/* CTA: Instagramフォロー誘導 */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.9 }}
-          className="mb-[var(--space-2xl)] flex justify-center"
+          className="mb-[var(--space-2xl)] flex flex-col items-center gap-4"
         >
-          <a href="/blog" className="btn-atelier whitespace-nowrap">
-            <span className="tracking-[0.1em]">美しさを育む、美容ジャーナルへ</span>
-            <span className="arrow ml-2">→</span>
+          <a
+            href="https://www.instagram.com/dr_miyaka_skin/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-atelier whitespace-nowrap inline-flex items-center gap-3"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" />
+              <circle cx="12" cy="12" r="5" />
+              <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+            </svg>
+            <span className="tracking-[0.1em]">Instagramで美肌の知恵を受け取る</span>
+            <span className="arrow ml-1">→</span>
+          </a>
+          <a href="/blog" className="text-[0.75rem] tracking-[0.08em] text-[var(--color-text-muted)] hover:text-[var(--color-pink-gold-deep)] transition-colors duration-500">
+            美容ジャーナルを読む
           </a>
         </motion.div>
 

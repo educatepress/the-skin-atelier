@@ -60,32 +60,48 @@ export default function Invitation() {
           </p>
         </FadeIn>
 
+        {/* Instagram CTA — Primary */}
         <FadeIn delay={0.3}>
-          <p className="text-[0.95rem] leading-[2.4] text-[var(--color-text-soft)] tracking-[0.04em] mb-[var(--space-xl)]">
-            ぜひ、お気軽にフォローしてみてください。
-          </p>
-        </FadeIn>
-
-        {/* Free Guide CTA */}
-        <FadeIn delay={0.35}>
           <div className="my-[var(--space-2xl)] bg-white/80 border border-[var(--color-marble-vein)] p-8 md:p-10">
             <p className="font-brand text-[11px] tracking-[0.4em] text-[var(--color-pink-gold-deep)] uppercase mb-4">
-              Free Guide
+              Follow on Instagram
             </p>
-            <h3 className="text-[1.05rem] md:text-[1.2rem] leading-[1.8] tracking-[0.08em] text-[var(--color-text-mocha)] mb-6">
-              10年後の自分を、もっと好きになる。
+            <h3 className="text-[1.05rem] md:text-[1.2rem] leading-[1.8] tracking-[0.08em] text-[var(--color-text-mocha)] mb-4">
+              毎日の投稿で、
               <br />
-              <span className="italic text-[var(--color-pink-gold-deep)]">3つの「引き算」ガイド</span>
+              <span className="italic text-[var(--color-pink-gold-deep)]">美しさの「なぜ？」を紐解く</span>
             </h3>
             <p className="text-[0.9rem] leading-[2.2] text-[var(--color-text-soft)] tracking-[0.03em] mb-8 max-w-[480px] mx-auto">
-              エビデンスとインナーウェルネスに基づく、最小で最大の変化を生む3つの習慣を、メールアドレスの登録で無料でお届けします。
+              エビデンスに基づくスキンケア知識、引き算の美容医療、インナーウェルネスのヒントを、Instagramで毎日お届けしています。
+            </p>
+            <a
+              href="https://www.instagram.com/dr_miyaka_skin/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-atelier inline-flex justify-center items-center text-xs px-8 py-4 gap-3"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" />
+                <circle cx="12" cy="12" r="5" />
+                <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+              </svg>
+              <span className="tracking-[0.15em]">@dr_miyaka_skin をフォロー</span>
+              <span className="arrow ml-1">→</span>
+            </a>
+          </div>
+        </FadeIn>
+
+        {/* Free Guide CTA — Secondary */}
+        <FadeIn delay={0.35}>
+          <div className="mt-[var(--space-lg)]">
+            <p className="text-[0.85rem] leading-[2.2] text-[var(--color-text-muted)] tracking-[0.03em] mb-4">
+              さらに深く学びたい方へ
             </p>
             <Link
               href="/guide"
-              className="btn-atelier inline-flex justify-center items-center text-xs px-8 py-4"
+              className="font-brand text-[0.75rem] tracking-[0.15em] text-[var(--color-text-soft)] uppercase px-6 py-3 border border-[var(--color-marble-vein)] hover:bg-[var(--color-champagne-light)] hover:text-[var(--color-text-mocha)] transition-all duration-500"
             >
-              <span className="tracking-[0.15em]">ガイドを受け取る</span>
-              <span className="arrow ml-2">→</span>
+              無料ガイドを受け取る →
             </Link>
           </div>
         </FadeIn>
