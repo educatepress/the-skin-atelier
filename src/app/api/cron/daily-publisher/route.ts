@@ -60,13 +60,11 @@ export async function GET(req: Request) {
       item => item.brand === 'atelier' && item.status === 'approved' && item.scheduled_date === today
     );
 
-    const targetItems: typeof eligibleItems = [];
-    const xItem = eligibleItems.find(item => item.type === 'x');
-    if (xItem) targetItems.push(xItem);
-    const blogItem = eligibleItems.find(item => item.type === 'blog');
-    if (blogItem) targetItems.push(blogItem);
-    const igItem = eligibleItems.find(item => item.type === 'reel' || item.type === 'carousel');
-    if (igItem) targetItems.push(igItem);
+    const targetItems: typeof eligibleItems = [
+      ...eligibleItems.filter(item => item.type === 'x'),
+      ...eligibleItems.filter(item => item.type === 'blog'),
+      ...eligibleItems.filter(item => item.type === 'reel' || item.type === 'carousel'),
+    ];
 
     if (targetItems.length === 0) {
       console.log('ℹ️ [Atelier] No approved items for today.');
