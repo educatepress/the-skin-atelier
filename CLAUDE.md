@@ -153,12 +153,15 @@ pending → (pre-patrol AI監査) → pending (patrol_pre_result='done')
 
 ## 必ず守ること
 
-- 実装を始める前に CONTEXT.md を読むこと
+- 作業開始時に CONTEXT.md / ISSUES.md / LESSONS.md / REVIEW.md を読むこと
 - 一度に1ステップだけ実装する（複数の変更をまとめない）
 - 作業の区切りで CONTEXT.md を更新すること
 - 問題や気づきを検知したら ISSUES.md に追記すること
+- 検閲（レビュー）依頼時は必ず REVIEW.md を読んでから実施すること
+- ISSUES.md の問題が解決し、普遍的教訓として残せるものは LESSONS.md に昇格させる提案をすること
+- 検閲中に新たな観点を発見したら REVIEW.md への追加を提案すること
 - 不明点があれば推測で進めず、必ず取締役に確認すること
-- CLAUDE.md / CONTEXT.md / ISSUES.md を変更するときは、事前に変更内容を提示して承認を得ること
+- CLAUDE.md / CONTEXT.md / ISSUES.md / LESSONS.md / REVIEW.md を変更するときは、事前に変更内容を提示して承認を得ること
 
 ## コーディング方針
 
@@ -281,5 +284,7 @@ pending → (pre-patrol AI監査) → pending (patrol_pre_result='done')
 
 1. CONTEXT.md を読んで、今の作業状態を把握する
 2. ISSUES.md を読んで、未解決の問題を確認する
-3. `git log -5` で最新コミットを確認する
-4. 取締役に「次に何をすべきか」を聞く
+3. LESSONS.md を読んで、過去の教訓を把握する
+4. REVIEW.md を読んで、検閲基準を把握する
+5. `git log -5` で最新コミットを確認する
+6. 取締役に「次に何をすべきか」を聞く
