@@ -86,6 +86,21 @@ function loadViralPatternsDoc(): string {
   return "";
 }
 
+function loadHashtagStrategy(): string {
+  const candidates = [
+    path.join(process.cwd(), "prompts", "hashtag-strategy.md"),
+    path.join(process.cwd(), "..", "the-skin-atelier", "prompts", "hashtag-strategy.md"),
+    path.resolve(__dirname, "..", "..", "prompts", "hashtag-strategy.md"),
+  ];
+  for (const p of candidates) {
+    try {
+      if (fs.existsSync(p)) return fs.readFileSync(p, "utf-8");
+    } catch {}
+  }
+  console.warn("⚠️ hashtag-strategy.md not found.");
+  return "";
+}
+
 // ---------- Theme selection ----------
 async function pickTheme(): Promise<{ theme: string; searchKeywords: string }> {
   const schedules = (await SheetsDB.getThemeSchedule()) || [];
@@ -107,6 +122,7 @@ async function pickTheme(): Promise<{ theme: string; searchKeywords: string }> {
 // ---------- Generator ----------
 async function generateVarietyPost(type: PatternType, theme: string): Promise<string> {
   const viralDoc = loadViralPatternsDoc();
+  const hashtagDoc = loadHashtagStrategy();
   const typeBlock = `
     今回のパターン: **${type}** (${PATTERN_DESCRIPTIONS[type]})
 
@@ -129,7 +145,12 @@ async function generateVarietyPost(type: PatternType, theme: string): Promise<st
       * Twitter Free Tier は 280 weight 制限（日本語1文字=2 weight、英数字=1 weight）
       * ハッシュタグも必ず文字数に含めて計算すること
       * 120 文字を絶対に超えないよう、本文を短く書き、ハッシュタグを精選すること
-    - ハッシュタグは本文末尾に 2-3 個（hashtag-strategy.md参照可能なら参照。多すぎると文字数超過するので厳選）
+    - ハッシュタグは本文末尾に 3-5 個。以下のハッシュタグ戦略バンクから選定すること:
+      * Big 1個 + Medium 1個 + Niche 2個 + Seasonal 1個 = 計5個を基本（文字数超過しそうなら3個まで減らしてOK）
+      * 現在の月に合った Seasonal タグを必ず含めること
+
+    【ハッシュタグ戦略バンク（hashtag-strategy.md）】
+    ${hashtagDoc}
     - 絵文字は最小限 (1-2個まで)
     - 末尾に余計な改行や記号を付けない
     - コードブロック (\`\`\`) で囲わない

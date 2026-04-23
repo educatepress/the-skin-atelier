@@ -60,12 +60,32 @@ async function generateXPost(theme: string, sceneContext: string) {
   }
   if (!masterPrompt) console.warn("⚠️ multi-platform-content-prompts.md が見つかりません。");
 
+  // ハッシュタグ戦略を読み込み
+  const hashtagCandidates = [
+    path.join(process.cwd(), "prompts", "hashtag-strategy.md"),
+    path.join(process.cwd(), "..", "the-skin-atelier", "prompts", "hashtag-strategy.md"),
+    path.resolve(__dirname, "..", "..", "prompts", "hashtag-strategy.md"),
+  ];
+  let hashtagDoc = "";
+  for (const p of hashtagCandidates) {
+    try {
+      if (fs.existsSync(p)) { hashtagDoc = fs.readFileSync(p, "utf-8"); break; }
+    } catch {}
+  }
+
   const prompt = `
     以下のルールに従いXのスレッド（3〜5ポスト）を作成してください。
     特にMarkdownの【2. 【X (Twitter) / Threads 用】】の指示を絶対に守ること。
 
     【ルール元ファイル抜粋】:
     ${masterPrompt}
+
+    【ハッシュタグ戦略】
+    スレッドの最終ポストにハッシュタグを 3-5 個付与すること。
+    以下のバンクから選定: Big 1 + Medium 1 + Niche 2 + Seasonal 1 = 計5個を基本。
+    現在の月に合った Seasonal タグを必ず含めること。
+
+    ${hashtagDoc}
 
     【今回のインプット】
     ・テーマ：${theme}
