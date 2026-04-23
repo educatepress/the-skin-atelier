@@ -1,0 +1,56 @@
+# 検知済みの問題パターン
+
+## 解決済
+
+### HEADERS 列ズレ事故
+- **初検知:** 2026-04-16
+- **原因:** `sheets-rest.ts` の HEADERS から `brand` 列が欠落。status が隣の列に書き込まれ、Slack承認が反映されなかった
+- **対応:** HEADERS を 18列に統一。sheets.ts と sheets-rest.ts の両方を必ず同時に更新するルール化
+- **再発防止:** CLAUDE.md の注意点セクションに記載済み
+
+### daily-publisher 同タイプ複数件スキップ
+- **初検知:** 2026-04-23
+- **原因:** `.find()` が各タイプ（blog/x/reel）につき1件しか返さない。同日に blog x 2件あると2件目がスキップされる
+- **対応:** `.filter()` に変更して全件処理するよう修正
+
+### OAuth Refresh Token 失効
+- **初検知:** 2026-04-16
+- **原因:** OAuth の Refresh Token が `invalid_grant` で失効
+- **対応:** サービスアカウント方式に移行。OAuth は廃止
+
+## 監視中
+
+### Make.com 変数名不統一
+- **検知:** 2026-04-17
+- **状況:** `MAKE_IG_PUBLISH_WEBHOOK_URL` と `MAKE_PUBLISH_WEBHOOK_URL` が同じ用途なのに名前が違う。fallback チェーンで動いているが、根本的に変数名を統一すべき
+- **影響:** 新しい環境構築時に片方を設定し忘れるリスク
+
+### Gemini API 503 頻発
+- **検知:** 2026-04-15 以降継続
+- **状況:** Gemini 2.5 Flash が高負荷時に 503 を返す。指数バックオフ retry（最大10回）で対処中
+- **影響:** 稀にリトライ上限に達してコンテンツ生成が失敗する。GitHub Actions のログで確認可能
+
+### x-patrol の Gemini タイムアウト
+- **検知:** 2026-04-23
+- **状況:** `logs/launchd-x-patrol-error.log` に `UND_ERR_HEADERS_TIMEOUT` エラーあり。Gemini API 評価時にタイムアウト
+- **影響:** その回の優良ターゲット抽出が0件になる（致命的ではないが機会損失）
+
+---
+
+# 自動チェックリスト
+
+パトロール時に毎回確認する項目を、気づいたら追記する。
+
+- [ ] Google Sheets の HEADERS 列順が sheets.ts と sheets-rest.ts で一致しているか
+- [ ] daily-publisher 実行後、approved のまま残っているアイテムがないか
+- [ ] x-patrol-history.json が肥大化していないか（数百件を超えたら古いものを削除）
+- [ ] GitHub Actions の直近実行が全て成功しているか
+- [ ] Slack 承認メッセージが届いているか（pre-patrol の動作確認）
+
+---
+
+# 運用ルール
+
+- 新しい問題を検知したら「監視中」に追記
+- 3回以上再発したらパターン化を検討し、プロンプトやテンプレートの根本修正を提案
+- 修正が適用されたら「解決済」に移動し、初検知日・原因・対応内容を残す
