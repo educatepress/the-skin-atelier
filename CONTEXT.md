@@ -1,6 +1,6 @@
 # 今のタスク
 
-フォロワー増加戦略の実装中。X ハッシュタグ自動付与は完了。REVIEW.md による初回レビューで X スレッドの文字数超過問題を検出。
+フォロワー増加戦略の実装がひと段落。X + ブログの品質改善と自動化の安定化フェーズ。
 
 # アクティブチャネル
 
@@ -10,27 +10,30 @@
 
 # 直近の変更
 
-- `scripts/auto-publish/x-variety-single.ts` — hashtag-strategy.md を読み込んでプロンプトに埋め込み。X バイラル投稿にハッシュタグ3-5個が自動付与されるようになった
-- `scripts/auto-publish/generate-x-post.ts` — 同上。ブログ連動 X スレッドにもハッシュタグ自動付与
-- `src/app/api/cron/daily-publisher/route.ts` — `.find()` → `.filter()` に修正。同日に同タイプ複数ある場合に全件処理
-- `CLAUDE.md` / `CONTEXT.md` / `ISSUES.md` / `LESSONS.md` / `REVIEW.md` — プロジェクトドキュメント整備
+- `src/app/api/cron/daily-publisher/route.ts` — `.find()` → `.filter()` で同日同タイプ全件処理に修正
+- `scripts/auto-publish/x-variety-single.ts` — hashtag-strategy.md を埋め込み、ハッシュタグ 3-5 個自動付与
+- `scripts/auto-publish/generate-x-post.ts` — ハッシュタグ自動付与 + 120文字/ツイート制限 + エビデンス引用ルール + 文体バリエーション5パターン追加
+- `scripts/auto-publish/x-prospecting-patrol.ts` — 自動リプライ(403エラー)をやめてSlack提案モードに変更。ワンタップ返信ボタン(X intent URL)付き
+- `scripts/plan-10day-themes.ts` — ThemeArea ①→②→③→④→⑤ ローテーション指示追加。隣接日の類似テーマ禁止
+- `.github/workflows/site-patrol.yml` — 自動実行を停止（画像エラー警告がノイズのため）
+- CLAUDE.md / CONTEXT.md / ISSUES.md / LESSONS.md / REVIEW.md — プロジェクトドキュメント一式を整備
+- 新しい10日分テーマ（4/28〜5/7）を ThemeSchedule に生成済み
 
 # 試したけどダメだったこと
 
-- (まだなし)
+- x-patrol の自動リプライ — Twitter Free Tier で 403 エラー（権限不足）。Slack提案モードに切り替え
 
 # 次にやること
 
-1. X スレッド（generate-x-post.ts）の文字数超過問題を修正 — プロンプトに120文字制限を追加
-2. X スレッドにエビデンス引用ルールを追加（医学的主張に論文引用を促す）
-3. post-patrol の実装強化 — 投稿後エンゲージメント率の自動計測と低パフォーマンスパターン検出
-4. x-monitor のデータを次回テーマ選定にフィードバックする仕組み
-5. (IG 再開時) daily-publisher で IG キャプションにハッシュタグ 5-6 個を自動付与
+1. post-patrol の実装強化 — 投稿後エンゲージメント率の自動計測と低パフォーマンスパターン検出
+2. x-monitor のデータを次回テーマ選定にフィードバックする仕組み
+3. (IG 再開時) daily-publisher で IG キャプションにハッシュタグ 5-6 個を自動付与
 
 # 未解決の疑問・迷い
 
-- X スレッドの文字数制限: 各ツイート120文字以内にすると情報量が足りなくなる可能性。Twitter Blue（有料プラン）なら長文OKだが、Free Tier 前提で書くべきか？
+- Twitter Free Tier のリプライ制限は恒久的か？Basic プラン（月$100）に上げる価値はあるか？
+- x-patrol の Gemini タイムアウト（ECONNRESET）が散発 — retry 追加で対応すべきか？
 
 # 最終更新
 
-2026-04-23
+2026-05-01
