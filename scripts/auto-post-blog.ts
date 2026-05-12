@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 import { SheetsDB, ThemeScheduleRow } from "./lib/sheets-db";
 import { WebClient } from '@slack/web-api';
 import { createClient } from 'pexels';
+import { researchTheme, formatReferencesForPrompt, type VerifiedReference } from './lib/pubmed-research';
+import { verifyBlogReferences, removeReferencesSection } from './lib/verify-references';
 
 // .env.localから環境変数を読み込む
 dotenv.config({ path: path.join(process.cwd(), ".env.local") });
@@ -284,7 +286,7 @@ async function fetchAestheticImage(): Promise<string> {
  * 3. 記事の生成
  * ※プロンプトは後日推敲予定のため、ガイドラインの内容を簡易的に埋め込んでいます。
  */
-async function generateBlogPost(theme: string, researchData: string, imageUrl: string, publishDate: string) {
+async function generateBlogPost(theme: string, researchData: string, imageUrl: string, publishDate: string, referencesBlock: string = '') {
   console.log(`✍️ 記事を生成中（Elegant Letter Style）...`);
 
   // プロンプトファイルのパス解決（ローカル・GitHub Actions 両対応）
@@ -313,6 +315,15 @@ async function generateBlogPost(theme: string, researchData: string, imageUrl: s
 
     【テーマ】: ${theme}
     【リサーチデータ】: ${researchData}
+
+    【PubMed検証済み論文リスト（この論文のみ引用可能）】
+    ${referencesBlock}
+
+    【論文引用の厳格ルール】
+    - 自分でPMIDや論文情報を生成・推測することは絶対に禁止
+    - 上記「PubMed検証済み論文リスト」に含まれる論文以外の文献を追加しないこと
+    - Referencesは上記論文リストの情報をそのまま転記すること
+    - WHO/AAD/FDA等の学会・機関名を本文中で引用する場合、対応する論文が上記リストに含まれていること
 
     【出力frontmatterの厳格ルール】
     - date フィールドには必ず「${publishDate}」をそのまま使用すること（ISO形式 YYYY-MM-DD）。過去日や未来日に勝手に変更しないこと。
@@ -477,7 +488,22 @@ async function main() {
   const researchTarget = searchKeywords ? `${todayTheme} (${searchKeywords})` : todayTheme;
 
   try {
-    // 1. レポート用のリサーチ実行
+    // ── Agent 1: PubMed で検証済み論文を取得 ──
+    console.log('\n🔬 Agent 1: PubMedで論文を検索中...');
+    let references: VerifiedReference[] = [];
+    try {
+      const pubmedQuery = searchKeywords || researchTarget;
+      references = await researchTheme(pubmedQuery, []);
+      console.log(`  📚 ${references.length}件の検証済み論文を取得`);
+      for (const r of references) {
+        console.log(`    PMID:${r.pmid} | ${r.firstAuthor} | ${r.journal} ${r.year}`);
+      }
+    } catch (err) {
+      console.warn(`  ⚠️ PubMed検索失敗（Referencesなしで続行）:`, err);
+    }
+    const referencesBlock = formatReferencesForPrompt(references);
+
+    // 1. レポート用のリサーチ実行（コンテキスト収集用。論文IDはAgent 1から取得済み）
     const researchResult = await performDeepResearch(researchTarget);
     console.log("✅ リサーチ完了\n");
 
@@ -485,8 +511,8 @@ async function main() {
     console.log("📸 LP用のサムネイル画像を取得中...");
     const imageUrl = await fetchAestheticImage();
 
-    // ③ 執筆
-    const articleMdx = await generateBlogPost(todayTheme, researchResult || "", imageUrl, tomorrowStr);
+    // ── Agent 2: 検証済み論文リストを注入してブログ生成 ──
+    const articleMdx = await generateBlogPost(todayTheme, researchResult || "", imageUrl, tomorrowStr, referencesBlock);
     console.log("✅ 記事生成完了\n");
 
     // ④ 検閲・自己修正
@@ -502,6 +528,24 @@ async function main() {
     const frontmatterStart = cleanMdx.indexOf('---');
     if (frontmatterStart > 0) {
       cleanMdx = cleanMdx.substring(frontmatterStart);
+    }
+
+    // ── Agent 3: 参考文献の独立検証 ──
+    if (references.length > 0) {
+      console.log('\n🔍 Agent 3: 参考文献を検証中...');
+      try {
+        const verification = await verifyBlogReferences(cleanMdx);
+        if (verification.passed) {
+          console.log(`  ✅ 検証合格 (${verification.checkedCount}件のPMIDを確認)`);
+        } else {
+          console.warn(`  ⚠️ 検証不合格: ${verification.failures.join('; ')}`);
+          console.warn('  🚨 Referencesセクションを除去して出力します');
+          cleanMdx = removeReferencesSection(cleanMdx);
+        }
+      } catch (verifyErr) {
+        console.warn('  ⚠️ 検証中にエラー（Referencesを除去して続行）:', verifyErr);
+        cleanMdx = removeReferencesSection(cleanMdx);
+      }
     }
 
     // ⑥ Google Sheetsへ保存 (承認不要 → 直接 approved で登録)
