@@ -14,6 +14,7 @@ export interface VerifiedReference {
     journal: string;
     year: number;
     doi?: string;
+    abstractText?: string;
 }
 
 // ── PubMed esearch: キーワードで PMID リストを取得 ──
@@ -105,6 +106,86 @@ export async function fetchPubMedSummary(pmids: string[]): Promise<VerifiedRefer
     return results;
 }
 
+// ── PubMed efetch: PMID リストからアブストラクトを取得 ──
+export async function fetchPubMedAbstracts(pmids: string[]): Promise<Map<string, string>> {
+    const abstracts = new Map<string, string>();
+    if (pmids.length === 0) return abstracts;
+
+    const params = new URLSearchParams({
+        db: 'pubmed',
+        id: pmids.join(','),
+        rettype: 'abstract',
+        retmode: 'xml',
+    });
+    const url = `${EUTILS_BASE}/efetch.fcgi?${params}`;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
+    try {
+        const res = await fetch(url, { signal: controller.signal });
+        if (!res.ok) throw new Error(`PubMed efetch failed: ${res.status}`);
+        const xml = await res.text();
+
+        // XML から各 PubmedArticle のアブストラクトを抽出
+        const articlePattern = /<PubmedArticle>([\s\S]*?)<\/PubmedArticle>/g;
+        let articleMatch;
+        while ((articleMatch = articlePattern.exec(xml)) !== null) {
+            const articleXml = articleMatch[1];
+
+            // PMID 抽出
+            const pmidMatch = articleXml.match(/<PMID[^>]*>(\d+)<\/PMID>/);
+            if (!pmidMatch) continue;
+            const pmid = pmidMatch[1];
+
+            // AbstractText 抽出（複数セクションを結合）
+            const abstractParts: string[] = [];
+            const abstractTextPattern = /<AbstractText[^>]*>([\s\S]*?)<\/AbstractText>/g;
+            let textMatch;
+            while ((textMatch = abstractTextPattern.exec(articleXml)) !== null) {
+                // XMLタグを除去してプレーンテキスト化
+                const cleanText = textMatch[1]
+                    .replace(/<[^>]+>/g, '')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+                if (cleanText) abstractParts.push(cleanText);
+            }
+
+            if (abstractParts.length > 0) {
+                abstracts.set(pmid, abstractParts.join(' '));
+            }
+        }
+    } catch (err: any) {
+        if (err.name === 'AbortError') {
+            console.warn('⚠️ PubMed efetch timeout (20s) — アブストラクトなしで続行');
+        } else {
+            console.warn('⚠️ PubMed efetch エラー — アブストラクトなしで続行:', err.message);
+        }
+    } finally {
+        clearTimeout(timeoutId);
+    }
+
+    return abstracts;
+}
+
+// ── esummary + efetch を統合して VerifiedReference（アブストラクト付き）を返す ──
+async function fetchReferencesWithAbstracts(pmids: string[]): Promise<VerifiedReference[]> {
+    if (pmids.length === 0) return [];
+
+    // esummary（メタデータ）と efetch（アブストラクト）を並列実行
+    const [refs, abstracts] = await Promise.all([
+        fetchPubMedSummary(pmids),
+        fetchPubMedAbstracts(pmids),
+    ]);
+
+    // アブストラクトをマージ
+    for (const ref of refs) {
+        const abs = abstracts.get(ref.pmid);
+        if (abs) ref.abstractText = abs;
+    }
+
+    return refs;
+}
+
 // ── sourceUrls から PMID を抽出 ──
 function extractPmidsFromUrls(urls: string[]): string[] {
     const pmids: string[] = [];
@@ -128,7 +209,7 @@ export async function researchTheme(
     const existingPmids = extractPmidsFromUrls(sourceUrls);
     if (existingPmids.length > 0) {
         console.log(`  📎 sourceUrls から PMID ${existingPmids.length}件を抽出`);
-        const verified = await fetchPubMedSummary(existingPmids);
+        const verified = await fetchReferencesWithAbstracts(existingPmids);
         for (const ref of verified) {
             if (ref.year > 0) collected.push(ref);
         }
@@ -148,7 +229,7 @@ export async function researchTheme(
         const pmids = await searchPubMed(query, remaining + 5); // 余裕をもって取得
 
         if (pmids.length > 0) {
-            const candidates = await fetchPubMedSummary(pmids);
+            const candidates = await fetchReferencesWithAbstracts(pmids);
             for (const ref of candidates) {
                 if (collected.length >= targetCount) break;
                 if (usedPmids.has(ref.pmid)) continue;
@@ -167,7 +248,7 @@ export async function researchTheme(
             const pmids2 = await searchPubMed(broaderQuery, remaining2 + 5);
 
             if (pmids2.length > 0) {
-                const candidates2 = await fetchPubMedSummary(pmids2);
+                const candidates2 = await fetchReferencesWithAbstracts(pmids2);
                 for (const ref of candidates2) {
                     if (collected.length >= targetCount) break;
                     if (usedPmids.has(ref.pmid)) continue;
@@ -183,10 +264,18 @@ export async function researchTheme(
     return collected.slice(0, targetCount);
 }
 
-// ── 論文リストをプロンプト用テキストに変換 ──
+// ── 論文リストをプロンプト用テキストに変換（アブストラクト付き）──
 export function formatReferencesForPrompt(refs: VerifiedReference[]): string {
     if (refs.length === 0) return '（論文が見つかりませんでした。Referencesセクションは生成しないでください。）';
-    return refs.map((r, i) =>
-        `${i + 1}. ${r.firstAuthor}, et al. "${r.title}" ${r.journal}. ${r.year}. PMID: ${r.pmid}`
-    ).join('\n');
+    return refs.map((r, i) => {
+        let entry = `${i + 1}. ${r.firstAuthor}, et al. "${r.title}" ${r.journal}. ${r.year}. PMID: ${r.pmid}`;
+        if (r.abstractText) {
+            // アブストラクトは長すぎる場合800文字で切る（トークン節約）
+            const truncated = r.abstractText.length > 800
+                ? r.abstractText.slice(0, 800) + '...'
+                : r.abstractText;
+            entry += `\n   【Abstract】${truncated}`;
+        }
+        return entry;
+    }).join('\n\n');
 }

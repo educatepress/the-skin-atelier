@@ -496,7 +496,8 @@ async function main() {
       references = await researchTheme(pubmedQuery, []);
       console.log(`  📚 ${references.length}件の検証済み論文を取得`);
       for (const r of references) {
-        console.log(`    PMID:${r.pmid} | ${r.firstAuthor} | ${r.journal} ${r.year}`);
+        const absStatus = r.abstractText ? `Abstract:${r.abstractText.length}文字` : 'Abstract:なし';
+        console.log(`    PMID:${r.pmid} | ${r.firstAuthor} | ${r.journal} ${r.year} | ${absStatus}`);
       }
     } catch (err) {
       console.warn(`  ⚠️ PubMed検索失敗（Referencesなしで続行）:`, err);
@@ -536,9 +537,12 @@ async function main() {
       try {
         const verification = await verifyBlogReferences(cleanMdx);
         if (verification.passed) {
-          console.log(`  ✅ 検証合格 (${verification.checkedCount}件のPMIDを確認)`);
+          console.log(`  ✅ 検証合格 (${verification.checkedCount}件のPMIDを確認、アブストラクト照合済み)`);
         } else {
-          console.warn(`  ⚠️ 検証不合格: ${verification.failures.join('; ')}`);
+          console.warn(`  ⚠️ 検証不合格:`);
+          for (const f of verification.failures) {
+            console.warn(`    - ${f}`);
+          }
           console.warn('  🚨 Referencesセクションを除去して出力します');
           cleanMdx = removeReferencesSection(cleanMdx);
         }

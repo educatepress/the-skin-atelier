@@ -5,7 +5,7 @@
  * Agent 2（Gemini）が Agent 1 の論文情報を正しくコピーしたかを独立検証する。
  */
 
-import { fetchPubMedSummary, type VerifiedReference } from './pubmed-research';
+import { fetchPubMedSummary, fetchPubMedAbstracts, type VerifiedReference } from './pubmed-research';
 
 export interface ReferenceCheck {
     pmid: string;
@@ -16,6 +16,8 @@ export interface ReferenceCheck {
     authorMatch: boolean;
     journalMatch: boolean;
     yearMatch: boolean;
+    abstractRelevance: boolean; // 記事の主張がアブストラクトと整合するか
+    abstractWarning?: string;   // 不整合の詳細
 }
 
 export interface VerificationResult {
@@ -99,6 +101,77 @@ function normalizeJournal(name: string): string {
         .trim();
 }
 
+// ── アブストラクト照合: 記事の主張がアブストラクトの内容と整合するか検証 ──
+function extractClaimsForPmid(mdx: string, pmid: string, authorSurname: string): string[] {
+    // 記事本文から、このPMIDや著者名が参照されている前後の文を抽出
+    const claims: string[] = [];
+    const bodyWithoutRefs = mdx.replace(/#{1,4}\s*(?:参考文献?|References)[\s\S]*$/i, '');
+    const sentences = bodyWithoutRefs.split(/[。\.\n]+/).filter(s => s.trim().length > 10);
+
+    for (const sentence of sentences) {
+        const mentionsPmid = sentence.includes(pmid);
+        const mentionsAuthor = authorSurname && sentence.toLowerCase().includes(authorSurname.toLowerCase());
+        if (mentionsPmid || mentionsAuthor) {
+            claims.push(sentence.trim());
+        }
+    }
+    return claims;
+}
+
+function checkAbstractRelevance(
+    claims: string[],
+    abstractText: string,
+): { relevant: boolean; warning?: string } {
+    if (!abstractText || claims.length === 0) {
+        // アブストラクトがない or 記事内に明示的引用がない場合はスキップ（合格扱い）
+        return { relevant: true };
+    }
+
+    const absLower = abstractText.toLowerCase();
+
+    // アブストラクトからキーワードを抽出（3文字以上の英単語 + 重要な医学用語）
+    const absWords = new Set(
+        absLower.match(/[a-z]{4,}/g)?.filter(w =>
+            // ストップワードを除外
+            !['with', 'from', 'that', 'this', 'were', 'been', 'have', 'their', 'which',
+              'would', 'could', 'should', 'about', 'there', 'these', 'those', 'than',
+              'more', 'also', 'into', 'only', 'other', 'some', 'such', 'when', 'what',
+              'will', 'each', 'make', 'like', 'over', 'after', 'before', 'between',
+              'through', 'during', 'without', 'again', 'further', 'then', 'once',
+              'here', 'both', 'most', 'very', 'just', 'being', 'does', 'done',
+              'study', 'studies', 'results', 'conclusion', 'background', 'methods',
+              'objective', 'purpose', 'patients', 'subjects', 'compared', 'group',
+              'significantly', 'associated', 'showed', 'found', 'reported',
+            ].includes(w)
+        ) || []
+    );
+
+    // 記事の主張文からキーワードを抽出し、アブストラクトとの重複を計測
+    const mismatched: string[] = [];
+    for (const claim of claims) {
+        const claimWords = new Set(
+            claim.toLowerCase().match(/[a-z]{4,}/g)?.filter(w => absWords.size > 0) || []
+        );
+        // 記事の主張に含まれる英語キーワードがアブストラクトに存在するか
+        const claimKeywords = claim.toLowerCase().match(/[a-z]{4,}/g) || [];
+        const relevantKeywords = claimKeywords.filter(w => absWords.has(w));
+
+        // 英語キーワードが3つ以上あるのに、アブストラクトとの重複が0の場合は警告
+        if (claimKeywords.length >= 3 && relevantKeywords.length === 0) {
+            mismatched.push(claim.slice(0, 80));
+        }
+    }
+
+    if (mismatched.length > 0) {
+        return {
+            relevant: false,
+            warning: `記事の主張がアブストラクトの内容と無関係の可能性: "${mismatched[0]}..."`,
+        };
+    }
+
+    return { relevant: true };
+}
+
 // ── メイン検証関数 ──
 export async function verifyBlogReferences(mdxContent: string): Promise<VerificationResult> {
     const pmids = extractPmidsFromMdx(mdxContent);
@@ -108,7 +181,11 @@ export async function verifyBlogReferences(mdxContent: string): Promise<Verifica
     }
 
     const citationDetails = extractCitationDetails(mdxContent);
-    const pubmedData = await fetchPubMedSummary(pmids);
+    // esummary（メタデータ）と efetch（アブストラクト）を並列取得
+    const [pubmedData, abstractMap] = await Promise.all([
+        fetchPubMedSummary(pmids),
+        fetchPubMedAbstracts(pmids),
+    ]);
     const pubmedMap = new Map(pubmedData.map(r => [r.pmid, r]));
 
     const details: ReferenceCheck[] = [];
@@ -122,6 +199,7 @@ export async function verifyBlogReferences(mdxContent: string): Promise<Verifica
             details.push({
                 pmid, citedAuthor: cited.author, citedJournal: cited.journal, citedYear: cited.year,
                 exists: false, authorMatch: false, journalMatch: false, yearMatch: false,
+                abstractRelevance: false, abstractWarning: 'PMIDが存在しないため検証不可',
             });
             failures.push(`PMID ${pmid}: PubMedに存在しない`);
             continue;
@@ -161,14 +239,22 @@ export async function verifyBlogReferences(mdxContent: string): Promise<Verifica
             ? !isNaN(citedYearNum) && Math.abs(citedYearNum - pubmed.year) <= 1
             : true;
 
+        // アブストラクト照合: 記事の主張がアブストラクトの内容と整合するか
+        const abstractText = abstractMap.get(pmid) || '';
+        const authorSurname = normalizeAuthorSurname(pubmed.firstAuthor);
+        const claims = extractClaimsForPmid(mdxContent, pmid, pubmed.firstAuthor);
+        const relevance = checkAbstractRelevance(claims, abstractText);
+
         details.push({
             pmid, citedAuthor: cited.author, citedJournal: cited.journal, citedYear: cited.year,
             exists: true, authorMatch, journalMatch, yearMatch,
+            abstractRelevance: relevance.relevant, abstractWarning: relevance.warning,
         });
 
         if (!authorMatch) failures.push(`PMID ${pmid}: 著者不一致 (記事: ${cited.author}, PubMed: ${pubmed.firstAuthor})`);
         if (!journalMatch) failures.push(`PMID ${pmid}: 雑誌不一致 (記事: ${cited.journal}, PubMed: ${pubmed.journal})`);
         if (!yearMatch) failures.push(`PMID ${pmid}: 年不一致 (記事: ${cited.year}, PubMed: ${pubmed.year})`);
+        if (!relevance.relevant) failures.push(`PMID ${pmid}: ${relevance.warning}`);
     }
 
     // ── 本文中の未検証組織引用チェック ──
