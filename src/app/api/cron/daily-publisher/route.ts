@@ -154,6 +154,23 @@ export async function GET(req: Request) {
 
             if (!jpContent) throw new Error('ブログのコンテンツが空です');
 
+            // フロントマター検証ガード（ビルド破壊防止）。
+            // 生成AIがまれに frontmatter を欠いた本文だけを出力することがあり、
+            // それをコミットすると gray-matter が全記事読み込み時にYAMLパース失敗し、
+            // Vercelビルド全体が落ちる（2026-06-13 の事故）。公開前にここで弾く。
+            const fmError = ((md: string): string | null => {
+              const m = md.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+              if (!m) return 'frontmatter ブロック(--- … ---)が無い';
+              const fm = m[1];
+              if (/^\s*#{1,6}\s/m.test(fm)) return 'frontmatter内に見出し(#)が混入（メタ欠落の兆候）';
+              if (!/^title:\s*\S/m.test(fm)) return 'title が無い';
+              if (!/^date:\s*\S/m.test(fm)) return 'date が無い';
+              return null;
+            })(jpContent);
+            if (fmError) {
+              throw new Error(`ブログのフロントマターが不正 (${fmError}) — ビルド破壊防止のため公開中止: ${item.title}`);
+            }
+
             const commitMessage = `Auto-publish: ${item.title}`;
             await pushToGithub(githubToken, 'educatepress', 'the-skin-atelier', `content/blog/${item.title}.md`, jpContent, commitMessage);
             postUrl = `https://github.com/educatepress/the-skin-atelier/blob/main/content/blog/${item.title}.md`;

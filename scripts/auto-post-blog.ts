@@ -531,6 +531,24 @@ async function main() {
       cleanMdx = cleanMdx.substring(frontmatterStart);
     }
 
+    // フロントマター検証ガード（生成側）。生成AIがまれに frontmatter を欠いた
+    // 本文だけを出力することがあり、それをキュー投入→公開すると gray-matter が
+    // 全記事読み込み時にYAMLパース失敗し Vercelビルド全体が落ちる（2026-06-13事故）。
+    // ここで弾いて不良記事の混入を防ぐ。
+    {
+      const fmMatch = cleanMdx.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+      const fm = fmMatch ? fmMatch[1] : '';
+      const fmInvalid = !fmMatch
+        ? 'frontmatter ブロック(--- … ---)が無い'
+        : /^\s*#{1,6}\s/m.test(fm) ? 'frontmatter内に見出し(#)が混入（メタ欠落の兆候）'
+        : !/^title:\s*\S/m.test(fm) ? 'title が無い'
+        : !/^date:\s*\S/m.test(fm) ? 'date が無い'
+        : null;
+      if (fmInvalid) {
+        throw new Error(`生成記事のフロントマターが不正 (${fmInvalid}) — キュー投入を中止: ${slug}`);
+      }
+    }
+
     // ── Agent 3: 参考文献の独立検証 ──
     if (references.length > 0) {
       console.log('\n🔍 Agent 3: 参考文献を検証中...');
