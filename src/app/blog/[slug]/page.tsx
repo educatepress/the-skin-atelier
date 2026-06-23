@@ -21,6 +21,8 @@ export async function generateMetadata({
 
   const cleanTitle = post.metadata.title.replace(/\n/g, "");
   const articleUrl = `${SITE_URL}/blog/${slug}`;
+  // 近似重複記事は canonical 指定があれば正規記事へ評価を集約する（自分自身が正規なら従来通り）
+  const canonicalUrl = `${SITE_URL}/blog/${post.metadata.canonical || slug}`;
   const imageUrl = post.metadata.image
     ? `${SITE_URL}${post.metadata.image}`
     : `${SITE_URL}/opengraph-image`;
@@ -28,11 +30,11 @@ export async function generateMetadata({
   return {
     title: `${cleanTitle} | Journal — The Skin Atelier`,
     description: post.metadata.excerpt,
-    alternates: { canonical: articleUrl },
+    alternates: { canonical: canonicalUrl },
     openGraph: {
       title: cleanTitle,
       description: post.metadata.excerpt,
-      url: articleUrl,
+      url: canonicalUrl,
       type: "article",
       locale: "ja_JP",
       siteName: "The Skin Atelier",
@@ -75,6 +77,7 @@ export default async function BlogArticlePage({
 
   const cleanTitle = post.metadata.title.replace(/\n/g, "");
   const articleUrl = `${SITE_URL}/blog/${slug}`;
+  const canonicalUrl = `${SITE_URL}/blog/${post.metadata.canonical || slug}`;
   const imageUrl = post.metadata.image
     ? `${SITE_URL}${post.metadata.image}`
     : `${SITE_URL}/opengraph-image`;
@@ -109,7 +112,7 @@ export default async function BlogArticlePage({
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": articleUrl,
+      "@id": canonicalUrl,
     },
     articleSection: post.metadata.category,
     inLanguage: "ja-JP",

@@ -3,6 +3,7 @@ title: "あなた自身の力で美しさを育む。PRP療法が秘める、肌
 excerpt: "ご自身の血液から美しさを引き出すPRP療法。肌再生、薄毛、ニキビ跡への可能性を、専門医の視点から優しくご紹介します。本来の輝きを取り戻すためのヒントがここに。"
 date: "2026-06-05"
 category: "Treatment"
+canonical: "blog-auto-2026-05-04-gvot2i"
 readTime: "4 min read"
 featured: false
 image: "/images/pool/pool-img-10.webp"

@@ -3,6 +3,7 @@ title: "見落としがちな盲点、光老化。5月からの全方位UV＋抗
 excerpt: "5月〜6月は光老化が加速する季節。顔だけでなく、目元、頭皮、手元にも忍び寄るエイジングサイン。全方位からのUV防御と抗酸化ケアで、肌の輝きを未来へ育む専門医の戦略をお伝えします。"
 date: "2026-06-08"
 category: "Skincare"
+canonical: "blog-auto-2026-05-18-vacxql"
 readTime: "4 min read"
 featured: false
 image: "/images/pool/pool-img-20.webp"

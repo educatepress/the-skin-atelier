@@ -3,6 +3,7 @@ title: "コラーゲンサプリは本当に肌に届くの？美しさを育む
 excerpt: "コラーゲンサプリメントは、どのように体内で吸収され、私たちの肌に働きかけるのでしょうか。その消化吸収プロセスと、期待できる皮膚への影響について、最新のエビデンスを紐解きます。"
 date: "2026-05-27"
 category: "Inner Care"
+canonical: "blog-auto-2026-04-20-c7lfz6"
 readTime: "4 min read"
 featured: false
 image: "/images/pool/pool-img-1.webp"

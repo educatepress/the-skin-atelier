@@ -13,6 +13,8 @@ export interface PostMetadata {
   readTime: string;
   featured?: boolean;
   image?: string;
+  /** 近似重複記事を正規URLへ集約するための優先記事スラッグ。未指定なら自分自身が正規。 */
+  canonical?: string;
 }
 
 export interface Post {
@@ -58,6 +60,7 @@ export function getPostBySlug(slug: string): Post | null {
       readTime: data.readTime || "5 min read",
       featured: typeof data.featured === "boolean" ? data.featured : false,
       image: data.image || "",
+      canonical: typeof data.canonical === "string" && data.canonical ? data.canonical : undefined,
     },
     content,
   };

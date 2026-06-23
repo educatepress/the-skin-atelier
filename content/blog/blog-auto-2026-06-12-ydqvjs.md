@@ -3,6 +3,7 @@ title: "レチノールフリーの選択肢：次世代成分「バクチオー
 excerpt: "レチノールの効果は欲しいけれど、刺激が気になる。そんなあなたに寄り添う「バクチオール」の魅力と、科学に裏打ちされたその真価を、優しく紐解きます。"
 date: "2026-06-12"
 category: "Skincare"
+canonical: "blog-auto-2026-05-12-fshqvd"
 readTime: "5 min read"
 featured: false
 image: "/images/pool/pool-img-10.webp"

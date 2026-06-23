@@ -3,6 +3,7 @@ title: "梅雨時の頭皮トラブルを優雅に乗り越える。痒みとニ
 excerpt: "梅雨特有の湿度と皮脂、そして常在菌のバランスの乱れが引き起こす頭皮の痒みやニオイ。その原因と、肌本来の健やかさを育むための科学的な対策を、専門医の視点から紐解きます。"
 date: "2026-06-09"
 category: "Skincare"
+canonical: "blog-auto-2026-05-11-59gc0o"
 readTime: "4 min read"
 featured: false
 image: "/images/pool/pool-img-30.webp"
