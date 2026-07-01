@@ -59,3 +59,4 @@ image: "/images/pool/pool-img-1.webp"
 *本記事はPubMed掲載のTier A/B論文に基づき執筆しています。*
 
 ![Dr. Miyaka Signature](/images/miyaka-signature-trimmed.png)
+
