@@ -7,6 +7,7 @@
 import { NextResponse } from 'next/server';
 import { getQueueItems, updateQueueItem, QueueItem, getAtelierEnv } from '@/lib/sheets';
 import { TwitterApi } from 'twitter-api-v2';
+import matter from 'gray-matter';
 
 export const maxDuration = 300;
 
@@ -169,6 +170,26 @@ export async function GET(req: Request) {
             })(jpContent);
             if (fmError) {
               throw new Error(`ブログのフロントマターが不正 (${fmError}) — ビルド破壊防止のため公開中止: ${item.title}`);
+            }
+
+            // YAML 実パース検証。正規表現ガードでは title/excerpt 値の中に
+            // 生成AIが入れた ASCII 引用符（例: それとも… "塗る"と"飲む"…）を検知できず、
+            // コミット後に全ページのビルドが落ちた（2026-07-07〜07-10 の4日連続デプロイ失敗）。
+            // 引用符破損は全角引用符への置換で自動修復し、それでも不正なら公開中止。
+            try {
+              matter(jpContent);
+            } catch {
+              const repaired = jpContent.replace(
+                /^((?:title|excerpt):\s*")(.*)("\s*)$/gm,
+                (_m, head: string, body: string, tail: string) => head + body.replace(/"/g, '”') + tail,
+              );
+              try {
+                matter(repaired);
+                jpContent = repaired;
+                console.log(`⚠️ [Atelier] frontmatterの引用符を自動修復して公開続行: ${item.title}`);
+              } catch {
+                throw new Error(`ブログのフロントマターがYAMLとして不正（自動修復も失敗） — ビルド破壊防止のため公開中止: ${item.title}`);
+              }
             }
 
             const commitMessage = `Auto-publish: ${item.title}`;
