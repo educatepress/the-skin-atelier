@@ -106,14 +106,14 @@ export default function Invitation() {
           </div>
         </FadeIn>
 
-        {/* Official LINE CTA 
-            [NOTE] 「ジャーナルでファン化」の動線に集中するため一時的にLINE導線を非表示（コメントアウト）にし、シルクトーンの気品を保護しています。
+        {/* Official LINE CTA — 実URLで有効化。Instagram と並ぶ相互導線。 */}
         <FadeIn delay={0.35}>
-          <div className="flex flex-col items-center justify-center gap-4">
+          <div className="mt-[var(--space-xl)] flex flex-col items-center justify-center gap-4">
             <motion.a
-              href="#"
+              href="https://line.me/R/ti/p/@534uwuav"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="公式LINE で Dr. Miyaka とつながる"
               className="inline-flex items-center gap-3 bg-[#06C755] text-white px-12 py-5 font-brand text-[0.85rem] tracking-[0.1em] rounded-full hover:bg-[#05b34c] transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] shadow-xl"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -121,14 +121,13 @@ export default function Invitation() {
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M22.5 9.8c0-4.3-4.3-7.8-9.6-7.8s-9.6 3.5-9.6 7.8c0 3.8 3.4 7.1 8 7.7.4.1.9.2 1 .5.1.3 0 .7 0 .7l-.2 1.2c0 .1-.1.4.3.6.4.2.9-.1 1-.2 1.1-.9 6.2-5 6.2-5 .2-.2.3-.4.3-.6.1-1.6 2.6-3 2.6-4.9z"/>
               </svg>
-              公式LINEで美容Tipsを受取る
+              公式LINEで「大人の肌育教科書」を受け取る
             </motion.a>
           </div>
           <p className="text-[0.75rem] text-[var(--color-text-muted)] tracking-[0.1em] mt-[var(--space-md)]">
             Dr.みやかの肌タイプ別ケア情報を配信中
           </p>
         </FadeIn>
-        */}
 
         {/* Trust signals */}
         <FadeIn delay={0.4}>

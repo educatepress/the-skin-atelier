@@ -3,10 +3,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// TODO: 本番URLに差し替え
 const SNS_LINKS = {
-  // x: "https://x.com/dr_miyaka_skin", // TODO: Xアカウント作成後に有効化
   instagram: "https://www.instagram.com/dr_miyaka_skin/",
+  line: "https://line.me/R/ti/p/@534uwuav",
 };
 
 export default function StickySnsBanner() {
@@ -28,16 +27,16 @@ export default function StickySnsBanner() {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="fixed bottom-6 right-6 z-50 flex flex-col gap-3"
         >
-          {/* X (Twitter) */}
+          {/* 公式LINE */}
           <a
-            href="https://x.com/dr_miyaka_skin"
+            href={SNS_LINKS.line}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="X (Twitter)"
-            className="w-12 h-12 rounded-full bg-white/90 backdrop-blur-md border border-[var(--color-marble-vein)] shadow-[var(--shadow-float)] flex items-center justify-center hover:bg-[var(--color-champagne-light)] hover:border-[var(--color-pink-gold)] transition-all duration-300 group"
+            aria-label="公式LINE で Dr. Miyaka とつながる"
+            className="w-12 h-12 rounded-full bg-[#06C755] border border-[#06C755] shadow-[var(--shadow-float)] flex items-center justify-center hover:brightness-105 transition-all duration-300 group"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="text-[var(--color-text-mocha)]">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#FFFFFF">
+              <path d="M12 2C6.48 2 2 5.64 2 10.13c0 4.02 3.55 7.39 8.35 8.03.33.07.77.22.88.5.1.26.07.66.03.92l-.14.86c-.04.26-.2 1.01.89.55 1.09-.46 5.87-3.46 8.01-5.92C21.5 13.4 22 11.83 22 10.13 22 5.64 17.52 2 12 2ZM8.09 12.71H6.1a.4.4 0 0 1-.4-.4V8.36a.4.4 0 0 1 .8 0v3.55h1.59a.4.4 0 1 1 0 .8Zm1.63-.4a.4.4 0 0 1-.8 0V8.36a.4.4 0 0 1 .8 0v3.95Zm4.13 0a.4.4 0 0 1-.72.24l-2.03-2.76v2.52a.4.4 0 0 1-.8 0V8.36a.4.4 0 0 1 .72-.24l2.03 2.76V8.36a.4.4 0 0 1 .8 0v3.95Zm2.65-2.37a.4.4 0 1 1 0 .8h-1.13v.77h1.13a.4.4 0 0 1 0 .8h-1.53a.4.4 0 0 1-.4-.4V8.36a.4.4 0 0 1 .4-.4h1.53a.4.4 0 0 1 0 .8h-1.13v.78h1.13Z" />
             </svg>
           </a>
 

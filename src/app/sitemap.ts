@@ -1,19 +1,19 @@
 import { MetadataRoute } from "next";
-import { getPostSlugs } from "@/lib/blog";
+import { getAllPosts } from "@/lib/blog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://skin-atelier.jp";
 
-  const blogSlugs = getPostSlugs();
-  const blogEntries = blogSlugs.map((filename) => {
-    const slug = filename.replace(/\.mdx?$/, "");
-    return {
-      url: `${baseUrl}/blog/${slug}`,
+  // 近似重複記事（canonical で他記事を指すもの）は sitemap から除外し、
+  // 正規記事のみを Google に送信してカニバリ・薄いコンテンツ評価を防ぐ。
+  const blogEntries = getAllPosts()
+    .filter((post) => !post.metadata.canonical)
+    .map((post) => ({
+      url: `${baseUrl}/blog/${post.metadata.slug}`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.7,
-    };
-  });
+    }));
 
   return [
     {

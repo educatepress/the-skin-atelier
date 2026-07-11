@@ -55,13 +55,13 @@ export default function Footer() {
                 Instagram
               </a>
               <a
-                href="https://x.com/dr_miyaka_skin"
+                href="https://line.me/R/ti/p/@534uwuav"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="X (Twitter) で Dr. Miyaka をフォロー"
+                aria-label="公式LINE で Dr. Miyaka とつながる"
                 className="text-[0.75rem] text-[var(--color-text-soft)] hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300 tracking-[0.03em]"
               >
-                X (Twitter)
+                LINE（公式）
               </a>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import BlogArticleClient from "./blog-article-client";
 import { getPostBySlug, getRelatedPosts } from "@/lib/blog";
 import { MDXRemote } from "next-mdx-remote/rsc";
@@ -13,16 +13,18 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  // 拡張子付きURL(/blog/xxx.md)は正規URL(拡張子なし)に統一する
+  const cleanSlug = slug.replace(/\.mdx?$/, "");
+  const post = getPostBySlug(cleanSlug);
 
   if (!post) {
     return { title: `Not Found | Journal — The Skin Atelier` };
   }
 
   const cleanTitle = post.metadata.title.replace(/\n/g, "");
-  const articleUrl = `${SITE_URL}/blog/${slug}`;
+  const articleUrl = `${SITE_URL}/blog/${cleanSlug}`;
   // 近似重複記事は canonical 指定があれば正規記事へ評価を集約する（自分自身が正規なら従来通り）
-  const canonicalUrl = `${SITE_URL}/blog/${post.metadata.canonical || slug}`;
+  const canonicalUrl = `${SITE_URL}/blog/${post.metadata.canonical || cleanSlug}`;
   const imageUrl = post.metadata.image
     ? `${SITE_URL}${post.metadata.image}`
     : `${SITE_URL}/opengraph-image`;
@@ -69,19 +71,25 @@ export default async function BlogArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  // 拡張子付きURL(/blog/xxx.md)は正規URLへ308恒久リダイレクトし、重複URLを集約する
+  const cleanSlug = slug.replace(/\.mdx?$/, "");
+  if (slug !== cleanSlug) {
+    permanentRedirect(`/blog/${cleanSlug}`);
+  }
+
+  const post = getPostBySlug(cleanSlug);
 
   if (!post) {
     notFound();
   }
 
   const cleanTitle = post.metadata.title.replace(/\n/g, "");
-  const articleUrl = `${SITE_URL}/blog/${slug}`;
-  const canonicalUrl = `${SITE_URL}/blog/${post.metadata.canonical || slug}`;
+  const articleUrl = `${SITE_URL}/blog/${cleanSlug}`;
+  const canonicalUrl = `${SITE_URL}/blog/${post.metadata.canonical || cleanSlug}`;
   const imageUrl = post.metadata.image
     ? `${SITE_URL}${post.metadata.image}`
     : `${SITE_URL}/opengraph-image`;
-  const relatedPosts = getRelatedPosts(slug, 3);
+  const relatedPosts = getRelatedPosts(cleanSlug, 3);
 
   // Article Schema (BlogPosting) for Google rich results
   const articleJsonLd = {
