@@ -4,7 +4,7 @@ excerpt: "「シミ取り＝レーザー」と思い込んでいませんか？ 
 category: "Treatment"
 date: "2026-03-25"
 readTime: "5 min read"
-featured: true
+featured: false
 image: "/images/pool/pool-img-31.webp"
 ---
 

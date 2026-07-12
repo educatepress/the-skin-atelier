@@ -4,7 +4,7 @@ excerpt: "ビタミンA（レチノール）は、乱れがちなターンオー
 date: "2026-07-12"
 category: "Skincare"
 readTime: "6 min read"
-featured: false
+featured: true
 image: "/images/pool/pool-img-17.webp"
 ---
 

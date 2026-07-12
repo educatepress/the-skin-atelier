@@ -30,8 +30,8 @@ export default function BlogListClient({ articles }: { articles: Article[] }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-[1px] bg-[var(--color-marble-vein)]">
               {featured.map((article, i) => (
                 <motion.article key={article.slug} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.2 + i * 0.15 }} className="bg-[#FDFCFA] group">
-                  <Link href={`/blog/${article.slug}`} className="block p-10 md:p-14">
-                    <div className="aspect-[4/3] bg-gradient-to-br from-[var(--color-surface)] via-[var(--color-marble-warm)] to-[var(--color-champagne-light)] mb-8 overflow-hidden relative">
+                  <Link href={`/blog/${article.slug}`} className="block p-6 md:p-8">
+                    <div className="aspect-[16/10] bg-gradient-to-br from-[var(--color-surface)] via-[var(--color-marble-warm)] to-[var(--color-champagne-light)] mb-5 overflow-hidden relative">
                       {article.image ? <img src={article.image} alt={article.title} className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-[1200ms]"/> : <div className="w-full h-full flex items-center justify-center"><span className="font-brand text-[2rem] text-[var(--color-pink-gold-deep)] opacity-20">✦</span></div>}
                     </div>
                     <div className="space-y-3">
@@ -39,7 +39,7 @@ export default function BlogListClient({ articles }: { articles: Article[] }) {
                         <span className="font-brand text-[11px] font-medium tracking-[0.2em] text-[#A88D82] uppercase">{article.category}</span>
                         <span className="text-[11px] text-[var(--color-text-muted)] tracking-[0.05em]">{article.date}</span>
                       </div>
-                      <h2 className="text-[1.25rem] leading-[1.5] mt-2 mb-3 tracking-[0.06em] text-[var(--color-text-mocha)] group-hover:text-[#A88D82] transition-colors duration-[800ms] whitespace-pre-line">
+                      <h2 className="text-[1.1rem] leading-[1.5] mt-2 mb-2 tracking-[0.06em] text-[var(--color-text-mocha)] group-hover:text-[#A88D82] transition-colors duration-[800ms] whitespace-pre-line">
                         {article.title}
                       </h2>
                       <p className="text-sm leading-[1.9] text-[var(--color-text-muted)] tracking-[0.02em]">{article.excerpt}</p>
@@ -59,21 +59,20 @@ export default function BlogListClient({ articles }: { articles: Article[] }) {
             <p className="font-brand text-[11px] tracking-[0.4em] text-[var(--color-text-muted)] uppercase whitespace-nowrap">これまでのジャーナル</p>
             <div className="flex-1 h-[1px] bg-[var(--color-marble-vein)]" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
             {rest.map((article, i) => (
-              <motion.article key={article.slug} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: i * 0.1 }} viewport={{ once: true }} className="group">
-                <Link href={`/blog/${article.slug}`} className="block space-y-3">
-                  <div className="aspect-[4/5] bg-gradient-to-br from-[var(--color-surface)] to-[var(--color-marble-warm)] overflow-hidden relative">
+              <motion.article key={article.slug} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: i * 0.05 }} viewport={{ once: true }} className="group">
+                <Link href={`/blog/${article.slug}`} className="block space-y-2">
+                  <div className="aspect-[4/3] bg-gradient-to-br from-[var(--color-surface)] to-[var(--color-marble-warm)] overflow-hidden relative">
                     {article.image ? <img src={article.image} alt={article.title} className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1200ms]"/> : <div className="w-full h-full flex items-center justify-center"><span className="font-brand text-[1.5rem] text-[var(--color-pink-gold-deep)] opacity-15">✦</span></div>}
                   </div>
                   <div className="flex items-center gap-3 pt-2">
                     <span className="font-brand text-[11px] font-medium tracking-[0.2em] text-[#A88D82] uppercase">{article.category}</span>
                     <span className="text-[11px] text-[var(--color-text-muted)] tracking-[0.05em]">{article.date}</span>
                   </div>
-                  <h3 className="text-base leading-[1.5] tracking-[0.04em] text-[var(--color-text-mocha)] group-hover:text-[#A88D82] transition-colors duration-[800ms] whitespace-pre-line">
+                  <h3 className="text-[0.85rem] leading-[1.55] tracking-[0.03em] text-[var(--color-text-mocha)] group-hover:text-[#A88D82] transition-colors duration-[800ms] line-clamp-3 whitespace-pre-line">
                     {article.title}
                   </h3>
-                  <p className="text-xs leading-[1.9] text-[var(--color-text-muted)] tracking-[0.02em] line-clamp-3">{article.excerpt}</p>
                 </Link>
               </motion.article>
             ))}
