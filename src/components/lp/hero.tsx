@@ -51,9 +51,9 @@ export default function Hero() {
           transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="text-[clamp(1.6rem,4.5vw,3rem)] leading-[1.5] tracking-[0.08em] text-[var(--color-text-mocha)] font-normal mb-[var(--space-lg)]"
         >
-          もう、スキンケアで
+          繰り返す大人ニキビに、
           <br className="md:hidden" />
-          迷わない。
+          エビデンスという答えを。
         </motion.h1>
 
         {/* Sub copy — generous line height for readability */}
@@ -64,41 +64,63 @@ export default function Hero() {
           className="max-w-lg mx-auto mb-[var(--space-2xl)]"
         >
           <p className="text-[1rem] leading-[2.4] text-[var(--color-text-soft)] tracking-[0.04em]">
-            <span className="inline-block">自らも肌荒れに悩み、</span>
-            <span className="inline-block">遠回りをしてきたからこそ</span>
-            <span className="inline-block">伝えたい。</span>
+            <span className="inline-block">流行や派手さではなく、</span>
+            <span className="inline-block">皮膚科学の根拠で。</span>
             <br className="hidden md:block" />
-            <span className="inline-block">情報に疲れた大人の肌に、</span>
+            <span className="inline-block">肌に悩んだ女医が、</span>
+            <span className="inline-block">「隠す肌」を「育てる肌」へ。</span>
             <br className="hidden md:block" />
-            <span className="inline-block">皮膚科学という明確な答えと、</span>
-            <span className="inline-block">『引き算の美容医療』を。</span>
+            <span className="inline-block">繰り返す大人ニキビと肌質改善に、</span>
+            <span className="inline-block">引き算の肌育を。</span>
           </p>
         </motion.div>
 
-        {/* CTA: Instagramフォロー誘導 */}
+        {/* 差別化を一目で — エビデンス/引き算/大人ニキビ特化 */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.75 }}
+          className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-[11px] tracking-[0.14em] text-[var(--color-pink-gold-deep)] mb-[var(--space-2xl)]"
+        >
+          <span>✦ エビデンスベース</span>
+          <span>✦ 引き算の肌育</span>
+          <span>✦ 大人ニキビ・肌質改善に特化</span>
+        </motion.div>
+
+        {/* CTA: 公式LINE(大人の肌育教科書PDF)を主導線に。Instagram/ジャーナルは副導線 */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.9 }}
-          className="mb-[var(--space-2xl)] flex flex-col items-center gap-4"
+          className="mb-[var(--space-2xl)] flex flex-col items-center gap-5"
         >
           <a
-            href="https://www.instagram.com/dr_miyaka_skin/"
+            href="https://line.me/R/ti/p/@534uwuav"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-atelier whitespace-nowrap inline-flex items-center gap-3"
+            aria-label="公式LINEで大人の肌育教科書を無料で受け取る"
+            className="inline-flex items-center gap-3 bg-[#06C755] text-white px-10 py-4 rounded-full font-brand text-[0.85rem] tracking-[0.08em] shadow-xl hover:bg-[#05b34c] transition-all duration-500 whitespace-nowrap"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2" y="2" width="20" height="20" rx="5" />
-              <circle cx="12" cy="12" r="5" />
-              <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22.5 9.8c0-4.3-4.3-7.8-9.6-7.8s-9.6 3.5-9.6 7.8c0 3.8 3.4 7.1 8 7.7.4.1.9.2 1 .5.1.3 0 .7 0 .7l-.2 1.2c0 .1-.1.4.3.6.4.2.9-.1 1-.2 1.1-.9 6.2-5 6.2-5 .2-.2.3-.4.3-.6.1-1.6 2.6-3 2.6-4.9z"/>
             </svg>
-            <span className="tracking-[0.1em]">Instagramで美肌の知恵を受け取る</span>
-            <span className="arrow ml-1">→</span>
+            <span>無料で「大人の肌育教科書」を受け取る</span>
           </a>
-          <a href="/blog" className="text-[0.75rem] tracking-[0.08em] text-[var(--color-text-muted)] hover:text-[var(--color-pink-gold-deep)] transition-colors duration-500">
-            美容ジャーナルを読む
-          </a>
+          <div className="flex items-center gap-6">
+            <a
+              href="https://www.instagram.com/dr_miyaka_skin/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram @dr_miyaka_skin をフォロー"
+              className="text-[0.8rem] tracking-[0.08em] text-[var(--color-text-soft)] hover:text-[var(--color-pink-gold-deep)] transition-colors duration-500"
+            >
+              Instagramを見る
+            </a>
+            <span className="text-[var(--color-marble-vein)]">|</span>
+            <a href="/blog" className="text-[0.8rem] tracking-[0.08em] text-[var(--color-text-soft)] hover:text-[var(--color-pink-gold-deep)] transition-colors duration-500">
+              ジャーナルを読む
+            </a>
+          </div>
         </motion.div>
 
         {/* Vertical divider — moved below CTA for better flow */}
