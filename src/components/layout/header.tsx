@@ -24,7 +24,7 @@ export default function Header() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
         isScrolled
           ? "glass-marble py-3 shadow-[var(--shadow-silk)] border-b border-[var(--color-marble-vein)]"
-          : "bg-white/40 backdrop-blur-xl py-5"
+          : "bg-[#FDFCFA]/85 backdrop-blur-xl py-5"
       }`}
     >
       <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">

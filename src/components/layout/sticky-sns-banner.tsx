@@ -33,7 +33,7 @@ export default function StickySnsBanner() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="公式LINE で Dr. Miyaka とつながる"
-            className="w-12 h-12 rounded-full bg-[#06C755] border border-[#06C755] shadow-[var(--shadow-float)] flex items-center justify-center hover:brightness-105 transition-all duration-300 group"
+            className="w-12 h-12 rounded-full bg-[var(--color-text-mocha)] border border-[var(--color-text-mocha)] shadow-[var(--shadow-float)] flex items-center justify-center hover:bg-[#5a5248] transition-all duration-300 group"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#FFFFFF">
               <path d="M12 2C6.48 2 2 5.64 2 10.13c0 4.02 3.55 7.39 8.35 8.03.33.07.77.22.88.5.1.26.07.66.03.92l-.14.86c-.04.26-.2 1.01.89.55 1.09-.46 5.87-3.46 8.01-5.92C21.5 13.4 22 11.83 22 10.13 22 5.64 17.52 2 12 2ZM8.09 12.71H6.1a.4.4 0 0 1-.4-.4V8.36a.4.4 0 0 1 .8 0v3.55h1.59a.4.4 0 1 1 0 .8Zm1.63-.4a.4.4 0 0 1-.8 0V8.36a.4.4 0 0 1 .8 0v3.95Zm4.13 0a.4.4 0 0 1-.72.24l-2.03-2.76v2.52a.4.4 0 0 1-.8 0V8.36a.4.4 0 0 1 .72-.24l2.03 2.76V8.36a.4.4 0 0 1 .8 0v3.95Zm2.65-2.37a.4.4 0 1 1 0 .8h-1.13v.77h1.13a.4.4 0 0 1 0 .8h-1.53a.4.4 0 0 1-.4-.4V8.36a.4.4 0 0 1 .4-.4h1.53a.4.4 0 0 1 0 .8h-1.13v.78h1.13Z" />

@@ -106,7 +106,6 @@ export default async function BlogArticlePage({
       url: SITE_URL,
       sameAs: [
         "https://www.instagram.com/dr_miyaka_skin/",
-        "https://x.com/dr_miyaka_skin",
       ],
     },
     publisher: {

@@ -80,11 +80,13 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.75 }}
-          className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-[11px] tracking-[0.14em] text-[var(--color-pink-gold-deep)] mb-[var(--space-2xl)]"
+          className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 mb-[var(--space-2xl)] text-[12px] md:text-[13px] tracking-[0.12em] text-[var(--color-text-soft)]"
         >
-          <span>✦ エビデンスベース</span>
-          <span>✦ 引き算の肌育</span>
-          <span>✦ 大人ニキビ・肌質改善に特化</span>
+          <span className="inline-flex items-center gap-1.5"><span className="text-[var(--color-pink-gold-deep)]">✦</span>エビデンスベース</span>
+          <span className="hidden md:inline text-[var(--color-marble-vein)]">／</span>
+          <span className="inline-flex items-center gap-1.5"><span className="text-[var(--color-pink-gold-deep)]">✦</span>引き算の肌育</span>
+          <span className="hidden md:inline text-[var(--color-marble-vein)]">／</span>
+          <span className="inline-flex items-center gap-1.5"><span className="text-[var(--color-pink-gold-deep)]">✦</span>大人ニキビ・肌質改善に特化</span>
         </motion.div>
 
         {/* CTA: 公式LINE(大人の肌育教科書PDF)を主導線に。Instagram/ジャーナルは副導線 */}
@@ -99,7 +101,7 @@ export default function Hero() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="公式LINEで大人の肌育教科書を無料で受け取る"
-            className="inline-flex items-center gap-3 bg-[#06C755] text-white px-10 py-4 rounded-full font-brand text-[0.85rem] tracking-[0.08em] shadow-xl hover:bg-[#05b34c] transition-all duration-500 whitespace-nowrap"
+            className="inline-flex items-center gap-3 bg-[var(--color-text-mocha)] text-[#FDFCFA] px-10 py-4 rounded-full font-brand text-[0.85rem] tracking-[0.08em] shadow-lg hover:bg-[#5a5248] transition-all duration-500 whitespace-nowrap"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
               <path d="M22.5 9.8c0-4.3-4.3-7.8-9.6-7.8s-9.6 3.5-9.6 7.8c0 3.8 3.4 7.1 8 7.7.4.1.9.2 1 .5.1.3 0 .7 0 .7l-.2 1.2c0 .1-.1.4.3.6.4.2.9-.1 1-.2 1.1-.9 6.2-5 6.2-5 .2-.2.3-.4.3-.6.1-1.6 2.6-3 2.6-4.9z"/>

@@ -26,29 +26,31 @@ const cormorant = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://skin-atelier.jp"),
-  title: "The Skin Atelier by Dr. Miyaka | 美容皮膚科医 みやか先生",
+  title: "The Skin Atelier by Dr. Miyaka | 大人ニキビとエビデンス肌育",
   description:
-    "ヒト臨床試験に基づく美容医療と、心・栄養・肌を整えるインナーウェルネス。美容皮膚科医みやかが、流行に流されない「引き算の美しさ」で、10年後の自分をもっと好きになるためのヒントをお届けします。",
+    "繰り返す大人ニキビ・ニキビ跡に、皮膚科学の根拠で。ホルモン・インナーケア・スキンケアまで、美容皮膚科医みやかが「隠す肌」を「育てる肌」へ導く、エビデンスベースの肌育ジャーナル。",
   keywords: [
-    "美容皮膚科医",
-    "みやか先生",
-    "エビデンスベース美容医療",
-    "インナーケア",
-    "インナーウェルネス",
-    "引き算の美容",
-    "肌育",
-    "光老化",
-    "ボトックス",
-    "ヒアルロン酸",
-    "IPL治療",
+    "大人ニキビ",
+    "大人ニキビ 治し方",
+    "ニキビ跡",
+    "繰り返すニキビ",
+    "月経前ニキビ",
+    "ホルモン ニキビ",
+    "スピロノラクトン",
+    "イソトレチノイン",
+    "ナイアシンアミド",
     "レチノール",
-    "スキンケア"
+    "インナーケア",
+    "エビデンスベース美容医療",
+    "肌育",
+    "美容皮膚科医",
+    "みやか先生"
   ],
   openGraph: {
     // 画像は app/opengraph-image.tsx が自動生成 (Next.js File Convention)
-    title: "The Skin Atelier by Dr. Miyaka",
+    title: "The Skin Atelier by Dr. Miyaka｜大人ニキビとエビデンス肌育",
     description:
-      "エビデンス × インナーウェルネス × 引き算の美容医療。流行に流されず、10年後の自分をもっと好きになるための、美容皮膚科医みやかのジャーナル。",
+      "繰り返す大人ニキビ・ニキビ跡に、皮膚科学の根拠で。ホルモン・インナーケア・スキンケアまで、美容皮膚科医みやかの肌育ジャーナル。",
     locale: "ja_JP",
     type: "website",
     siteName: "The Skin Atelier",
@@ -56,9 +58,9 @@ export const metadata: Metadata = {
   twitter: {
     // 画像は app/twitter-image.tsx がない場合 opengraph-image が使われる
     card: "summary_large_image",
-    title: "The Skin Atelier by Dr. Miyaka",
+    title: "The Skin Atelier by Dr. Miyaka｜大人ニキビとエビデンス肌育",
     description:
-      "エビデンスとインナーウェルネスで、10年後の自分をもっと好きに。美容皮膚科医みやかのジャーナル。",
+      "繰り返す大人ニキビ・ニキビ跡に、皮膚科学の根拠で。美容皮膚科医みやかの肌育ジャーナル。",
   },
   alternates: {
     canonical: "https://skin-atelier.jp",
@@ -101,7 +103,7 @@ export default function RootLayout({
               url: "https://skin-atelier.jp",
               inLanguage: "ja-JP",
               description:
-                "美容皮膚科医みやかによる、エビデンスとインナーウェルネスを大切にする美容ジャーナル。引き算の美容医療で、10年後の自分をもっと好きになるためのヒントをお届けします。",
+                "美容皮膚科医みやかによる、大人ニキビ・ニキビ跡を皮膚科学の根拠で紐解く肌育ジャーナル。ホルモン・インナーケア・スキンケアまで、エビデンスベースで「隠す肌」を「育てる肌」へ。",
               publisher: {
                 "@type": "Person",
                 name: "Dr. Miyaka",
@@ -123,23 +125,23 @@ export default function RootLayout({
               name: "Dr. Miyaka",
               alternateName: ["みやか先生", "みやか"],
               description:
-                "美容皮膚科医。自身の長年の肌悩みと向き合う中で辿り着いた「エビデンスベースの美容医療」と「心・栄養・肌を整えるインナーウェルネス」を融合した独自のアプローチを発信。流行に流されない引き算の美しさを提唱。",
+                "美容皮膚科医。自身の長年の肌悩み（大人ニキビ）と向き合う中で辿り着いた、エビデンスベースの肌育とインナーケアを発信。繰り返す大人ニキビ・ニキビ跡に、皮膚科学の根拠で寄り添う。",
               jobTitle: "美容皮膚科医",
               knowsAbout: [
-                "美容皮膚科学",
-                "エビデンスベース美容医療",
-                "インナーウェルネス",
+                "大人ニキビ",
+                "ニキビ跡",
+                "ホルモンとニキビ",
+                "スピロノラクトン",
+                "イソトレチノイン",
+                "ナイアシンアミド",
                 "レチノール",
-                "ボトックス",
-                "ヒアルロン酸",
-                "IPL治療",
+                "インナーケア",
+                "エビデンスベース美容医療",
                 "肌育",
-                "光老化対策",
               ],
               url: "https://skin-atelier.jp",
               sameAs: [
                 "https://www.instagram.com/dr_miyaka_skin/",
-                "https://x.com/dr_miyaka_skin",
               ],
             }),
           }}

@@ -114,7 +114,7 @@ export default function Invitation() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="公式LINE で Dr. Miyaka とつながる"
-              className="inline-flex items-center gap-3 bg-[#06C755] text-white px-12 py-5 font-brand text-[0.85rem] tracking-[0.1em] rounded-full hover:bg-[#05b34c] transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] shadow-xl"
+              className="inline-flex items-center gap-3 bg-[var(--color-text-mocha)] text-[#FDFCFA] px-12 py-5 font-brand text-[0.85rem] tracking-[0.1em] rounded-full hover:bg-[#5a5248] transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] shadow-lg"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
