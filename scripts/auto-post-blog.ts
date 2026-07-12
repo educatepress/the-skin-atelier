@@ -58,6 +58,9 @@ async function withRetry<T>(
  * 季節テーマを読み込み（今月・来月分を返す）
  */
 function getSeasonalHints(): { currentMonth: string; hints: string[] } {
+  // 季節ネタ乱発(梅雨×5・ブライダル×6等)の重複源だったため無効化。
+  // テーマは大人ニキビ軸の ThemeSchedule(plan-10day-themes) に一本化する。
+  return { currentMonth: "", hints: [] };
   try {
     const seasonalPath = path.join(process.cwd(), "scripts", "data", "seasonal-themes.json");
     if (!fs.existsSync(seasonalPath)) return { currentMonth: "", hints: [] };

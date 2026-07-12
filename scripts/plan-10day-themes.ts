@@ -101,6 +101,8 @@ function collectHistory(brandSchedules: ThemeScheduleRow[]): string[] {
 // Gemini にテーマ10件を生成させる（avoidThemes に列挙したテーマは明示的に回避させる）
 async function generateThemes(brand: string, avoidThemes: string[]): Promise<any[]> {
   const recentThemes = avoidThemes.join(" / ");
+  // 季節ズレ防止: 実行時点(JST)の月をプロンプトに明示し、過去の例示季節の流用を防ぐ
+  const jstMonth = new Date(Date.now() + 9 * 3600 * 1000).getUTCMonth() + 1;
   const prompt = `
 あなたは美容皮膚科・アンチエイジング専門医の視点を持つ「シニア・リサーチ・エディター」です。
 直近のSNSと最新論文トレンドから、今後10日間（1日1記事）で執筆すべき「全く新しいバズテーマ10個」を提案してください。
@@ -117,11 +119,13 @@ async function generateThemes(brand: string, avoidThemes: string[]): Promise<any
   - [既存テーマ]: ${recentThemes || "(まだ履歴なし)"}
 
 2. 各テーマは以下の5つの大枠（ThemeArea）からそれぞれ2個ずつ、合計10個生成してください。
-    ①最新成分ディープダイブ（例: レバーエキス、エクソソーム、レチノール代替成分など）
-    ②美容医療トレンド（例: ピコレーザーの真実、ポテンツァのダウンタイムなど）
-    ③自宅スキンケアの落とし穴（例: クレンジングの罠、摩擦レスの副作用など）
-    ④季節の肌トラブル（例: 紫外線と隠れシミ、花粉とゆらぎ肌など）
-    ⑤論文ベースの神話崩し（例: コラーゲンサプリは効くか？ 経皮吸収の限界など）
+   ※このメディアは「大人ニキビ」の専門です。すべて大人ニキビ・ニキビ跡・肌質改善に接続する切り口で。
+    ①大人ニキビの病態・原因（例: 月経前の悪化とホルモン、Uゾーンに繰り返す理由、バリア低下と乾燥性ニキビ）
+    ②ニキビの治療・薬（例: スピロノラクトンの抗アンドロゲン、イソトレチノインのリアル、アダパレン/BPO、アゼライン酸）※処方薬は一般論・「医療機関で相談を」の姿勢
+    ③ニキビ跡・肌質改善（例: 跡のタイプ別、赤い跡(PIE)と茶色い跡(PIH)の違い、サブシジョン/TCA CROSS/マイクロニードリング）
+    ④インナーケア・生活習慣（例: 低GL食、乳製品/ホエイ、オメガ3・亜鉛、睡眠・ストレス、月経周期に合わせたケア）
+    ⑤スキンケア成分と神話崩し（例: ナイアシンアミド/レチノール/ビタミンC誘導体、洗いすぎ・肌断食の誤解、叩き込みパッティング）
+   ※現在は${jstMonth}月です。季節に触れる場合は必ず現在の季節（${jstMonth}月）に合わせ、過去の例示の季節を流用しないこと。季節ネタは全体の1〜2割まで。
 
 3. 【隣接テーマの多様性 — 最重要】
    - 連続する2日間で同じ ThemeArea のテーマを並べないこと（例: ①→①は禁止、①→②→③のように散らす）
@@ -137,7 +141,7 @@ async function generateThemes(brand: string, avoidThemes: string[]): Promise<any
 evidenceTier には必ず "A" または "B" を指定。 "C" の場合はエラーとして再選定すること。
 [
   {
-    "themeArea": "①最新成分ディープダイブ",
+    "themeArea": "①大人ニキビの病態・原因",
     "theme": "生成されたテーマタイトル",
     "searchKeywords": "Exosome OR Niacinamide mechanism 2024",
     "referenceUrl": "",
