@@ -17,7 +17,7 @@ export default function Hero() {
     <section
       ref={ref}
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-start justify-center overflow-hidden"
     >
       {/* Marble background — Stitch large radial + subtle veining */}
       <div className="absolute inset-0 bg-[#FDFCFA]">
@@ -42,7 +42,7 @@ export default function Hero() {
 
       <motion.div
         style={{ opacity, y }}
-        className="relative z-10 text-center px-6 max-w-4xl mx-auto"
+        className="relative z-10 text-center px-6 max-w-4xl mx-auto pt-32 md:pt-40 pb-24"
       >
         {/* Main catch copy */}
         <motion.h1
