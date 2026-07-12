@@ -2,8 +2,19 @@ import Link from "next/link";
 import FadeIn from "@/components/common/fade-in";
 import { getAllPosts } from "@/lib/blog";
 
+// トップの Journal は「肌育教科書シリーズ」の代表3本を固定表示（大人ニキビ×エビデンス）
+const FEATURED_SLUGS = [
+  "adult-acne-ng-skincare-5",
+  "adult-acne-vs-teen",
+  "skin-inner-care-nutrition",
+];
+
 export default function BlogPreview() {
-  const posts = getAllPosts().slice(0, 3); // View latest 3 posts
+  const all = getAllPosts();
+  const featured = FEATURED_SLUGS.map((s) => all.find((p) => p.metadata.slug === s)).filter(
+    (p): p is (typeof all)[number] => Boolean(p)
+  );
+  const posts = featured.length === 3 ? featured : all.slice(0, 3); // 無ければ最新3件にフォールバック
 
   return (
     <section id="blog" className="section-padding relative bg-[var(--color-marble)]">
