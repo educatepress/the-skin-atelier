@@ -22,7 +22,11 @@ function normalizeStrongEmphasis(md: string): string {
       }
       if (inFence) return line;
       // 同一行内の **...** を <strong>...</strong> に（開始直後の空白は除外）
-      return line.replace(/\*\*(?!\s)(.+?)\*\*/g, "<strong>$1</strong>");
+      return line
+        .replace(/\*\*(?!\s)(.+?)\*\*/g, "<strong>$1</strong>")
+        // <strong>直後に句読点・約物が来ると、インライン境界でその約物が行頭に送られる。
+        // word-joiner(U+2060/改行禁止)を挟んで、約物を直前の語に貼り付ける（行頭禁則の担保）。
+        .replace(/<\/strong>([、。，．」』）】〉》！？：；])/g, "</strong>⁠$1");
     })
     .join("\n");
 }

@@ -39,7 +39,7 @@ export default function BlogListClient({ articles }: { articles: Article[] }) {
                         <span className="font-brand text-[11px] font-medium tracking-[0.2em] text-[#A88D82] uppercase">{article.category}</span>
                         <span className="text-[11px] text-[var(--color-text-muted)] tracking-[0.05em]">{article.date}</span>
                       </div>
-                      <h2 className="text-[1.1rem] leading-[1.5] mt-2 mb-2 tracking-[0.06em] text-[var(--color-text-mocha)] group-hover:text-[#A88D82] transition-colors duration-[800ms] whitespace-pre-line">
+                      <h2 className="text-[1.1rem] leading-[1.5] mt-2 mb-2 tracking-[0.06em] text-[var(--color-text-mocha)] group-hover:text-[#A88D82] transition-colors duration-[800ms] whitespace-pre-line [word-break:keep-all]">
                         {article.title}
                       </h2>
                       <p className="text-sm leading-[1.9] text-[var(--color-text-muted)] tracking-[0.02em]">{article.excerpt}</p>
@@ -70,7 +70,7 @@ export default function BlogListClient({ articles }: { articles: Article[] }) {
                     <span className="font-brand text-[11px] font-medium tracking-[0.2em] text-[#A88D82] uppercase">{article.category}</span>
                     <span className="text-[11px] text-[var(--color-text-muted)] tracking-[0.05em]">{article.date}</span>
                   </div>
-                  <h3 className="text-[0.85rem] leading-[1.55] tracking-[0.03em] text-[var(--color-text-mocha)] group-hover:text-[#A88D82] transition-colors duration-[800ms] line-clamp-3 whitespace-pre-line">
+                  <h3 className="text-[0.85rem] leading-[1.55] tracking-[0.03em] text-[var(--color-text-mocha)] group-hover:text-[#A88D82] transition-colors duration-[800ms] line-clamp-3 whitespace-pre-line [word-break:keep-all]">
                     {article.title}
                   </h3>
                 </Link>
