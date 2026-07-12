@@ -62,6 +62,7 @@
     word-break: normal;
     word-break: auto-phrase; /* Chromium系：文節単位で折る（未対応はnormalにフォールバック） */
     line-break: strict;
+    hanging-punctuation: allow-end; /* 行末の句読点をぶら下げ、行頭への送りを抑制（対応ブラウザ） */
     overflow-wrap: break-word;
     overflow-x: hidden;
     letter-spacing: 0.02em;
@@ -74,7 +75,7 @@
     font-weight: 400;
     letter-spacing: 0.06em;
     line-height: 1.6;
-    text-wrap: balance;
+    text-wrap: pretty; /* balanceは行長均等化でカタカナ語を割る位置を作るため pretty に */
   }
 
   h1 { font-weight: 400; letter-spacing: 0.08em; }

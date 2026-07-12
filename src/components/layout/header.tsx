@@ -28,6 +28,7 @@ export default function Header() {
   }, [isMobileMenuOpen]);
 
   return (
+    <>
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
         isScrolled
@@ -90,54 +91,54 @@ export default function Header() {
         </button>
       </nav>
 
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <>
-            {/* 背後スクリム：ページを覆って透けを防ぎ、タップで閉じる */}
-            <motion.div
-              key="scrim"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              onClick={() => setIsMobileMenuOpen(false)}
-              aria-hidden="true"
-              className="md:hidden fixed inset-0 bg-[rgba(74,66,56,0.28)] backdrop-blur-sm"
-            />
-            <motion.div
-              key="panel"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="md:hidden relative z-10 overflow-hidden bg-[#FDFCFA] border-b border-[var(--color-marble-vein)] shadow-[var(--shadow-silk)]"
-            >
-            <div className="px-6 py-[var(--space-xl)] flex flex-col gap-[var(--space-lg)]">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="font-brand text-[0.75rem] tracking-[0.2em] text-[var(--color-text-soft)] uppercase"
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <a
-                href="https://www.instagram.com/dr_miyaka_skin/"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="btn-atelier justify-center mt-[var(--space-sm)]"
-              >
-                Follow on Instagram
-              </a>
-            </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </header>
+
+    {/* Mobile 全画面メニュー — ヘッダー外に置くことで position:fixed が
+        ヘッダーの backdrop-filter 含有ブロックに閉じ込められず、全画面を確実に覆う */}
+    <AnimatePresence>
+      {isMobileMenuOpen && (
+        <motion.div
+          key="mobile-menu"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="md:hidden fixed inset-0 z-40 bg-[#FDFCFA] flex flex-col items-center justify-center gap-[var(--space-xl)]"
+        >
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="font-brand text-[1rem] tracking-[0.3em] text-[var(--color-text-mocha)] uppercase"
+            >
+              {item.label}
+            </Link>
+          ))}
+          <div className="flex flex-col gap-4 mt-[var(--space-md)] w-64">
+            <a
+              href="https://www.instagram.com/dr_miyaka_skin/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="btn-atelier justify-center"
+            >
+              Follow on Instagram
+            </a>
+            <a
+              href="https://line.me/R/ti/p/@534uwuav"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="btn-atelier justify-center"
+            >
+              公式LINE を追加
+            </a>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+    </>
   );
 }
