@@ -42,7 +42,7 @@ export default function Hero() {
 
       <motion.div
         style={{ opacity, y }}
-        className="relative z-10 text-center px-6 max-w-4xl mx-auto pt-24"
+        className="relative z-10 text-center px-6 max-w-4xl mx-auto"
       >
         {/* Main catch copy */}
         <motion.h1

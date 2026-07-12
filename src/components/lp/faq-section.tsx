@@ -95,6 +95,10 @@ const faqs = [
   },
 ];
 
+// トップには「大人ニキビ・インナーケア・スキンケア基本」に沿う代表7問のみ表示し、
+// スクロール量を抑える（構造化データも表示分に一致させる）。
+const shown = [15, 17, 18, 10, 11, 9, 16].map((i) => faqs[i]);
+
 export default function FaqSection() {
   return (
     <section id="faq" className="section-padding relative">
@@ -104,7 +108,7 @@ export default function FaqSection() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            mainEntity: faqs.map((f) => ({
+            mainEntity: shown.map((f) => ({
               "@type": "Question",
               name: f.q,
               acceptedAnswer: {
@@ -135,7 +139,7 @@ export default function FaqSection() {
         </FadeIn>
 
         <div className="space-y-0">
-          {faqs.map((faq, i) => (
+          {shown.map((faq, i) => (
             <FadeIn key={i} delay={0.15 + i * 0.08}>
               <details className="group border-b border-[var(--color-marble-vein)] last:border-b-0">
                 <summary className="flex items-start gap-[var(--space-md)] py-[var(--space-lg)] cursor-pointer list-none [&::-webkit-details-marker]:hidden">
