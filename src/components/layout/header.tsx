@@ -19,15 +19,23 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // モバイルメニュー展開中は背後のスクロールをロックする
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
         isScrolled
           ? "glass-marble py-3 shadow-[var(--shadow-silk)] border-b border-[var(--color-marble-vein)]"
-          : "bg-[#FDFCFA]/85 backdrop-blur-xl py-5"
+          : "bg-[#FDFCFA]/95 backdrop-blur-xl py-5"
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+      <nav className="relative z-10 max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
         <Link href="/#hero" className="group">
           <p className="font-brand text-[0.8rem] tracking-[0.3em] text-[var(--color-text-mocha)] uppercase group-hover:text-[var(--color-pink-gold-deep)] transition-colors duration-300">
@@ -85,13 +93,26 @@ export default function Header() {
       {/* Mobile menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="md:hidden overflow-hidden glass-marble"
-          >
+          <>
+            {/* 背後スクリム：ページを覆って透けを防ぎ、タップで閉じる */}
+            <motion.div
+              key="scrim"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              aria-hidden="true"
+              className="md:hidden fixed inset-0 bg-[rgba(74,66,56,0.28)] backdrop-blur-sm"
+            />
+            <motion.div
+              key="panel"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="md:hidden relative z-10 overflow-hidden bg-[#FDFCFA] border-b border-[var(--color-marble-vein)] shadow-[var(--shadow-silk)]"
+            >
             <div className="px-6 py-[var(--space-xl)] flex flex-col gap-[var(--space-lg)]">
               {navItems.map((item) => (
                 <Link
@@ -113,7 +134,8 @@ export default function Header() {
                 Follow on Instagram
               </a>
             </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </header>

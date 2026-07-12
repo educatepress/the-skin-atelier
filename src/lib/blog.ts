@@ -4,6 +4,29 @@ import matter from "gray-matter";
 
 const POSTS_DIRECTORY = path.join(process.cwd(), "content/blog");
 
+/**
+ * MDX(CommonMark)の強調記法は、閉じ ** の直前が全角約物（）」』"など）だと
+ * right-flanking と判定されず、** が生のまま本文に露出する（CJK特有の既知挙動）。
+ * これを回避するため、コードブロック外の **太字** を <strong> に正規化する。
+ * ・イタリックの単体 * には手を触れない
+ * ・``` で囲われたコードブロック内は変換しない
+ */
+function normalizeStrongEmphasis(md: string): string {
+  let inFence = false;
+  return md
+    .split("\n")
+    .map((line) => {
+      if (line.trimStart().startsWith("```")) {
+        inFence = !inFence;
+        return line;
+      }
+      if (inFence) return line;
+      // 同一行内の **...** を <strong>...</strong> に（開始直後の空白は除外）
+      return line.replace(/\*\*(?!\s)(.+?)\*\*/g, "<strong>$1</strong>");
+    })
+    .join("\n");
+}
+
 export interface PostMetadata {
   slug: string;
   title: string;
@@ -62,7 +85,7 @@ export function getPostBySlug(slug: string): Post | null {
       image: data.image || "",
       canonical: typeof data.canonical === "string" && data.canonical ? data.canonical : undefined,
     },
-    content,
+    content: normalizeStrongEmphasis(content),
   };
 }
 

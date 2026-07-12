@@ -40,7 +40,7 @@ export default function BlogArticleClient({
           >
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-[11px] font-brand tracking-[0.3em] text-[var(--color-text-muted)] uppercase hover:text-[var(--color-pink-gold-deep)] transition-colors duration-500 mb-6 md:mb-12"
+              className="inline-flex items-center gap-2 text-[11px] font-brand tracking-[0.3em] text-[var(--color-text-muted)] uppercase hover:text-[var(--color-pink-gold-deep)] transition-colors duration-500 py-2.5 -my-1 mb-6 md:mb-12"
             >
               ← Journal
             </Link>
@@ -127,7 +127,7 @@ export default function BlogArticleClient({
             <h3 className="text-[1.1rem] text-[var(--color-text-mocha)] tracking-[0.08em] leading-[2] mb-6">
               日々の気づきや、論文から見えてきた新しい美しさのヒントを、
               <br className="hidden md:block" />
-              Instagram と X でもお届けしています。
+              Instagram と 公式LINE でお届けしています。
             </h3>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
@@ -141,13 +141,13 @@ export default function BlogArticleClient({
                 <span className="arrow ml-2">→</span>
               </a>
               <a
-                href="https://x.com/dr_miyaka_skin"
+                href="https://line.me/R/ti/p/@534uwuav"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="X (Twitter) で Dr. Miyaka をフォロー"
+                aria-label="公式LINE を友だち追加"
                 className="btn-atelier inline-flex justify-center items-center text-xs px-6 py-3"
               >
-                <span className="tracking-[0.15em]">X (Twitter) をフォロー</span>
+                <span className="tracking-[0.15em]">公式LINE を追加</span>
                 <span className="arrow ml-2">→</span>
               </a>
             </div>
@@ -204,7 +204,7 @@ export default function BlogArticleClient({
             <div className="mt-12 flex justify-center">
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-2 text-[11px] font-brand tracking-[0.3em] text-[var(--color-text-muted)] uppercase hover:text-[var(--color-pink-gold-deep)] transition-colors duration-500"
+                className="inline-flex items-center gap-2 text-[11px] font-brand tracking-[0.3em] text-[var(--color-text-muted)] uppercase hover:text-[var(--color-pink-gold-deep)] transition-colors duration-500 py-2.5"
               >
                 すべての記事を読む →
               </Link>

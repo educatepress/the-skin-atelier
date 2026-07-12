@@ -58,7 +58,10 @@
     font-family: var(--font-noto-sans), "Hiragino Kaku Gothic ProN", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* 和文組版：禁則（句読点・約物・小書き仮名の行頭回避）＋文節改行でカタカナ途中割れを抑制 */
     word-break: normal;
+    word-break: auto-phrase; /* Chromium系：文節単位で折る（未対応はnormalにフォールバック） */
+    line-break: strict;
     overflow-wrap: break-word;
     overflow-x: hidden;
     letter-spacing: 0.02em;
@@ -345,10 +348,10 @@
   }
 
   .prose-atelier p {
-    font-size: clamp(0.88rem, 1.6vw, 1rem);
+    font-size: clamp(0.95rem, 1.6vw, 1.05rem);
     line-height: 2.2;
     margin-bottom: 2em;
-    color: var(--color-text-soft);
+    color: #544D46;
     letter-spacing: 0.04em;
   }
 
@@ -365,8 +368,8 @@
   .prose-atelier ol {
     margin-bottom: 2em;
     padding-left: 1.2em;
-    color: var(--color-text-soft);
-    font-size: clamp(0.88rem, 1.6vw, 1rem);
+    color: #544D46;
+    font-size: clamp(0.95rem, 1.6vw, 1.05rem);
     line-height: 2.2;
     letter-spacing: 0.04em;
   }
